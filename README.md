@@ -25,8 +25,8 @@ BESSEL
 BUTTERWORTH
 CHEBYSHEV_01 (.01dB ripple)
 CHEBYSHEV_04 (.04dB ripple) 
-CHEBYSHEV_10 (.1dB ripple)
-CHEBYSHEV_20 (.2dB ripple)
+CHEBYSHEV_1 (.1dB ripple)
+CHEBYSHEV_2 (.2dB ripple)
 COHN 
 GAUSSIAN_6 (6dB down)
 GAUSSIAN_12 (12dB down)

@@ -24,6 +24,8 @@ for i in range(10000):
     delta = (res[7].max() - fd)
     if delta**2 < 1e-10: break
     fd += .01 * delta
+else:
+    raise OverflowError
 
 print('fd=%.3f kHz' % (fd / 1e3), 'Lm=%.5g' % LM, 'Cm=%.5g' % -CM, 'Co=%.5g' % -CP)
 print('CK', res[0])

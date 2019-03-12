@@ -129,7 +129,7 @@ LOWPASS = {
 }
 
 ZVEREV = {
-    #    qo    q1    q2    k12   k23 ...
+    #    qo    IL,   q1    q2    k12   k23 ...
     'BUTTERWORTH': [
     [ 14.142,0.915,1.4142,1.4142,0.7071 ],
     [ 7.071,1.938,1.4142,1.4142,0.7071 ],
@@ -1298,10 +1298,11 @@ def to_coupling(g):
     return q, k
 
 def zverev_min(name, n, qo=None):
-    for res in ZVEREV[name]:
+    for res in ZVEREV.get(name, []):
         if len(res) - 3 != n: continue
         if qo is None or res[0] <= qo: 
             return res[0], res[1]
+    return inf, 0
 
 def zverev_qk(name, n, qo):
     found = 0

@@ -1282,12 +1282,12 @@ ZVEREV = {
 }
 ######################################
 
-def to_leff(f, fo, LM, CP):
-    w = 2 * np.pi * f
+def to_leff(fd, fo, LM, CP):
+    wd = 2 * np.pi * fd
     wo = 2 * np.pi * fo
-    A = CP * LM * (w**2 - wo**2)
-    leff = LM * (A**2 - A + 2 * w**2 * CP * LM) / (CP * LM * (w**2 + wo**2) * (A - 1)**2)
-    return leff
+    A = CP * LM * (wd**2 - wo**2)
+    return LM * (A**2 - A + 2 * wd**2 * CP * LM) / (
+           CP * LM * (wd**2 + wo**2) * (A - 1)**2)
 
 def to_coupling(g):
     N = len(g)

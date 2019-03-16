@@ -1399,10 +1399,10 @@ def to_coupling(g):
     k = 1 / np.array([ np.sqrt(g[n] * g[n+1]) for n in range(1, N-2) ])
     return q, k
 
-def zverev_min(name, n, qo=None):
+def zverev_min(name, n, qo=inf):
     for res in ZVEREV.get(name, []):
         if len(res) - 3 != n: continue
-        if qo is None or res[0] <= qo: 
+        if res[0] <= qo: 
             return res[0], res[1]
     return inf, 0
 
@@ -1418,7 +1418,14 @@ def zverev_qk(name, n, qo):
 def lowpass_g(name, n):
     for g in LOWPASS[name]:
         if len(g) - 2 == n: 
-            return g
+            yield g
+
+def coupled_qk(name, n):
+    for res in COUPLED[name]:
+        q = res[0:2]
+        k = res[2:]
+        if len(k) + 1 == n: 
+            yield q, k
 
 # wide bandwidth filters
 ######################################

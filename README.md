@@ -1,5 +1,5 @@
 
-Library for creating wideband and narrowband filters. Includes table of predistorted q,k values from Zverek
+Library for creating wideband and narrowband filters. Includes a table of predistorted q, k values from Zverek
 
 rffilter.py python3 library
 ----------------------
@@ -11,7 +11,7 @@ The element values g are contained in the dictionary LOWPASS.
 They can either be accessed directly or using the function lowpass_g().
 
 ```
-lowpass_g(name, n)
+lowpass_g(name, n) - returns an iterator of g values
 to_lowpass(g, fc, R)
 to_highpass(g, fc, R)
 to_bandpass(g, fo, BW, R)
@@ -23,15 +23,16 @@ LOWPASS provides the following lowpass responses:
 ```
 BESSEL
 BUTTERWORTH
-CHEBYSHEV_01 (.01dB ripple)
-CHEBYSHEV_04 (.04dB ripple) 
-CHEBYSHEV_1 (.1dB ripple)
-CHEBYSHEV_2 (.2dB ripple)
+CHEBYSHEV_001 (.01dB ripple)
+CHEBYSHEV_004 (.04dB ripple) 
+CHEBYSHEV_01 (.1dB ripple)
+CHEBYSHEV_02 (.2dB ripple)
 COHN 
-GAUSSIAN_6 (6dB down)
-GAUSSIAN_12 (12dB down)
-LINEAR_PHASE_05 (.05 deg error)
-QUASI_EQUIRIPPLE (derived from q,k in ARRL 2017 Handbook)
+GAUSSIAN_6 (to 6dB down)
+GAUSSIAN_12 (to 12dB down)
+LINEAR_PHASE_05 (.05 deg ripple)
+LINEAR_PHASE_5 (.5 deg ripple)
+QUASI_EQUIRIPPLE (derived from q, k in ARRL 2017 Handbook)
 ```
 
 The library also provides functions for creating either
@@ -44,35 +45,56 @@ of the resonators.
 
 The q,k values can be generated with using the to_coupling()
 function from the lossless g values retrieved above.  
-The q,k values can also be found by using the Zverev k,q predistored
+The q,k values can also be found by using the Zverev q, k predistored
 table OCRed into the library.  The table is located in the
-dictionary ZVEREV.  The k,q values for a normalized Q, qo,
+dictionary ZVEREV.  The q, k values for a normalized Q, qo,
 can be retrieved directly or using the zverev_qk() function.  
 The lower bound qo and insertion loss for a filter can 
 found using the zverev_min() function.
 
 ```
-zverev_qk(name, n, qo)
-zverev_min(name, n, qo=None)
+zverev_qk(name, n, qo) - returns an iterator of q,k values
+zverev_min(name, n, qo=inf) - returns the minimum qo and IL of the response
 to_coupling(g)
 to_topc(q, k, fo, BW, RE=None, L0=None, QU=inf)
 to_shuntc(q, k, fo, BW, RE=None, L0=None, fd=None, QU=inf)
 ```
 
-ZVEREV provides the following k,q responses:
+ZVEREV provides the following q, k responses:
 
 ```
 BESSEL
 BUTTERWORTH
-CHEBYSHEV_01 (.01dB ripple)
-CHEBYSHEV_1 (.1dB ripple)
-CHEBYSHEV_5 (.5dB ripple)
+CHEBYSHEV_001 (.01dB ripple)
+CHEBYSHEV_01 (.1dB ripple)
+CHEBYSHEV_05 (.5dB ripple)
 GAUSSIAN 
-GAUSSIAN_6 (6db down)
-GAUSSIAN_12 (12db down)
+GAUSSIAN_6 (to 6db down)
+GAUSSIAN_12 (to 12db down)
 LEGENDRE 
-LINEAR_PHASE_5 (.5 deg error)
-LINEAR_PHASE_05 (.05 deg error)
+LINEAR_PHASE_5 (.5 deg ripple)
+LINEAR_PHASE_05 (.05 deg ripple)
+```
+
+COUPLED provides the following q, k responses:
+
+```
+BESSEL
+BUTTERWORTH
+CHEBYSHEV_001
+CHEBYSHEV_01
+CHEBYSHEV_05
+CHEBYSHEV_1
+GAUSSIAN_12
+GAUSSIAN_6
+LINEAR_PHASE_05
+LINEAR_PHASE_5
+```
+
+To get a particular response and order from COUPLED you can use:
+
+```
+coupled_qk(name, n)- returns an iterator of q,k values
 ```
 
 crystal filters

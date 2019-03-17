@@ -107,7 +107,7 @@ are the series resonant frequency, motional inductance and holder capacitance
 of the crystal respectively.
 
 ```
-to_leff(f, fo, LM, CP)
+to_leff(f, fo, LM, CP) - returns new_LM, new_fo, Q_unloaded
 ```
 
 The zverev data OCR
@@ -133,12 +133,12 @@ Example
 
 $ python3 example.py
 
-fd=4002.161 kHz Lm=0.17 Cm=-9.3126e-15 Co=-2.0488e-12
-CK [-7.3053e-12 -1.5911e-11 -2.3291e-11 -2.9597e-11 -3.5305e-11 -4.2670e-11 -6.8308e-11]
-CS [-1.5911e-11  1.0872e-03 -1.0644e-11 -8.1291e-12 -7.2662e-12 -6.7579e-12 -6.1858e-12 -5.4026e-12]
-RE [9391.716   451.0974]
-Q  [  780.4213 15081.7423]
-K  [7.3980e-04 3.3967e-04 2.3204e-04 1.8260e-04 1.5308e-04 1.2666e-04 7.9120e-05]
+fd=4003.544 kHz Lm=0.17 Cm=-9.3126e-15 Co=-2.0488e-12
+CK [-4.6755e-12 -1.0183e-11 -1.4907e-11 -1.8942e-11 -2.2595e-11 -2.7309e-11 -4.3717e-11]
+CS [-1.0183e-11  6.9232e-04 -6.8120e-12 -5.2027e-12 -4.6504e-12 -4.3251e-12 -3.9590e-12 -3.4577e-12]
+RE [14726.795    762.0542]
+Q  [  780.6911 15086.9553]
+K  [7.3954e-04 3.3955e-04 2.3196e-04 1.8254e-04 1.5303e-04 1.2661e-04 7.9092e-05]
 Kf [2960.8  1359.4   928.65  730.8   612.65  506.9   316.65]
 
 # Note, capacitance is given as negative.  CK is the coupling cap and CS is the tuning.

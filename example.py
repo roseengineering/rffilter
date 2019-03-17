@@ -18,9 +18,10 @@ CM = 1 / (wo**2 * LM)
 CP = 220 * CM
 fd = fo
 for i in range(10000):
-    L0 = np.ones(N) * to_leff(fd, fo, LM, CP)
+    L0, fs, qu = to_leff(fd, fo, LM, CP) 
+    L0 = np.ones(N) * L0
     if name == 'QUASI_EQUIRIPPLE': L0[0] /= 2; L0[-1] /= 2
-    res = to_shuntc(q, k, fo, BW, fd=fd, L0=L0, QU=QU)
+    res = to_shuntc(q, k, fs, BW, fd=fd, L0=L0, QU=qu)
     delta = (res[7].max() - fd)
     if delta**2 < 1e-10: break
     fd += .01 * delta

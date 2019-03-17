@@ -1384,7 +1384,7 @@ ZVEREV = {
 }
 ######################################
 
-def to_leff(fd, fo, LM, CP, RM=0):
+def to_leff(fd, fo, LM, CP, RM):
     wo = 2 * np.pi * fo
     wd = 2 * np.pi * fd
     CM = 1 / (wo**2 * LM)

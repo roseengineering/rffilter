@@ -146,6 +146,6 @@ K  [7.3954e-04 3.3955e-04 2.3196e-04 1.8254e-04 1.5303e-04 1.2661e-04 7.9092e-05
 Kf [2960.8  1359.4   928.65  730.8   612.65  506.9   316.65]
 
 # Note, capacitance is given as negative.  CK is the coupling cap and CS is the tuning.
-# The tuning capacitor of 1.0872mH above should be considered a short.
+# The tuning capacitor of .69284mH above should be considered a short.
 ```
 

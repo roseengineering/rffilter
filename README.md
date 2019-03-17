@@ -107,8 +107,9 @@ are the series resonant frequency, motional inductance and holder capacitance
 of the crystal respectively.
 
 ```
-to_leff(f, fo, LM, CP) - returns new_LM, new_fo, Q_unloaded
+to_leff(f, fo, LM, CP, RM) - returns new_LM, new_fo, Q_unloaded
 ```
+ 
 
 The zverev data OCR
 -------------------

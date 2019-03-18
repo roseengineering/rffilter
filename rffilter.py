@@ -1384,18 +1384,21 @@ ZVEREV = {
 }
 ######################################
 
-def to_leff(fd, fo, LM, CP, RM):
+def to_xeff(fd, fo, LM, CP, RM):
     wo = 2 * np.pi * fo
     wd = 2 * np.pi * fd
     CM = 1 / (wo**2 * LM)
-    # find inductance of circuit
+    a = RM + 1j * (wd * LM - 1 / (wd * CM))
+    b = 1j * (-1 / (wd * CP))
+    return a * b / (a + b)
+
+def to_leff(fd, fo, LM, CP, RM):
+    wo = 2 * np.pi * fo
+    wd = 2 * np.pi * fd
     A = CP * LM * (wd**2 - wo**2)
     leff = LM * (A**2 - A + 2 * wd**2 * CP * LM) / (
            CP * LM * (wd**2 + wo**2) * (A - 1)**2)
-    # find impedance of circuit
-    a = RM + 1j * (wd * LM - 1 / (wd * CM))
-    b = 1j * (-1 / (wd * CP))
-    x = a * b / (a + b)
+    x = to_xeff(fd, fo, LM, CP, RM)
     rm = x.real
     cm = -1 / (x.imag - wd * leff) / wd
     fs = 1 / (2 * np.pi * np.sqrt(leff * cm))

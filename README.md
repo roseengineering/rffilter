@@ -1,5 +1,5 @@
 
-Library for creating wideband and narrowband filters. Includes a table of predistorted q, k values from Zverek
+Library for creating wideband and narrowband filters. Includes a table of predistorted q,k values from Zverek
 
 rffilter.py python3 library
 ----------------------
@@ -32,7 +32,7 @@ GAUSSIAN_6 (to 6dB down)
 GAUSSIAN_12 (to 12dB down)
 LINEAR_PHASE_05 (.05 deg ripple)
 LINEAR_PHASE_5 (.5 deg ripple)
-QUASI_EQUIRIPPLE (derived from q, k in ARRL 2017 Handbook)
+QUASI_EQUIRIPPLE (derived from q,k in ARRL 2017 Handbook)
 ```
 
 The library also provides functions for creating either
@@ -45,9 +45,9 @@ of the resonators.
 
 The q,k values can be generated with using the to_coupling()
 function from the lossless g values retrieved above.  
-The q,k values can also be found by using the Zverev q, k predistored
+The q,k values can also be found by using the Zverev q,k predistored
 table OCRed into the library.  The table is located in the
-dictionary ZVEREV.  The q, k values for a normalized Q, qo,
+dictionary ZVEREV.  The q,k values for a normalized Q, qo,
 can be retrieved directly or using the zverev_qk() function.  
 The lower bound qo and insertion loss for a filter can 
 found using the zverev_min() function.
@@ -60,7 +60,7 @@ to_topc(q, k, fo, BW, RE=None, L0=None, QU=inf)
 to_shuntc(q, k, fo, BW, RE=None, L0=None, fd=None, QU=inf)
 ```
 
-ZVEREV provides the following q, k responses:
+ZVEREV provides the following q,k responses:
 
 ```
 BESSEL
@@ -76,7 +76,7 @@ LINEAR_PHASE_5 (.5 deg ripple)
 LINEAR_PHASE_05 (.05 deg ripple)
 ```
 
-COUPLED provides the following q, k responses:
+COUPLED provides the following q,k responses:
 
 ```
 BESSEL

@@ -3,20 +3,17 @@ import numpy as np
 from rffilter import *
 
 np.set_printoptions(precision=4, linewidth=135)
+fo, LM, BW, QU = 4e6, .170, 500, 200000
 N = 8
-fo = 4e6
-BW = 500
 name = 'BESSEL'
-LM = .170
-QU = 200000
-QL = fo / BW
-qo = QU / QL
 
 wo = 2 * np.pi * fo
 RM = wo * LM / QU
 CM = 1 / (wo**2 * LM)
 CP = 220 * CM
 
+QL = fo / BW
+qo = QU / QL
 q, k = next(zverev_qk(name, N, qo))
 fd = fo
 for i in range(10000):

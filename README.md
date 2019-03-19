@@ -134,7 +134,8 @@ Example
 
 $ python3 example.py
 
-fd=4003.544 kHz Lm=0.17 Cm=-9.3126e-15 Co=-2.0488e-12 Rm=21.36
+fo=4000000 Lm=0.17 Cm=9.3126e-15 Co=2.0488e-12 Rm=21.36
+fd = 4003.544 kHz
 CK [-4.6753e-12 -1.0183e-11 -1.4906e-11 -1.8942e-11 -2.2595e-11 -2.7308e-11 -4.3716e-11]
 R0 [57.4162 57.4162 57.4162 57.4162 57.4162 57.4162 57.4162 57.4162]
 L0 [0.4571 0.4571 0.4571 0.4571 0.4571 0.4571 0.4571 0.4571]
@@ -148,4 +149,3 @@ Kf [2960.8  1359.4   928.65  730.8   612.65  506.9   316.65]
 # Note, capacitance is given as negative.  CK is the coupling cap and CS is the tuning.
 # The tuning capacitor of .69284mH above should be considered a short.
 ```
-

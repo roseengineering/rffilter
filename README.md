@@ -151,5 +151,5 @@ Kf 1247.1,724.35,790.75,604.4,302.65,420.1,817.05
 # The negative tuning capacitor above should be considered a short.
 ```
 
-Open demo.sch in Qucs to simulate the above crystal filter.
+Open [demo.sch](demo.sch) in Qucs to simulate the above crystal filter.
 

@@ -2,11 +2,10 @@
 import sys
 import numpy as np
 from rffilter import to_leff, to_shuntc, zverev_qk, zverev_min
-from decimal import Decimal, getcontext
+from decimal import Decimal, Context, Rounded, Inexact
 
 def h(d):
-    getcontext().prec=5
-    return ','.join([ Decimal(x).normalize().to_eng_string().lower() for x in d ])
+    return ','.join([ Decimal(x).normalize(Context(prec=5)).to_eng_string().lower() for x in d ])
 
 def calculate(q, k, BW, fo, LM, CM, CP, RM, name=''):
     fd = fo

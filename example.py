@@ -37,12 +37,12 @@ def main(fo=4e6, BW=500, LM=.170, QU=200000, name='LINEAR_PHASE_05', N=8):
     qo = QU / QL
     qo_lossless, _ = zverev_min(name, N, qo)
     for q, k in zverev_qk(name, N, qo):
+        print('name=', name, 'N(poles)=', N, 'BW=', BW, 'fo=', fo)
+        print('QU=', QU, 'qo=', qo, 'qo(lossless)=', qo_lossless)
         wo = 2 * np.pi * fo
         RM = wo * LM / QU
         CM = 1 / (wo**2 * LM)
         CP = 220 * CM
-        print('name=', name, 'N(poles)=', N, 'BW=', BW, 'fo=', fo)
-        print('qo=', qo, 'qo(lossless)=', qo_lossless)
         print('Lm=%.5g' % LM, 'Cm=%.5g' % CM, 'Co=%.5g' % CP, 'Rm=%.2f' % RM)
         res, fd, qu = calculate(q, k, BW, fo, LM, CM, CP, RM)
         display(res, fd, qu)

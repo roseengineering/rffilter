@@ -1,17 +1,18 @@
 
-import sys
 import numpy as np
 from rffilter import to_leff, to_shuntc, zverev_qk, zverev_min
 from decimal import Decimal, Context, Rounded, Inexact
 
 def h(d):
-    return ','.join([ Decimal(x).normalize(Context(prec=5)).to_eng_string().lower() for x in d ])
+    return ','.join([ Decimal(x).normalize(Context(prec=5))
+                      .to_eng_string().lower() for x in d ])
 
 def calculate(q, k, BW, fo, LM, CM, CP, RM, name=''):
     fd = fo
     for i in range(10000):
         lm, fs, qu = to_leff(fd, fo, LM, CP, RM) 
-        if name == 'QUASI_EQUIRIPPLE': lm = np.ones(len(k)+1) * lm; lm[0] /= 2; lm[-1] /= 2
+        if name == 'QUASI_EQUIRIPPLE':
+            lm = np.ones(len(k)+1) * lm; lm[0] /= 2; lm[-1] /= 2
         res = to_shuntc(q, k, fs, BW, fd=fd, L0=lm, QU=qu)
         delta = res[7].max() - fd
         if delta**2 < 1e-10: break
@@ -48,5 +49,6 @@ def main(fo=4e6, BW=500, LM=.170, QU=200000, name='LINEAR_PHASE_05', N=8):
         display(res, fd, qu)
 
 if __name__ == "__main__":
+    import sys
     main(**{ k:v for k,v in [ d.split('=') for d in sys.argv[1:] ] })
 

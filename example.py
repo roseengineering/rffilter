@@ -1,7 +1,7 @@
 
 import numpy as np
 from rffilter import to_leff, to_shuntc, zverev_qk, zverev_min
-from decimal import Decimal, Context, Rounded, Inexact
+from decimal import Decimal, Context
 
 def h(d):
     return ','.join([ Decimal(x).normalize(Context(prec=5))
@@ -14,7 +14,7 @@ def calculate(q, k, BW, fo, LM, CM, CP, RM, name=''):
         if name == 'QUASI_EQUIRIPPLE':
             lm = np.ones(len(k)+1) * lm; lm[0] /= 2; lm[-1] /= 2
         res = to_shuntc(q, k, fs, BW, fd=fd, L0=lm, QU=qu)
-        delta = res[7].max() - fd
+        delta = res[8] - fd
         if delta**2 < 1e-10: break
         fd += .01 * delta
     return res, fd, qu
@@ -29,7 +29,7 @@ def display(res, fd, qu):
     print('RE', h(res[4]))
     print('Q ', h(res[5]))
     print('K ', h(res[6]))
-    print('Kf', h(res[6] * fd))
+    print('Kf', h(res[7]))
     print()
 
 def main(fo=4e6, BW=500, LM=.170, QU=200000, name='LINEAR_PHASE_05', N=8):

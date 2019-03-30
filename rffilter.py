@@ -1506,7 +1506,7 @@ def to_topc(q, k, fo, BW, RE=None, L0=None, QU=inf):
 
         # adjust C0
         C0 -= CK[:-1] + CK[1:]
-        return CK[1:-1], L0, C0, RE, QE, K
+        return CK[1:-1], L0, C0, RE, QE, K, K * fo
 
 
 def to_shuntc(q, k, fo, BW, RE=None, L0=None, fd=None, QU=inf):
@@ -1549,7 +1549,7 @@ def to_shuntc(q, k, fo, BW, RE=None, L0=None, fd=None, QU=inf):
 
         # find untuned mesh frequencies
         CUN = 1 / (1 / C0 + 1 / CK[:-1] + 1 / CK[1:])
-        fd = 1 / (2 * np.pi * np.sqrt(-CUN * L0))
-        return CK[1:-1], L0, C0, CS, RE, QE, K, fd
+        fun = 1 / (2 * np.pi * np.sqrt(-CUN * L0))
+        return CK[1:-1], L0, C0, CS, RE, QE, K, K * fd, fun.max()
 
 

@@ -1423,7 +1423,7 @@ def zverev_min(name, n, qo=inf):
 
 def zverev_qk(name, n, qo):
     found = 0
-    for res in ZVEREV[name]:
+    for res in ZVEREV.get(name, []):
         if len(res) - 3 != n: continue
         if res[0] < found: break
         if res[0] <= qo: 
@@ -1431,12 +1431,12 @@ def zverev_qk(name, n, qo):
             yield res[2:4], res[4:] 
 
 def lowpass_g(name, n):
-    for g in LOWPASS[name]:
+    for g in LOWPASS.get(name, []):
         if len(g) - 2 == n: 
             yield g
 
 def coupled_qk(name, n):
-    for res in COUPLED[name]:
+    for res in COUPLED.get(name, []):
         q = res[0:2]
         k = res[2:]
         if len(k) + 1 == n: 

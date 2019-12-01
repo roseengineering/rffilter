@@ -1,0 +1,17 @@
+.SUBCKT F1 1 4
+* COMMAND: rffilter.py -g butterworth -lowpass -f 10e6 -n 5
+* TYPE:    BUTTERWORTH
+* FILTER:  LOWPASS
+* ORDER:   5
+* FREQ:    10.000000 MHz 
+* RS:      50.0
+* RL:      50.0
+L1  1  2   491.8126e-09
+
+C2  2  0   515.0349e-12
+L3  2  3     1.5915e-06
+
+C4  3  0   515.0349e-12
+L5  3  4   491.8126e-09
+.ends
+.end

@@ -151,6 +151,9 @@ C5  3  0   196.7251e-12
 ```
 
 
+![lowpass](examples/lowpass.png)
+
+
 ```
 $ rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 75
 .SUBCKT F1 1 4

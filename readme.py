@@ -80,6 +80,9 @@ List filters provided.
 Lowpass and highpass filters.
 
 { run("rffilter.py -g butterworth -lowpass -f 10e6 -n 5") }
+
+![lowpass](examples/lowpass.png)
+
 { run("rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 75") }
 { run("rffilter.py -g butterworth -highpass -f 10e6 -n 5 -r 75") }
 

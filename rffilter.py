@@ -1630,9 +1630,8 @@ def main(*args):
             print("* qo:      {:.1f}".format(kw['qo']))
 
         if kw.get('q') is not None:
-            print("*")
-            print_table(kw['q'], kw['k'], BW)
-            print("*")
+            print()
+            list_couplings(kw['q'], kw['k'], BW)
 
         for line in res: 
             print(line)
@@ -1640,7 +1639,7 @@ def main(*args):
         print('.end')
         print()
            
-    def print_table(q, k, BW):
+    def list_couplings(q, k, BW):
         N = len(k) + 1
         TD1 = np.ones(N + 1) * np.nan
         TD2 = np.ones(N + 1) * np.nan
@@ -1651,6 +1650,7 @@ def main(*args):
         print("* ij    qi,kij           TD0           TDn           CBW")
         for i in range(N + 1):
             print('* {:d}{:d}  {:8.4f} {} {} {}'.format(i, i+1, qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i])))
+        print()
  
     def list_gfilters():
         print('{:16s}  {}'.format("G LOWPASS", "POLES"))
@@ -1782,7 +1782,6 @@ def main(*args):
             kw['q'], kw['k'] = q, k
             XS, XP, RE = to_mesh(q, k, kw['f'], kw['bw'], R=kw['r'], L=kw.get('l'))
             netlist(XS, XP, RE, kw, 0)
-        print(".end")
     elif kw.get('crystal'):
         kw['filter'] = 'CRYSTAL_MESH'
         for q, k in qk:
@@ -1792,8 +1791,7 @@ def main(*args):
             netlist(XS, XP, RE, kw, 0)
     elif kw.get('bw'):
         for q, k in qk:
-            print_table(q, k, kw['bw'])
-            print()
+            list_couplings(q, k, kw['bw'])
     else:
         raise ValueError('No filter configuration given')
 

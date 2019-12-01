@@ -1,7 +1,6 @@
-# -*- compile-command: "python3 filter.py" -*-
+#!/usr/bin/python3
 
 import numpy as np
-from numpy import inf
 
 COUPLED = {
     # q1 qn k12 k23 k34 k45 k56 k67 k78
@@ -185,17 +184,6 @@ LOWPASS = {
     [ 1,1.39,1.398,2.318,1.542,2.39,1.554,2.372,1.507,2.151,0.9035,0.65 ],
     [ 1,1.393,1.402,2.324,1.547,2.401,1.565,2.401,1.547,2.324,1.402,1.393,1 ],
     ],
-    'QUASI_EQUIRIPPLE': [
-    [ 1.07712,0.92302,1.84604,1.84604,0.92302,0.92840 ],
-    [ 1.11227,0.92747,1.85494,1.85494,1.85494,0.92747,1.11227 ],
-    [ 1.15559,0.93528,1.87056,1.87056,1.87056,1.87056,0.93528,0.86536 ],
-    [ 1.25292,0.94787,1.89573,1.89573,1.89573,1.89573,1.89573,0.94787,1.25292 ],
-    [ 1.31035,0.95639,1.91278,1.91278,1.91278,1.91278,1.91278,1.91278,0.95639,0.76316 ],
-    [ 1.39416,0.96395,1.92790,1.92790,1.92790,1.92790,1.92790,1.92790,1.92790,0.96395,1.39416 ],
-    [ 1.45610,0.96937,1.93874,1.93874,1.93874,1.93874,1.93874,1.93874,1.93874,1.93874,0.96937,0.68676 ],
-    [ 1.53558,0.97390,1.94780,1.94780,1.94780,1.94780,1.94780,1.94780,1.94780,1.94780,1.94780,0.97390,1.53558 ],
-    [ 1.58657,0.97733,1.95465,1.95465,1.95465,1.95465,1.95465,1.95465,1.95465,1.95465,1.95465,1.95465,0.97733,0.63029 ],
-    ],
     'GAUSSIAN_6': [
     [ 1,0.3655,0.9032,2.269,1 ],
     [ 1,0.4153,0.8634,1.142,2.264,1 ], 
@@ -216,19 +204,6 @@ LOWPASS = {
     [ 1,0.2455,0.5571,0.7357,0.8012,0.8073,0.8616,0.9225,1.051,2.297,1 ],
     [ 1,0.2762,0.6115,0.7907,0.8416,0.9086,0.8923,0.9270,0.9104,1.102,2.240,1 ]
     ],
-    'COHN': [
-    [ 1,1.41421,1.41421,1 ],
-    [ 1,1.58740,1.58740,1.58740,1 ],
-    [ 1,1.68179,1.68179,1.68179,1.68179,1 ],
-    [ 1,1.74110,1.74110,1.74110,1.74110,1.74110,1 ],
-    [ 1,1.78180,1.78180,1.78180,1.78180,1.78180,1.78180,1 ],
-    [ 1,1.81145,1.81145,1.81145,1.81145,1.81145,1.81145,1.81145,1 ],
-    [ 1,1.83401,1.83401,1.83401,1.83401,1.83401,1.83401,1.83401,1.83401,1 ],
-    [ 1,1.85175,1.85175,1.85175,1.85175,1.85175,1.85175,1.85175,1.85175,1.85175,1 ],
-    [ 1,1.86607,1.86607,1.86607,1.86607,1.86607,1.86607,1.86607,1.86607,1.86607,1.86607,1 ],
-    [ 1,1.87786,1.87786,1.87786,1.87786,1.87786,1.87786,1.87786,1.87786,1.87786,1.87786,1.87786,1 ],
-    [ 1,1.88775,1.88775,1.88775,1.88775,1.88775,1.88775,1.88775,1.88775,1.88775,1.88775,1.88775,1.88775,1 ],
-    ]
 }
 
 ZVEREV = {
@@ -1383,31 +1358,42 @@ ZVEREV = {
     [ 24.175,7.881,2.5225,0.8219,0.8228,0.2676,0.5828,0.6261,0.4767,0.4729,0.7791 ],
     ],
 }
+
 ######################################
 
-def to_xeff(fd, fo, LM, CP, RM):
-    wo = 2 * np.pi * fo
-    wd = 2 * np.pi * fd
-    CM = 1 / (wo**2 * LM)
-    a = RM + 1j * (wd * LM - 1 / (wd * CM))
-    b = 1j * (-1 / (wd * CP))
-    return a * b / (a + b)
+def zverev_qo(name, n, qo=np.inf):
+    for res in ZVEREV.get(name, []):
+        if len(res) - 3 != n:
+            continue
+        if res[0] <= qo: 
+            return res[0]
 
-def to_leff(fd, fo, LM, CP, RM):
-    wo = 2 * np.pi * fo
-    wd = 2 * np.pi * fd
-    A = CP * LM * (wd**2 - wo**2)
-    leff = LM * (A**2 - A + 2 * wd**2 * CP * LM) / (
-           CP * LM * (wd**2 + wo**2) * (A - 1)**2)
-    x = to_xeff(fd, fo, LM, CP, RM)
-    rm = x.real
-    cm = -1 / (x.imag - wd * leff) / wd
-    fs = 1 / (2 * np.pi * np.sqrt(leff * cm))
-    with np.errstate(divide='ignore'):
-        qu = np.divide(wd * leff, rm)
-    return leff, fs, qu
+def zverev_k(name, n, qo=np.inf):
+    found = 0
+    for res in ZVEREV.get(name, []):
+        if len(res) - 3 != n:
+            continue
+        if res[0] < found:
+            break
+        if res[0] <= qo: 
+            found = res[0]
+            q = res[2:4]
+            k = res[4:]
+            yield q, k
 
-def to_coupling(g):
+def lowpass_g(name, n):
+    for g in LOWPASS.get(name, []):
+        if len(g) - 2 == n: 
+            return g
+
+def coupling_qk(name, n):
+    for res in COUPLED.get(name, []):
+        q = res[0:2]
+        k = res[2:]
+        if len(k) + 1 == n: 
+            return q, k
+
+def to_coupling_qk(g):
     N = len(g)
     q1 = g[0] * g[1]
     qn = g[-2] * g[-1] if N % 2 else g[-2] / g[-1]
@@ -1415,142 +1401,388 @@ def to_coupling(g):
     k = 1 / np.array([ np.sqrt(g[n] * g[n+1]) for n in range(1, N-2) ])
     return q, k
 
-def zverev_min(name, n, qo=inf):
-    for res in ZVEREV.get(name, []):
-        if len(res) - 3 != n: continue
-        if res[0] <= qo: 
-            return res[0], res[1]
-    return inf, 0
+def to_coupling_bw(q, k, BW):
+    K01 = 1 / np.array(q)
+    KIJ = np.array(k)
+    CBW = np.insert(K01, 1, KIJ) * BW
+    return CBW
 
-def zverev_qk(name, n, qo):
-    found = 0
-    for res in ZVEREV.get(name, []):
-        if len(res) - 3 != n: continue
-        if res[0] < found: break
-        if res[0] <= qo: 
-            found = res[0]
-            yield res[2:4], res[4:] 
-
-def lowpass_g(name, n):
-    for g in LOWPASS.get(name, []):
-        if len(g) - 2 == n: 
-            yield g
-
-def coupled_qk(name, n):
-    for res in COUPLED.get(name, []):
-        q = res[0:2]
-        k = res[2:]
-        if len(k) + 1 == n: 
-            yield q, k
+def to_group_delay(q, k, BW):
+    QE = np.array(q) / BW
+    K = np.array(k) * BW
+    TD = np.zeros(len(K) + 3)
+    for i in range(2, len(TD)):
+        TD[i] = TD[i-2] + 2 / np.pi * (QE[0] * np.prod(K[0:i-2:2]**2) / np.prod(K[1:i-2:2]**2))**((-1)**i)
+    return TD[2:]
 
 # wide bandwidth filters
 ######################################
 
-def to_lowpass(g, fc, R):
+def to_lowpass(g, fo, R):
     g = np.array(g)
-    wc = 2 * np.pi * fc
-    LS = g[1:-1] * R / wc
-    CP = -g[1:-1] / (wc * R)
-    RL = g[[0,-1]] * R
-    return LS, CP, [R, RL]
+    wo = 2 * np.pi * fo
+    LS = g[1:-1] * R / wo
+    CP = -g[1:-1] / (wo * R)
+    RE = g[[0,-1]] * R
+    return LS, CP, RE
 
-def to_highpass(g, fc, R):
+def to_highpass(g, fo, R):
     g = np.array(g)
-    wc = 2 * np.pi * fc
-    CS = -1 / (g[1:-1] * wc * R)
-    LP = R / (g[1:-1] * wc)
-    RL = g[[0,-1]] * R
-    return CS, LP, [R, RL]
+    wo = 2 * np.pi * fo
+    CS = -1 / (g[1:-1] * wo * R)
+    LP = R / (g[1:-1] * wo)
+    RE = g[[0,-1]] * R
+    return CS, LP, RE
 
 def to_bandpass(g, fo, BW, R):
-    fo = np.sqrt((fo - BW / 2) * (fo + BW / 2))
     QL = fo / BW 
     LS, CP, RE = to_lowpass(g, fo / QL, R)
     CS, LP, RE = to_highpass(g, fo * QL, R)
-    return (LS, CS), (LP, CP), RE
+    return [ LS, CS ], [ LP, CP ], RE
 
-def to_bandstop(g, fo, BW, R):
-    fo = np.sqrt((fo - BW / 2) * (fo + BW / 2))
-    QL = fo / BW
+def to_bandstop(g, R, BW, fo):
+    QL = fo / BW 
     LS, CP, RE = to_lowpass(g, fo * QL, R)
     CS, LP, RE = to_highpass(g, fo / QL, R)
-    return (LS, CS), (LP, CP), RE
+    return [ LS, CS ], [ LP, CP ], RE
 
 # narrow bandwidth filters
 #######################################################
 
-def to_topc(q, k, fo, BW, RE=None, L0=None, QU=inf):
+def to_nodal(q, k, fo, BW, R=None, L=None):
     with np.errstate(divide='ignore'):
         N = len(k) + 1
-        fo = np.sqrt((fo - BW / 2) * (fo + BW / 2))
-        wo = 2 * np.pi * fo
-        QL = fo / BW
-        QE = 1 / (1 / (np.array(q) * QL) - 1 / QU)
-        qe = 1 / (1 / QE - 1 / QU)
-
-        # find L0, C0 and RE
-        if (L0 is None) == (RE is None): raise ValueError
-        if L0 is None:
-            RE = np.ones(2) * RE
-            L0 = RE / (wo * qe)
-            L0 = np.insert(L0, 1, np.ones(N-2) * L0[0])
-        if RE is None:
-            L0 = np.ones(N) * L0
-            RE = wo * L0[::N-1] * qe
-        C0 = -1 / (wo**2 * L0)
-
-        # find CK
-        Z = 1 / (wo * np.sqrt(C0[:-1] * C0[1:]))
-        K = np.array(k) / QL
-        CK = -K / (wo * Z)     # K inverter
-        CK = np.insert(np.zeros(2), 1, CK)
-
-        # adjust C0
-        C0 -= CK[:-1] + CK[1:]
-        return CK[1:-1], L0, C0, RE, QE, K, K * fo
-
-
-def to_shuntc(q, k, fo, BW, RE=None, L0=None, fd=None, QU=inf):
-    with np.errstate(divide='ignore'):
-        if fd is None: 
-            fs = fo = np.sqrt((fo - BW / 2) * (fo + BW / 2))
-        else:
-            fs, fo = fo, fd
-        N = len(k) + 1
-        ws = 2 * np.pi * fs
         wo = 2 * np.pi * fo
         QL = fo / BW
         QE = np.array(q) * QL
-        qe = 1 / (1 / QE - 1 / QU)
+        K = np.array(k) / QL
 
         # find L0, C0 and RE
-        if (L0 is None) == (RE is None): raise ValueError
-        if L0 is None:
-            RE = np.ones(2) * RE
-            L0 = RE * qe / wo
+        if L is not None:
+            L0 = np.ones(N) * L
+            RE = wo * L0[::N-1] * QE
+        elif R is not None:
+            RE = np.ones(2) * R
+            L0 = RE / (wo * QE)
             L0 = np.insert(L0, 1, np.ones(N-2) * L0[0])
-        if RE is None:
-            L0 = np.ones(N) * L0
-            RE = wo * L0[::N-1] / qe
-        C0 = -1 / (ws**2 * L0)
+        C0 = -1 / (wo**2 * L0)
 
-        # find CK
-        Z = wo * np.sqrt(L0[:-1] * L0[1:])
+        # find CK and C0 using K inverter
+        Z = 1 / (wo * np.sqrt(C0[:-1] * C0[1:]))
+        CK = -K / (wo * Z)
+        CK = np.insert(np.zeros(2), 1, CK)
+        C0 = C0 - CK[:-1] - CK[1:]
+
+        # result
+        CS = np.zeros(2 * N - 1)
+        CP = np.zeros(2 * N - 1)
+        LP = np.zeros(2 * N - 1)
+        CS[1::2] = CK[1:-1]
+        LP[0::2] = L0
+        CP[0::2] = C0
+        return [CS], [LP, CP], RE
+
+def to_mesh(q, k, fo, BW, R=None, L=None):
+    with np.errstate(divide='ignore'):
+        N = len(k) + 1
+        wo = 2 * np.pi * fo
+        QL = fo / BW
+        QE = np.array(q) * QL
         K = np.array(k) / QL
-        CK = -1 / (wo * K * Z)     # K inverter
-        CK = np.insert(np.ones(2) * -inf, 1, CK)
 
-        # find C0 and CS
-        if fd is None:
-            C0 = 1 / (1 / C0 - 1 / CK[:-1] - 1 / CK[1:])
-            CS = np.ones(N) * -inf
+        # find L0, C0 and RE
+        if L is not None:
+            L0 = np.ones(N) * L
+            RE = wo * L0[::N-1] / QE
+        elif R is not None:
+            RE = np.ones(2) * R
+            L0 = RE * QE / wo
+            L0 = np.insert(L0, 1, np.ones(N-2) * L0[0])
+        C0 = -1 / (wo**2 * L0)
+
+        # find CK and C0 using K inverter
+        Z = wo * np.sqrt(L0[:-1] * L0[1:])
+        CK = -1 / (wo * K * Z)
+        CK = np.insert(np.ones(2) * -np.inf, 1, CK)
+        C0 = 1 / (1 / C0 - 1 / CK[:-1] - 1 / CK[1:])
+
+        # result
+        CS = np.zeros(2 * N - 1)
+        LS = np.zeros(2 * N - 1)
+        CP = np.zeros(2 * N - 1)
+        LS[0::2] = L0
+        CS[0::2] = C0
+        CP[1::2] = CK[1:-1]
+        return [LS, CS], [CP], RE
+
+def crystal_filter(q, k, fo, BW, LM, CP=0, QU=np.inf):
+
+    def bisect(f, a, b, N=100):
+        for n in range(N):
+            c = (a + b) / 2
+            if np.abs(c - a) < .1: return b
+            if np.sign(f(c)[-1]) == np.sign(f(a)[-1]): a = c
+            else: b = c
+
+    def to_fp(fo, CM, LM, CP):
+        return 1 / (2 * np.pi * np.sqrt(LM * CM * CP / (CM + CP)))
+
+    def to_xeff(fo, CM, LM, CP, RM):
+        wo = 2 * np.pi * fo
+        a = RM + 1j * (wo * LM - 1 / (wo * CM))
+        if CP == 0: return a
+        b = -1j / (wo * CP)
+        return a * b / (a + b)
+
+    def to_leff(fo, CM, LM, CP, RM, df=1):
+        x1 = to_xeff(fo + df, CM, LM, CP, RM).imag
+        x0 = to_xeff(fo, CM, LM, CP, RM).imag
+        return (x1 - x0) / df / (4 * np.pi)
+
+    def func(fo):
+        L = to_leff(fo, CM, LM, CP, RM) 
+        XS, XP, RE = to_mesh(q, k, fo, BW, L=L)
+        CX = -1 / ((2 * np.pi * fs)**2 * L)
+        CS = 1 / (1 / XS[1][0::2] - 1 / CX)
+        XS[1][0::2] = CS
+        return XS, XP, RE, np.max(CS)
+
+    wo = 2 * np.pi * fo
+    RM = wo * LM / QU
+    CM = 1 / (wo**2 * LM)
+    fs = fo
+    fp = np.max(to_fp(fo, CM, LM, CP or 5e-12))
+    fo = bisect(func, fs, fp)
+    XS, XP, RE = func(fo)[:3]
+    return XS, XP, RE, fo
+
+
+#######################################################
+
+subckt = 0
+
+def unit(x):
+    if np.isnan(x): return '            -'
+    if np.isinf(x): return '          inf'
+    exp = np.floor(np.log10(np.abs(x)))
+    p = 3 * np.int(exp // 3)
+    value = x / 10**p
+    return '{:9.4f}e'.format(value) + '%+03d' % p
+
+def netitem(num, a, b, x):
+    tag = 'C' if x < 0 else 'L'
+    return '{}{:<2d} {:<2d} {:<2d} {}'.format(tag, num, a, b, unit(np.abs(x)))
+
+def netlist(XS, XP, RE, kw, n):
+    global subckt
+    subckt += 1
+    if subckt > 1: print()
+    N = kw['n']
+    fo = kw['f']
+    k = 1
+    num = 1
+    res = []
+    for i in range(len(XS[0])):
+        if i % 2 == n:
+            for j in range(len(XS)):
+                res.append(netitem(num, k, k + 1, XS[j][i]))
+                num += 1
+                k += 1
         else:
-            CREF = -C0 / (C0 * L0 * wo**2 + 1)
-            CS = 1 / (1 / CREF - 1 / CK[:-1] - 1 / CK[1:])
+            for j in range(len(XP)):
+                res.append(netitem(num, k, 0, XP[j][i]))
+                num += 1
 
-        # find untuned mesh frequencies
-        CUN = 1 / (1 / C0 + 1 / CK[:-1] + 1 / CK[1:])
-        fun = 1 / (2 * np.pi * np.sqrt(-CUN * L0))
-        return CK[1:-1], L0, C0, CS, RE, QE, K, K * fd, fun.max()
+    print(".SUBCKT F{} {a} {b}".format(subckt, a=1, b=k))
+    print("* TYPE:   {}".format(kw['type']))
+    print("* FILTER: {}".format(kw['filter']))
+    print("* ORDER:  {}".format(N))
+    print("* FREQ:   {:.6f} MHz ".format(kw.get('fd', fo) / 1e6))
+    print("* RS:     {:.1f}".format(RE[0]))
+    print("* RL:     {:.1f}".format(RE[1]))
+
+    if kw.get('bw'):
+        BW = kw['bw']
+        QL = fo / BW
+        print("* BW:     {}".format(unit(BW).strip()))
+        print("* QL:     {:.1f}".format(QL))
+
+    if kw.get('qo'):
+        print("* QU:     {:.1f}".format(kw['qu']))
+        print("* QO:     {:.1f}".format(kw['qu'] / QL))
+        print("* qo:     {:.1f}".format(kw['qo']))
+
+    if kw.get('q') is not None:
+        q = kw['q']
+        k = kw['k']
+        TD1 = np.ones(N + 1) * np.nan
+        TD2 = np.ones(N + 1) * np.nan
+        TD1[:-1] = to_group_delay(q, k, BW=BW)
+        TD2[1:] = to_group_delay(q[::-1], k[::-1], BW=BW)[::-1]
+        CBW = to_coupling_bw(q, k, BW=BW)
+        qk = np.insert(q, 1, k)
+        print("*")
+        print("*       qi,kij           TD1           TD2           CBW")
+        for i in range(N + 1):
+            print('* K{:d}{:d} {:8.4f} {} {} {}'.format(i, i+1, qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i])))
+        print("*")
+
+    for line in res: 
+        print(line)
+    print(".ends")
+        
+def list_gfilters():
+    print('{:16s}  {}'.format("G LOWPASS", "POLES"))
+    for name in sorted(LOWPASS.keys()):
+        print('{:16s}'.format(name.lower()), end='')
+        for g in LOWPASS[name]:
+            n = len(g) - 2
+            print(' {:2d}'.format(n), end='')
+        print()
+
+def list_kfilters():
+    print('{:16s}  {}'.format("QK COUPLING", "POLES"))
+    for name in sorted(COUPLED.keys()):
+        print('{:16s}'.format(name.lower()), end='')
+        for k in COUPLED[name]:
+            n = len(k) - 1
+            print(' {:2d}'.format(n), end='')
+        print()
+
+def list_zverev():
+    print('{:16s}  {}'.format("QK ZVEREV", "POLES"))
+    for name in sorted(ZVEREV.keys()):
+        print('{:16s}'.format(name.lower()), end='')
+        prev = 0
+        for z in ZVEREV[name]:
+            n = len(z) - 3
+            if n != prev:
+                print(' {:2d}'.format(n), end='')
+                prev = n
+        print()
+
+def main(*args):
+    defaults = { 'r': 50, 'qu': np.inf, 'cp': 0 }
+    args = list(args)
+    kw = dict(defaults)
+    while args:
+        opt = args.pop(0)
+        if False:
+            pass
+        elif opt == '-g':
+            if not args: return list_gfilters() 
+            kw['g'] = args.pop(0).upper()
+        elif opt == '-k':
+            if not args: return list_kfilters() 
+            kw['k'] = args.pop(0).upper()
+        elif opt == '-zverev':
+            if not args: return list_zverev() 
+            kw['zverev'] = args.pop(0).upper()
+
+        elif opt == '-n':
+            kw['n'] = np.int(args.pop(0))
+        elif opt == '-r':
+            kw['r'] = np.array([ np.double(x) for x in args.pop(0).split(',') ])
+        elif opt == '-l':
+            kw['l'] = np.array([ np.double(x) for x in args.pop(0).split(',') ])
+        elif opt == '-f':
+            kw['f'] = np.double(args.pop(0))
+        elif opt == '-bw':
+            kw['bw'] = np.double(args.pop(0))
+        elif opt == '-qu':
+            kw['qu'] = np.double(args.pop(0))
+        elif opt == '-cp':
+            kw['cp'] = np.double(args.pop(0))
+
+        elif opt == '-lowpass':
+            kw['lowpass'] = True
+        elif opt == '-highpass':
+            kw['highpass'] = True
+        elif opt == '-bandpass':
+            kw['bandpass'] = True
+        elif opt == '-bandstop':
+            kw['bandstop'] = True
+        elif opt == '-nodal':
+            kw['nodal'] = True
+        elif opt == '-mesh':
+            kw['mesh'] = True
+        elif opt == '-crystal':
+            kw['crystal'] = True
+        else:
+            raise ValueError('unknown option:', opt)
+
+    # get type
+
+    if kw.get('g'):
+        kw['type'] = kw['g']
+        g = lowpass_g(kw['type'], kw['n'])
+        qk = [ to_coupling_qk(g) ]
+    elif kw.get('k'):
+        kw['type'] = kw['k']
+        qk = [ coupling_qk(kw['type'], kw['n']) ]
+    elif kw.get('zverev'):
+        kw['type'] = kw['zverev']
+        QL = kw['f'] / kw['bw']
+        QO = kw['qu'] / QL
+        qk = list(zverev_k(kw['type'], kw['n'], QO))
+        kw['qo'] = zverev_qo(kw['type'], kw['n'], QO)
+    else:
+        raise ValueError('No filter type given')
+
+    # print wide-band
+
+    if kw.get('lowpass'):
+        kw['filter'] = 'LOWPASS'
+        XS, XP, RE = to_lowpass(g, kw['f'], R=kw['r'])
+        netlist([XS], [XP], RE, kw, 0)
+        netlist([XS], [XP], RE, kw, 1)
+        print(".end")
+    elif kw.get('highpass'):
+        kw['filter'] = 'HIGHPASS'
+        XS, XP, RE = to_highpass(g, kw['f'], R=kw['r'])
+        netlist([XS], [XP], RE, kw, 0)
+        netlist([XS], [XP], RE, kw, 1)
+        print(".end")
+    elif kw.get('bandpass'):
+        kw['filter'] = 'BANDPASS'
+        QL = kw['f'] / kw['bw']
+        XS, XP, RE = to_bandpass(g, kw['f'], kw['bw'], R=kw['r'])
+        netlist(XS, XP, RE, kw, 0)
+        netlist(XS, XP, RE, kw, 1)
+        print(".end")
+    elif kw.get('nodal'):
+        kw['filter'] = 'NODAL'
+        for q, k in qk:
+            kw['q'], kw['k'] = q, k
+            XS, XP, RE = to_nodal(q, k, kw['f'], kw['bw'], R=kw['r'], L=kw.get('l'))
+            netlist(XS, XP, RE, kw, 1)
+        print(".end")
+    elif kw.get('mesh'):
+        kw['filter'] = 'MESH'
+        for q, k in qk:
+            kw['q'], kw['k'] = q, k
+            XS, XP, RE = to_mesh(q, k, kw['f'], kw['bw'], R=kw['r'], L=kw.get('l'))
+            netlist(XS, XP, RE, kw, 0)
+        print(".end")
+    elif kw.get('crystal'):
+        kw['filter'] = 'CRYSTAL_MESH'
+        for q, k in qk:
+            kw['q'], kw['k'] = q, k
+            XS, XP, RE, kw['fd'] = crystal_filter(
+                q, k, kw['f'], kw['bw'], LM=kw['l'], CP=kw['cp'], QU=kw['qu'])
+            netlist(XS, XP, RE, kw, 0)
+    else:
+        raise ValueError('No filter configuration given')
+
+    if subckt > 0:
+        print('.end')
+
+if __name__ == '__main__':
+    import sys
+    main(*sys.argv[1:])
+
+
+
+
 
 

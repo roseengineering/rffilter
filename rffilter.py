@@ -1736,27 +1736,23 @@ def main(*args):
         XS, XP, RE = to_lowpass(g, kw['f'], R=kw['r'])
         netlist([XS], [XP], RE, kw, 0)
         netlist([XS], [XP], RE, kw, 1)
-        print(".end")
     elif kw.get('highpass'):
         kw['filter'] = 'HIGHPASS'
         XS, XP, RE = to_highpass(g, kw['f'], R=kw['r'])
         netlist([XS], [XP], RE, kw, 0)
         netlist([XS], [XP], RE, kw, 1)
-        print(".end")
     elif kw.get('bandpass'):
         kw['filter'] = 'BANDPASS'
         QL = kw['f'] / kw['bw']
         XS, XP, RE = to_bandpass(g, kw['f'], kw['bw'], R=kw['r'])
         netlist(XS, XP, RE, kw, 0)
         netlist(XS, XP, RE, kw, 1)
-        print(".end")
     elif kw.get('nodal'):
         kw['filter'] = 'NODAL'
         for q, k in qk:
             kw['q'], kw['k'] = q, k
             XS, XP, RE = to_nodal(q, k, kw['f'], kw['bw'], R=kw['r'], L=kw.get('l'))
             netlist(XS, XP, RE, kw, 1)
-        print(".end")
     elif kw.get('mesh'):
         kw['filter'] = 'MESH'
         for q, k in qk:

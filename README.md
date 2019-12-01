@@ -6,6 +6,10 @@ rffilter
 Python 3 script for calculating RF filters.
 The script requires the numpy library.
 
+For nodal and mesh filters (including crystal filters) the script
+will output resonator group delays from Ness as well as 
+resonator coupling bandwidths from Dishal.
+
 Command Line
 -------------
 

@@ -49,7 +49,23 @@ Command Line
 The program takes the following command line options:
 
 ```
-(see examples below)
+-g             : lowpass prototype element values
+-k             : ideal q, k coupling coefficients
+-zverev        : q, k coupling coefficients from Zverev's QO tables
+-n             : number of filter poles or resonators
+-r             : end resistors, can be given in common notation
+-l             : resonator inductor values, can be given in common notation
+-f             : design frequency
+-bw            : design bandwidth
+-qu            : unload Q of resonators
+-cp            : parallel capacitance, C0, of crystals
+-losspass      : generate a lowpass filter
+-highpass      : generate a highpass filter
+-bandpass      : generate a wideband bandpass filter
+-bandstop      : generate a wideband bandstop filter
+-nodal         : generate a narrow-band nodal bandpass filter
+-mesh          : generate a narrow-band mesh bandpass filter
+-crystal       : generate a narrow-band crystal bandpass filter
 ```
 
 Examples

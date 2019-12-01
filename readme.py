@@ -12,6 +12,7 @@ $ {command}
 ```
 """
 
+# -g             : lowpass prototype filter type
 
 print(f"""
 
@@ -27,7 +28,7 @@ Command Line
 The program takes the following command line options:
 
 ```
--g             : lowpass prototype filter type
+(see examples below)
 ```
 
 Examples

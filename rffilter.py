@@ -1564,13 +1564,14 @@ def main(*args):
     def unit(x):
         if np.isnan(x): return '            -'
         if np.isinf(x): return '          inf'
-        exp = np.floor(np.log10(np.abs(x)))
-        p = 3 * np.int(exp // 3)
+        exp = 0 if x == 0 else np.floor(np.log10(np.abs(x)))
+        p = 3 * (exp // 3)
         value = x / 10**p
         return '{:9.4f}e'.format(value) + '%+03d' % p
 
-    def netitem(num, a, b, x):
-        tag = 'C' if x < 0 else 'L'
+    def netitem(num, a, b, x, tag=None):
+        if not tag:
+            tag = 'L' if x > 0 else 'C'
         return '{}{:<2d} {:<2d} {:<2d} {}'.format(tag, num, a, b, unit(np.abs(x)))
 
     def netlist(XS, XP, RE, kw, n):
@@ -1579,18 +1580,32 @@ def main(*args):
         subckt += 1
         N = kw['n']
         fo = kw['f']
-        k = 1
-        num = 1
+        QU = kw['qu']
+        wo = 2 * np.pi * fo
+        k, num = 1, 1
         res = []
         for i in range(len(XS[0])):
+            node = k
             if i % 2 == n:
                 for j in range(len(XS)):
-                    res.append(netitem(num, k, k + 1, XS[j][i]))
-                    num += 1
-                    k += 1
+                    x = XS[j][i]
+                    res.append(netitem(num, k, k + 1, x))
+                    k, num = k + 1, num + 1
+                    if kw.get('cp') and x > 0:
+                        # res.append(netitem(num, node, k, -kw['cp']))
+                        # num += 1
+                        pass
+                    elif not np.isinf(QU) and x > 0:
+                        res.append(netitem(num, k, k + 1, wo * x / QU, tag='R'))
+                        k, num = k + 1, num + 1
             else:
                 for j in range(len(XP)):
-                    res.append(netitem(num, k, 0, XP[j][i]))
+                    k = node
+                    x = XP[j][i]
+                    if not np.isinf(QU) and x > 0:
+                        res.append(netitem(num, k, k + 1, wo * x / QU, tag='R'))
+                        k, num = k + 1, num + 1
+                    res.append(netitem(num, k, 0, x))
                     num += 1
 
         print(".SUBCKT F{} {a} {b}".format(subckt, a=1, b=k))
@@ -1607,9 +1622,11 @@ def main(*args):
             print("* BW:     {}".format(unit(BW).strip()))
             print("* QL:     {:.1f}".format(QL))
 
+        if not np.isinf(QU):  
+            print("* QU:     {:.1f}".format(QU))
+
         if kw.get('qo'):
-            print("* QU:     {:.1f}".format(kw['qu']))
-            print("* QO:     {:.1f}".format(kw['qu'] / QL))
+            print("* QO:     {:.1f}".format(QU / QL))
             print("* qo:     {:.1f}".format(kw['qo']))
 
         if kw.get('q') is not None:

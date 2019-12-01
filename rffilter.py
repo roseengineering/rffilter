@@ -1440,7 +1440,7 @@ def to_bandpass(g, fo, BW, R):
     CS, LP, RE = to_highpass(g, fo * QL, R)
     return [ LS, CS ], [ LP, CP ], RE
 
-def to_bandstop(g, R, BW, fo):
+def to_bandstop(g, fo, BW, R):
     QL = fo / BW 
     LS, CP, RE = to_lowpass(g, fo * QL, R)
     CS, LP, RE = to_highpass(g, fo / QL, R)
@@ -1515,7 +1515,7 @@ def to_mesh(q, k, fo, BW, R=None, L=None):
         CP[1::2] = CK[1:-1]
         return [LS, CS], [CP], RE
 
-def crystal_filter(q, k, fo, BW, LM, CP=0, QU=np.inf):
+def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
 
     def bisect(f, a, b, N=100):
         for n in range(N):
@@ -1559,109 +1559,109 @@ def crystal_filter(q, k, fo, BW, LM, CP=0, QU=np.inf):
 
 #######################################################
 
-subckt = 0
-
-def unit(x):
-    if np.isnan(x): return '            -'
-    if np.isinf(x): return '          inf'
-    exp = np.floor(np.log10(np.abs(x)))
-    p = 3 * np.int(exp // 3)
-    value = x / 10**p
-    return '{:9.4f}e'.format(value) + '%+03d' % p
-
-def netitem(num, a, b, x):
-    tag = 'C' if x < 0 else 'L'
-    return '{}{:<2d} {:<2d} {:<2d} {}'.format(tag, num, a, b, unit(np.abs(x)))
-
-def netlist(XS, XP, RE, kw, n):
-    global subckt
-    subckt += 1
-    if subckt > 1: print()
-    N = kw['n']
-    fo = kw['f']
-    k = 1
-    num = 1
-    res = []
-    for i in range(len(XS[0])):
-        if i % 2 == n:
-            for j in range(len(XS)):
-                res.append(netitem(num, k, k + 1, XS[j][i]))
-                num += 1
-                k += 1
-        else:
-            for j in range(len(XP)):
-                res.append(netitem(num, k, 0, XP[j][i]))
-                num += 1
-
-    print(".SUBCKT F{} {a} {b}".format(subckt, a=1, b=k))
-    print("* TYPE:   {}".format(kw['type']))
-    print("* FILTER: {}".format(kw['filter']))
-    print("* ORDER:  {}".format(N))
-    print("* FREQ:   {:.6f} MHz ".format(kw.get('fd', fo) / 1e6))
-    print("* RS:     {:.1f}".format(RE[0]))
-    print("* RL:     {:.1f}".format(RE[1]))
-
-    if kw.get('bw'):
-        BW = kw['bw']
-        QL = fo / BW
-        print("* BW:     {}".format(unit(BW).strip()))
-        print("* QL:     {:.1f}".format(QL))
-
-    if kw.get('qo'):
-        print("* QU:     {:.1f}".format(kw['qu']))
-        print("* QO:     {:.1f}".format(kw['qu'] / QL))
-        print("* qo:     {:.1f}".format(kw['qo']))
-
-    if kw.get('q') is not None:
-        q = kw['q']
-        k = kw['k']
-        TD1 = np.ones(N + 1) * np.nan
-        TD2 = np.ones(N + 1) * np.nan
-        TD1[:-1] = to_group_delay(q, k, BW=BW)
-        TD2[1:] = to_group_delay(q[::-1], k[::-1], BW=BW)[::-1]
-        CBW = to_coupling_bw(q, k, BW=BW)
-        qk = np.insert(q, 1, k)
-        print("*")
-        print("*       qi,kij           TD1           TD2           CBW")
-        for i in range(N + 1):
-            print('* K{:d}{:d} {:8.4f} {} {} {}'.format(i, i+1, qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i])))
-        print("*")
-
-    for line in res: 
-        print(line)
-    print(".ends")
-        
-def list_gfilters():
-    print('{:16s}  {}'.format("G LOWPASS", "POLES"))
-    for name in sorted(LOWPASS.keys()):
-        print('{:16s}'.format(name.lower()), end='')
-        for g in LOWPASS[name]:
-            n = len(g) - 2
-            print(' {:2d}'.format(n), end='')
-        print()
-
-def list_kfilters():
-    print('{:16s}  {}'.format("QK COUPLING", "POLES"))
-    for name in sorted(COUPLED.keys()):
-        print('{:16s}'.format(name.lower()), end='')
-        for k in COUPLED[name]:
-            n = len(k) - 1
-            print(' {:2d}'.format(n), end='')
-        print()
-
-def list_zverev():
-    print('{:16s}  {}'.format("QK ZVEREV", "POLES"))
-    for name in sorted(ZVEREV.keys()):
-        print('{:16s}'.format(name.lower()), end='')
-        prev = 0
-        for z in ZVEREV[name]:
-            n = len(z) - 3
-            if n != prev:
-                print(' {:2d}'.format(n), end='')
-                prev = n
-        print()
-
 def main(*args):
+
+    def unit(x):
+        if np.isnan(x): return '            -'
+        if np.isinf(x): return '          inf'
+        exp = np.floor(np.log10(np.abs(x)))
+        p = 3 * np.int(exp // 3)
+        value = x / 10**p
+        return '{:9.4f}e'.format(value) + '%+03d' % p
+
+    def netitem(num, a, b, x):
+        tag = 'C' if x < 0 else 'L'
+        return '{}{:<2d} {:<2d} {:<2d} {}'.format(tag, num, a, b, unit(np.abs(x)))
+
+    def netlist(XS, XP, RE, kw, n):
+        nonlocal subckt
+        if subckt > 0: print()
+        subckt += 1
+        N = kw['n']
+        fo = kw['f']
+        k = 1
+        num = 1
+        res = []
+        for i in range(len(XS[0])):
+            if i % 2 == n:
+                for j in range(len(XS)):
+                    res.append(netitem(num, k, k + 1, XS[j][i]))
+                    num += 1
+                    k += 1
+            else:
+                for j in range(len(XP)):
+                    res.append(netitem(num, k, 0, XP[j][i]))
+                    num += 1
+
+        print(".SUBCKT F{} {a} {b}".format(subckt, a=1, b=k))
+        print("* TYPE:   {}".format(kw['type']))
+        print("* FILTER: {}".format(kw['filter']))
+        print("* ORDER:  {}".format(N))
+        print("* FREQ:   {:.6f} MHz ".format(kw.get('fd', fo) / 1e6))
+        print("* RS:     {:.1f}".format(RE[0]))
+        print("* RL:     {:.1f}".format(RE[1]))
+
+        if kw.get('bw'):
+            BW = kw['bw']
+            QL = fo / BW
+            print("* BW:     {}".format(unit(BW).strip()))
+            print("* QL:     {:.1f}".format(QL))
+
+        if kw.get('qo'):
+            print("* QU:     {:.1f}".format(kw['qu']))
+            print("* QO:     {:.1f}".format(kw['qu'] / QL))
+            print("* qo:     {:.1f}".format(kw['qo']))
+
+        if kw.get('q') is not None:
+            q = kw['q']
+            k = kw['k']
+            TD1 = np.ones(N + 1) * np.nan
+            TD2 = np.ones(N + 1) * np.nan
+            TD1[:-1] = to_group_delay(q, k, BW=BW)
+            TD2[1:] = to_group_delay(q[::-1], k[::-1], BW=BW)[::-1]
+            CBW = to_coupling_bw(q, k, BW=BW)
+            qk = np.insert(q, 1, k)
+            print("*")
+            print("*       qi,kij           TD1           TD2           CBW")
+            for i in range(N + 1):
+                print('* K{:d}{:d} {:8.4f} {} {} {}'.format(i, i+1, qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i])))
+            print("*")
+
+        for line in res: 
+            print(line)
+        print(".ends")
+            
+    def list_gfilters():
+        print('{:16s}  {}'.format("G LOWPASS", "POLES"))
+        for name in sorted(LOWPASS.keys()):
+            print('{:16s}'.format(name.lower()), end='')
+            for g in LOWPASS[name]:
+                n = len(g) - 2
+                print(' {:2d}'.format(n), end='')
+            print()
+
+    def list_kfilters():
+        print('{:16s}  {}'.format("QK COUPLING", "POLES"))
+        for name in sorted(COUPLED.keys()):
+            print('{:16s}'.format(name.lower()), end='')
+            for k in COUPLED[name]:
+                n = len(k) - 1
+                print(' {:2d}'.format(n), end='')
+            print()
+
+    def list_zverev():
+        print('{:16s}  {}'.format("QK ZVEREV", "POLES"))
+        for name in sorted(ZVEREV.keys()):
+            print('{:16s}'.format(name.lower()), end='')
+            prev = 0
+            for z in ZVEREV[name]:
+                n = len(z) - 3
+                if n != prev:
+                    print(' {:2d}'.format(n), end='')
+                    prev = n
+            print()
+
+    subckt = 0
     defaults = { 'r': 50, 'qu': np.inf, 'cp': 0 }
     args = list(args)
     kw = dict(defaults)
@@ -1711,7 +1711,7 @@ def main(*args):
         else:
             raise ValueError('unknown option:', opt)
 
-    # get type
+    # get filter type
 
     if kw.get('g'):
         kw['type'] = kw['g']
@@ -1729,7 +1729,7 @@ def main(*args):
     else:
         raise ValueError('No filter type given')
 
-    # print wide-band
+    # print wide-band filters
 
     if kw.get('lowpass'):
         kw['filter'] = 'LOWPASS'
@@ -1747,6 +1747,9 @@ def main(*args):
         XS, XP, RE = to_bandpass(g, kw['f'], kw['bw'], R=kw['r'])
         netlist(XS, XP, RE, kw, 0)
         netlist(XS, XP, RE, kw, 1)
+
+    # print narrow-band filters
+
     elif kw.get('nodal'):
         kw['filter'] = 'NODAL'
         for q, k in qk:
@@ -1764,7 +1767,7 @@ def main(*args):
         kw['filter'] = 'CRYSTAL_MESH'
         for q, k in qk:
             kw['q'], kw['k'] = q, k
-            XS, XP, RE, kw['fd'] = crystal_filter(
+            XS, XP, RE, kw['fd'] = to_crystal_mesh(
                 q, k, kw['f'], kw['bw'], LM=kw['l'], CP=kw['cp'], QU=kw['qu'])
             netlist(XS, XP, RE, kw, 0)
     else:

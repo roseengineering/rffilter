@@ -26,6 +26,39 @@ For nodal and mesh filters (including crystal filters) the script
 will output resonator group delays from Ness as well as 
 resonator coupling bandwidths from Dishal.
 
+Library functions
+-----------------
+
+The script provides the following public functions for import.
+
+```
+# find filter coefficients or prototype values
+
+g    = lowpass_g(name, n):
+q, k = coupling_qk(name, n):
+q, k = zverev_k(name, n, qo=np.inf):
+qo   = zverev_qo(name, n, qo=np.inf):
+
+# coupling coefficent conversion
+
+q, k = to_coupling_qk(g):
+cbw  = to_coupling_bw(q, k, BW):
+td   = to_group_delay(q, k, BW):
+
+# wide-band filter design
+
+xs, xp, re = to_lowpass(g, fo, R):
+xs, xp, re = to_highpass(g, fo, R):
+xs, xp, re = to_bandpass(g, fo, BW, R):
+xs, xp, re = to_bandstop(g, fo, BW, R):
+
+# narrow-band filter design
+
+xs, xp, re     = to_nodal(q, k, fo, BW, R=None, L=None):
+xs, xp, re     = to_mesh(q, k, fo, BW, R=None, L=None):
+xs, xp, re, fo = to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
+```
+
 Command Line
 -------------
 

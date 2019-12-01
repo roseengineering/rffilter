@@ -107,6 +107,29 @@ linear_phase_5    2  3  4  5  6  7  8
 ```
 
 
+Print out coupling design information.  CBW is the coupling bandwidth between resonators and the bandwidth of the two resonators at the end.
+TD0 and TDn are the group delay
+at the center freqency for each resonator looking from either end, see 
+Ness' "A Unified Approach to the
+Design, Measurement, and Tuning of Coupled-Resonator Filters" in MTT.
+
+
+```
+$ rffilter.py -g chebyshev_02 -n 8 -bw 1000
+* ij    qi,kij           TD0           TDn           CBW
+* 01    1.3800  878.5353e-06             -  724.6377e+00
+* 12    0.7225  883.6282e-06    3.3733e-03  722.5464e+00
+* 23    0.5602    2.3402e-03    5.1911e-03  560.1693e+00
+* 34    0.5349    1.8526e-03    2.8023e-03  534.9420e+00
+* 45    0.5298    3.8305e-03    3.8317e-03  529.7756e+00
+* 56    0.5349    2.8030e-03    1.8522e-03  534.8960e+00
+* 67    0.5601    5.1897e-03    2.3410e-03  560.1072e+00
+* 78    0.7225    3.3742e-03  883.4691e-06  722.5309e+00
+* 89    1.3803             -  878.7312e-06  724.4761e+00
+
+```
+
+
 Lowpass and highpass filters.
 
 
@@ -1610,28 +1633,5 @@ C47 32   33     39.5133e-12
 
 
 ![crystal lossy](examples/xtalloss.png)
-
-Print out coupling design information.  CBW is the coupling bandwidth between resonators and the bandwidth of the two resonators at the end.
-TD0 and TDn are the group delay
-at the center freqency for each resonator looking from either end, see 
-Ness' "A Unified Approach to the
-Design, Measurement, and Tuning of Coupled-Resonator Filters" in MTT.
-
-
-```
-$ rffilter.py -g chebyshev_02 -n 8 -bw 1000
-* ij    qi,kij           TD0           TDn           CBW
-* 01    1.3800  878.5353e-06             -  724.6377e+00
-* 12    0.7225  883.6282e-06    3.3733e-03  722.5464e+00
-* 23    0.5602    2.3402e-03    5.1911e-03  560.1693e+00
-* 34    0.5349    1.8526e-03    2.8023e-03  534.9420e+00
-* 45    0.5298    3.8305e-03    3.8317e-03  529.7756e+00
-* 56    0.5349    2.8030e-03    1.8522e-03  534.8960e+00
-* 67    0.5601    5.1897e-03    2.3410e-03  560.1072e+00
-* 78    0.7225    3.3742e-03  883.4691e-06  722.5309e+00
-* 89    1.3803             -  878.7312e-06  724.4761e+00
-
-```
-
 
 

@@ -77,6 +77,14 @@ List filters provided.
 { run("rffilter.py -k") }
 { run("rffilter.py -zverev") }
 
+Print out coupling design information.  CBW is the coupling bandwidth between resonators and the bandwidth of the two resonators at the end.
+TD0 and TDn are the group delay
+at the center freqency for each resonator looking from either end, see 
+Ness' "A Unified Approach to the
+Design, Measurement, and Tuning of Coupled-Resonator Filters" in MTT.
+
+{ run("rffilter.py -g chebyshev_02 -n 8 -bw 1000") }
+
 Lowpass and highpass filters.
 
 { run("rffilter.py -g butterworth -lowpass -f 10e6 -n 5") }
@@ -135,14 +143,6 @@ Build a 2400 Hz bandwidth crystal filter.  This filter is from an example in Ste
 { run("rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000 | tee examples/xtalloss.cir") }
 
 ![crystal lossy](examples/xtalloss.png)
-
-Print out coupling design information.  CBW is the coupling bandwidth between resonators and the bandwidth of the two resonators at the end.
-TD0 and TDn are the group delay
-at the center freqency for each resonator looking from either end, see 
-Ness' "A Unified Approach to the
-Design, Measurement, and Tuning of Coupled-Resonator Filters" in MTT.
-
-{ run("rffilter.py -g chebyshev_02 -n 8 -bw 1000") }
 
 """)
 

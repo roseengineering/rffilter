@@ -95,11 +95,11 @@ Narrow-band nodal filters.
 { run("rffilter.py -k butterworth -nodal -f 10e6 -bw 1e6 -n 5") }
 { run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -l 100e-9") }
 { run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -r 100,120") }
-{ run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5") }
+{ run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 | tee examples/nodal.cir") }
 
 ![butterworth](examples/nodal.png)
 
-{ run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -qu 200") }
+{ run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -qu 200 | tee examples/nodalloss.cir") }
 
 ![butterworth](examples/nodalloss.png)
 
@@ -121,11 +121,11 @@ Build a 500 Hz bandwidth crystal filter.
 Build a 2400 Hz bandwidth crystal filter.  This filter is from an example in Steder's 
 "Crystal Ladder Filters for All" paper in QEX.  
 
-{ run("rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12") }
+{ run("rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 | tee examples/xtal.cir") }
 
 ![no loss](examples/xtal.png)
 
-{ run("rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000") }
+{ run("rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000 | tee examples/xtalloss.cir") }
 
 ![lossy](examples/xtalloss.png)
 

@@ -28,7 +28,7 @@
   <GND * 5 750 180 0 0 0 0>
   <GND * 5 350 190 0 0 0 0>
   <GND * 5 530 150 0 0 0 0>
-  <SPICE X1 1 530 120 -26 -57 0 0 "nodalloss.cir" 1 "_net1,_net10" 0 "yes" 0 "none" 0>
+  <SPICE X1 1 530 120 -26 -57 0 0 "nodalloss.cir" 1 "_net1,_net5" 0 "yes" 0 "none" 0>
 </Components>
 <Wires>
   <560 120 750 120 "" 0 0 0 "">

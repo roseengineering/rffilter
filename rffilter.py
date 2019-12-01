@@ -1575,7 +1575,7 @@ def main(*args):
     def netitem(num, a, b, x, tag=None):
         if not tag:
             tag = 'L' if x > 0 else 'C'
-        return '{}{:<2d} {:<2d} {:<2d} {}'.format(tag, num, a, b, unit(np.abs(x)))
+        return '{}{:<2d} {:<4d} {:<4d} {}'.format(tag, num, a, b, unit(np.abs(x)))
 
     def netlist(XS, XP, RE, kw, n):
         fo = kw['f']
@@ -1585,8 +1585,8 @@ def main(*args):
         k, num = 1, 1
         res = []
         for i in range(len(XS[0])):
-            node = k
             if i % 2 == n:
+                node = k
                 for j in range(len(XS)):
                     x = XS[j][i]
                     res.append(netitem(num, k, k + 1, x))
@@ -1602,11 +1602,11 @@ def main(*args):
                 for j in range(len(XP)):
                     x = XP[j][i]
                     if not np.isinf(QU) and x > 0:
-                        res.append(netitem(num, node, k + 1, wo * x / QU, tag='R'))
-                        k, num = k + 1, num + 1
-                        res.append(netitem(num, k, 0, x))
+                        res.append(netitem(num, k, num + 1000, x))
+                        num + 1
+                        res.append(netitem(num, num + 1000, 0, wo * x / QU, tag='R'))
                     else:
-                        res.append(netitem(num, node, 0, x))
+                        res.append(netitem(num, k, 0, x))
                     num += 1
 
         print(".SUBCKT F1 {a} {b}".format(a=1, b=k))

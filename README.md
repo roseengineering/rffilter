@@ -472,7 +472,7 @@ C14 5    0       4.7214e-09
 ```
 
 
-![butterworth](examples/nodal.png)
+![nodal](examples/nodal.png)
 
 
 ```
@@ -526,7 +526,7 @@ C14 5    0       4.7214e-09
 ```
 
 
-![butterworth](examples/nodalloss.png)
+![nodal lossy](examples/nodalloss.png)
 
 Narrow-band mesh filters.
 
@@ -650,6 +650,140 @@ C11 8    9       7.1511e-12
 
 ```
 
+
+```
+$ rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 | tee examples/mesh.cir
+.SUBCKT F1 1 17
+* COMMAND: rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8
+* TYPE:    BUTTERWORTH
+* FILTER:  MESH
+* ORDER:   8
+* FREQ:    10.000000 MHz 
+* RS:      50.0
+* RL:      50.0
+* BW:      400.0000e+03
+* QL:      25.0
+
+* ij    qi,kij           TD0           TDn           CBW
+* 01    0.3902  620.9908e-09             -    1.0252e+06
+* 12    1.5187    1.7684e-06    8.1580e-06  607.4955e+03
+* 23    0.7357    3.2676e-06    8.1580e-06  294.2641e+03
+* 34    0.5537    4.8904e-06    7.5370e-06  221.4725e+03
+* 45    0.5098    6.3896e-06    6.3896e-06  203.9183e+03
+* 56    0.5537    7.5370e-06    4.8904e-06  221.4725e+03
+* 67    0.7357    8.1580e-06    3.2676e-06  294.2641e+03
+* 78    1.5187    8.1580e-06    1.7684e-06  607.4955e+03
+* 89    0.3902             -  620.9908e-09    1.0252e+06
+
+L1  1    2       7.7624e-06
+C2  2    3      34.7427e-12
+
+C3  3    0     537.1580e-12
+L4  3    4       7.7624e-06
+C5  4    5      35.8664e-12
+
+C6  5    0       1.1089e-09
+L7  5    6       7.7624e-06
+C8  6    7      34.4066e-12
+
+C9  7    0       1.4734e-09
+L10 7    8       7.7624e-06
+C11 8    9      34.0819e-12
+
+C12 9    0       1.6003e-09
+L13 9    10      7.7624e-06
+C14 10   11     34.0819e-12
+
+C15 11   0       1.4734e-09
+L16 11   12      7.7624e-06
+C17 12   13     34.4066e-12
+
+C18 13   0       1.1089e-09
+L19 13   14      7.7624e-06
+C20 14   15     35.8664e-12
+
+C21 15   0     537.1580e-12
+L22 15   16      7.7624e-06
+C23 16   17     34.7427e-12
+.ends
+.end
+
+```
+
+
+![mesh lossy](examples/mesh.png)
+
+
+```
+$ rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 -qu 2000 | tee examples/meshloss.cir
+.SUBCKT F1 1 25
+* COMMAND: rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 -qu 2000
+* TYPE:    BUTTERWORTH
+* FILTER:  MESH
+* ORDER:   8
+* FREQ:    10.000000 MHz 
+* RS:      50.0
+* RL:      50.0
+* BW:      400.0000e+03
+* QL:      25.0
+* QU:      2000.0
+
+* ij    qi,kij           TD0           TDn           CBW
+* 01    0.3902  620.9908e-09             -    1.0252e+06
+* 12    1.5187    1.7684e-06    8.1580e-06  607.4955e+03
+* 23    0.7357    3.2676e-06    8.1580e-06  294.2641e+03
+* 34    0.5537    4.8904e-06    7.5370e-06  221.4725e+03
+* 45    0.5098    6.3896e-06    6.3896e-06  203.9183e+03
+* 56    0.5537    7.5370e-06    4.8904e-06  221.4725e+03
+* 67    0.7357    8.1580e-06    3.2676e-06  294.2641e+03
+* 78    1.5187    8.1580e-06    1.7684e-06  607.4955e+03
+* 89    0.3902             -  620.9908e-09    1.0252e+06
+
+L1  1    2       7.7624e-06
+R2  2    3     243.8625e-03
+C3  3    4      34.7427e-12
+
+C4  4    0     537.1580e-12
+L5  4    5       7.7624e-06
+R6  5    6     243.8625e-03
+C7  6    7      35.8664e-12
+
+C8  7    0       1.1089e-09
+L9  7    8       7.7624e-06
+R10 8    9     243.8625e-03
+C11 9    10     34.4066e-12
+
+C12 10   0       1.4734e-09
+L13 10   11      7.7624e-06
+R14 11   12    243.8625e-03
+C15 12   13     34.0819e-12
+
+C16 13   0       1.6003e-09
+L17 13   14      7.7624e-06
+R18 14   15    243.8625e-03
+C19 15   16     34.0819e-12
+
+C20 16   0       1.4734e-09
+L21 16   17      7.7624e-06
+R22 17   18    243.8625e-03
+C23 18   19     34.4066e-12
+
+C24 19   0       1.1089e-09
+L25 19   20      7.7624e-06
+R26 20   21    243.8625e-03
+C27 21   22     35.8664e-12
+
+C28 22   0     537.1580e-12
+L29 22   23      7.7624e-06
+R30 23   24    243.8625e-03
+C31 24   25     34.7427e-12
+.ends
+.end
+
+```
+
+
+![mesh lossy](examples/meshloss.png)
 
 Use the Zverev filter tables with an unloaded Q.
 
@@ -1387,7 +1521,7 @@ C39 24   25     39.5128e-12
 ```
 
 
-![no loss](examples/xtal.png)
+![crystal](examples/xtal.png)
 
 
 ```
@@ -1475,7 +1609,7 @@ C47 32   33     39.5133e-12
 ```
 
 
-![lossy](examples/xtalloss.png)
+![crystal lossy](examples/xtalloss.png)
 
 Print out coupling design information.  CBW is the coupling bandwidth between resonators and the bandwidth of the two resonators at the end.
 TD0 and TDn are the group delay

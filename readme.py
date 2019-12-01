@@ -97,17 +97,24 @@ Narrow-band nodal filters.
 { run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -r 100,120") }
 { run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 | tee examples/nodal.cir") }
 
-![butterworth](examples/nodal.png)
+![nodal](examples/nodal.png)
 
 { run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -qu 200 | tee examples/nodalloss.cir") }
 
-![butterworth](examples/nodalloss.png)
+![nodal lossy](examples/nodalloss.png)
 
 Narrow-band mesh filters.
 
 { run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -l 100e-9") }
 { run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100") }
 { run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100,120") }
+{ run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 | tee examples/mesh.cir") }
+
+![mesh lossy](examples/mesh.png)
+
+{ run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 -qu 2000 | tee examples/meshloss.cir") }
+
+![mesh lossy](examples/meshloss.png)
 
 Use the Zverev filter tables with an unloaded Q.
 
@@ -123,11 +130,11 @@ Build a 2400 Hz bandwidth crystal filter.  This filter is from an example in Ste
 
 { run("rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 | tee examples/xtal.cir") }
 
-![no loss](examples/xtal.png)
+![crystal](examples/xtal.png)
 
 { run("rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000 | tee examples/xtalloss.cir") }
 
-![lossy](examples/xtalloss.png)
+![crystal lossy](examples/xtalloss.png)
 
 Print out coupling design information.  CBW is the coupling bandwidth between resonators and the bandwidth of the two resonators at the end.
 TD0 and TDn are the group delay

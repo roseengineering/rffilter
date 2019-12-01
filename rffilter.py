@@ -1554,8 +1554,8 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
     RM = wo * LM / QU
     CM = 1 / (wo**2 * LM)
     fs = fo
-    fp = np.max(to_fp(fo, CM, LM, CP or 5e-12))
-    fo = bisect(func, fs, fp)
+    fp = to_fp(fo, CM, LM, CP or 5e-12)
+    fo = bisect(func, np.min(fo), np.max(fp))
     XS, XP, RE = func(fo)[:3]
     return XS, XP, RE, fo
 
@@ -1578,7 +1578,7 @@ def main(*args):
         return '{}{:<2d} {:<4d} {:<4d} {}'.format(tag, num, a, b, unit(np.abs(x)))
 
     def netlist(XS, XP, RE, kw, n):
-        fo = kw['f']
+        fo = kw.get('fd', kw['f'])
         QU = kw['qu']
         wo = 2 * np.pi * fo
 
@@ -1610,26 +1610,26 @@ def main(*args):
                     num += 1
 
         print(".SUBCKT F1 {a} {b}".format(a=1, b=k))
-        print("* COMMAND: {}".format(' '.join(sys.argv)))
-        print("* TYPE:    {}".format(kw['type']))
-        print("* FILTER:  {}".format(kw['filter']))
-        print("* ORDER:   {}".format(kw['n']))
-        print("* FREQ:    {:.6f} MHz ".format(kw.get('fd', fo) / 1e6))
-        print("* RS:      {:.1f}".format(RE[0]))
-        print("* RL:      {:.1f}".format(RE[1]))
+        print("* COMMAND  : {}".format(' '.join(sys.argv)))
+        print("* TYPE     : {}".format(kw['type']))
+        print("* FILTER   : {}".format(kw['filter']))
+        print("* ORDER    : {}".format(kw['n']))
+        print("* FREQ     : {:.6f} MHz".format(fo / 1e6))
+        print("* RS       : {:.1f}".format(RE[0]))
+        print("* RL       : {:.1f}".format(RE[1]))
 
         if kw.get('bw'):
             BW = kw['bw']
             QL = fo / BW
-            print("* BW:      {}".format(unit(BW).strip()))
-            print("* QL:      {:.1f}".format(QL))
+            print("* BW       : {}".format(unit(BW).strip()))
+            print("* QL       : {:.1f}".format(QL))
 
         if not np.isinf(QU):  
-            print("* QU:      {:.1f}".format(QU))
+            print("* QU       : {:.1f}".format(QU))
 
         if kw.get('qo'):
-            print("* QO:      {:.1f}".format(QU / QL))
-            print("* qo:      {:.1f}".format(kw['qo']))
+            print("* QO       : {:.1f}".format(QU / QL))
+            print("* qo       : {:.1f}".format(kw['qo']))
 
         if kw.get('q') is not None:
             print()
@@ -1708,7 +1708,8 @@ def main(*args):
         elif opt == '-l':
             kw['l'] = np.array([ np.double(x) for x in args.pop(0).split(',') ])
         elif opt == '-f':
-            kw['f'] = np.double(args.pop(0))
+            kw['f'] = np.array([ np.double(x) for x in args.pop(0).split(',') ])
+            # kw['f'] = np.double(args.pop(0))
         elif opt == '-bw':
             kw['bw'] = np.double(args.pop(0))
         elif opt == '-qu':
@@ -1754,16 +1755,19 @@ def main(*args):
     # print wide-band filters
 
     if kw.get('lowpass'):
+        kw['f'] = kw['f'][0]
         kw['filter'] = 'LOWPASS'
         XS, XP, RE = to_lowpass(g, kw['f'], R=kw['r'])
         netlist([XS], [XP], RE, kw, 0)
         netlist([XS], [XP], RE, kw, 1)
     elif kw.get('highpass'):
+        kw['f'] = kw['f'][0]
         kw['filter'] = 'HIGHPASS'
         XS, XP, RE = to_highpass(g, kw['f'], R=kw['r'])
         netlist([XS], [XP], RE, kw, 0)
         netlist([XS], [XP], RE, kw, 1)
     elif kw.get('bandpass'):
+        kw['f'] = kw['f'][0]
         kw['filter'] = 'BANDPASS'
         QL = kw['f'] / kw['bw']
         XS, XP, RE = to_bandpass(g, kw['f'], kw['bw'], R=kw['r'])
@@ -1774,12 +1778,14 @@ def main(*args):
 
     elif kw.get('nodal'):
         kw['filter'] = 'NODAL'
+        kw['f'] = kw['f'][0]
         for q, k in qk:
             kw['q'], kw['k'] = q, k
             XS, XP, RE = to_nodal(q, k, kw['f'], kw['bw'], R=kw['r'], L=kw.get('l'))
             netlist(XS, XP, RE, kw, 1)
     elif kw.get('mesh'):
         kw['filter'] = 'MESH'
+        kw['f'] = kw['f'][0]
         for q, k in qk:
             kw['q'], kw['k'] = q, k
             XS, XP, RE = to_mesh(q, k, kw['f'], kw['bw'], R=kw['r'], L=kw.get('l'))

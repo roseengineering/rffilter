@@ -1,13 +1,13 @@
 .SUBCKT F1 1 25
-* COMMAND: rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12
-* TYPE:    CHEBYSHEV_0.2
-* FILTER:  CRYSTAL_MESH
-* ORDER:   8
-* FREQ:    4.915110 MHz 
-* RS:      1060.0
-* RL:      1059.7
-* BW:      2.4000e+03
-* QL:      2047.3
+* COMMAND  : rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12
+* TYPE     : CHEBYSHEV_0.2
+* FILTER   : CRYSTAL_MESH
+* ORDER    : 8
+* FREQ     : 4.915110 MHz
+* RS       : 1060.0
+* RL       : 1059.7
+* BW       : 2.4000e+03
+* QL       : 2048.0
 
 * ij    qi,kij           TD0           TDn           CBW
 * 01    1.3800  366.0564e-06             -    1.7391e+03

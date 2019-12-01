@@ -99,6 +99,10 @@ Narrow-band nodal filters.
 
 ![butterworth](examples/nodal.png)
 
+{ run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -qu 200") }
+
+![butterworth](examples/nodalloss.png)
+
 Narrow-band mesh filters.
 
 { run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -l 100e-9") }
@@ -119,7 +123,7 @@ Build a 2400 Hz bandwidth crystal filter.  This filter is from an example in Ste
 
 { run("rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12") }
 
-![no loss](examples/xtalnone.png)
+![no loss](examples/xtal.png)
 
 { run("rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000") }
 

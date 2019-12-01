@@ -1581,6 +1581,7 @@ def main(*args):
         fo = kw['f']
         QU = kw['qu']
         wo = 2 * np.pi * fo
+
         k, num = 1, 1
         res = []
         for i in range(len(XS[0])):
@@ -1599,12 +1600,13 @@ def main(*args):
             else:
                 if res: res.append('')
                 for j in range(len(XP)):
-                    k = node
                     x = XP[j][i]
                     if not np.isinf(QU) and x > 0:
-                        res.append(netitem(num, k, k + 1, wo * x / QU, tag='R'))
+                        res.append(netitem(num, node, k + 1, wo * x / QU, tag='R'))
                         k, num = k + 1, num + 1
-                    res.append(netitem(num, k, 0, x))
+                        res.append(netitem(num, k, 0, x))
+                    else:
+                        res.append(netitem(num, node, 0, x))
                     num += 1
 
         print(".SUBCKT F1 {a} {b}".format(a=1, b=k))

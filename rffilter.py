@@ -1578,9 +1578,6 @@ def main(*args):
         return '{}{:<2d} {:<2d} {:<2d} {}'.format(tag, num, a, b, unit(np.abs(x)))
 
     def netlist(XS, XP, RE, kw, n):
-        nonlocal subckt
-        if subckt > 0: print()
-        subckt += 1
         fo = kw['f']
         QU = kw['qu']
         wo = 2 * np.pi * fo
@@ -1610,34 +1607,38 @@ def main(*args):
                     res.append(netitem(num, k, 0, x))
                     num += 1
 
-        print(".SUBCKT F{} {a} {b}".format(subckt, a=1, b=k))
-        print("* TYPE:   {}".format(kw['type']))
-        print("* FILTER: {}".format(kw['filter']))
-        print("* ORDER:  {}".format(kw['n']))
-        print("* FREQ:   {:.6f} MHz ".format(kw.get('fd', fo) / 1e6))
-        print("* RS:     {:.1f}".format(RE[0]))
-        print("* RL:     {:.1f}".format(RE[1]))
+        print(".SUBCKT F1 {a} {b}".format(a=1, b=k))
+        print("* COMMAND: {}".format(' '.join(sys.argv)))
+        print("* TYPE:    {}".format(kw['type']))
+        print("* FILTER:  {}".format(kw['filter']))
+        print("* ORDER:   {}".format(kw['n']))
+        print("* FREQ:    {:.6f} MHz ".format(kw.get('fd', fo) / 1e6))
+        print("* RS:      {:.1f}".format(RE[0]))
+        print("* RL:      {:.1f}".format(RE[1]))
 
         if kw.get('bw'):
             BW = kw['bw']
             QL = fo / BW
-            print("* BW:     {}".format(unit(BW).strip()))
-            print("* QL:     {:.1f}".format(QL))
+            print("* BW:      {}".format(unit(BW).strip()))
+            print("* QL:      {:.1f}".format(QL))
 
         if not np.isinf(QU):  
-            print("* QU:     {:.1f}".format(QU))
+            print("* QU:      {:.1f}".format(QU))
 
         if kw.get('qo'):
-            print("* QO:     {:.1f}".format(QU / QL))
-            print("* qo:     {:.1f}".format(kw['qo']))
+            print("* QO:      {:.1f}".format(QU / QL))
+            print("* qo:      {:.1f}".format(kw['qo']))
 
         if kw.get('q') is not None:
+            print("*")
             print_table(kw['q'], kw['k'], BW)
             print("*")
 
         for line in res: 
             print(line)
         print(".ends")
+        print('.end')
+        print()
            
     def print_table(q, k, BW):
         N = len(k) + 1
@@ -1647,7 +1648,6 @@ def main(*args):
         TD2[1:] = to_group_delay(q[::-1], k[::-1], BW=BW)[::-1]
         CBW = to_coupling_bw(q, k, BW=BW)
         qk = np.insert(q, 1, k)
-        print("*")
         print("* ij    qi,kij           TD0           TDn           CBW")
         for i in range(N + 1):
             print('* {:d}{:d}  {:8.4f} {} {} {}'.format(i, i+1, qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i])))
@@ -1682,7 +1682,6 @@ def main(*args):
                     prev = n
             print()
 
-    subckt = 0
     defaults = { 'r': 50, 'qu': np.inf, 'cp': 0 }
     args = list(args)
     kw = dict(defaults)
@@ -1794,11 +1793,10 @@ def main(*args):
     elif kw.get('bw'):
         for q, k in qk:
             print_table(q, k, kw['bw'])
+            print()
     else:
         raise ValueError('No filter configuration given')
 
-    if subckt > 0:
-        print('.end')
 
 if __name__ == '__main__':
     import sys

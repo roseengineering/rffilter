@@ -113,12 +113,13 @@ Lowpass and highpass filters.
 ```
 $ rffilter.py -g butterworth -lowpass -f 10e6 -n 5
 .SUBCKT F1 1 4
-* TYPE:   BUTTERWORTH
-* FILTER: LOWPASS
-* ORDER:  5
-* FREQ:   10.000000 MHz 
-* RS:     50.0
-* RL:     50.0
+* COMMAND: rffilter.py -g butterworth -lowpass -f 10e6 -n 5
+* TYPE:    BUTTERWORTH
+* FILTER:  LOWPASS
+* ORDER:   5
+* FREQ:    10.000000 MHz 
+* RS:      50.0
+* RL:      50.0
 L1  1  2   491.8126e-09
 
 C2  2  0   515.0349e-12
@@ -127,14 +128,16 @@ L3  2  3     1.5915e-06
 C4  3  0   515.0349e-12
 L5  3  4   491.8126e-09
 .ends
+.end
 
-.SUBCKT F2 1 3
-* TYPE:   BUTTERWORTH
-* FILTER: LOWPASS
-* ORDER:  5
-* FREQ:   10.000000 MHz 
-* RS:     50.0
-* RL:     50.0
+.SUBCKT F1 1 3
+* COMMAND: rffilter.py -g butterworth -lowpass -f 10e6 -n 5
+* TYPE:    BUTTERWORTH
+* FILTER:  LOWPASS
+* ORDER:   5
+* FREQ:    10.000000 MHz 
+* RS:      50.0
+* RL:      50.0
 C1  1  0   196.7251e-12
 L2  1  2     1.2876e-06
 
@@ -144,18 +147,20 @@ L4  2  3     1.2876e-06
 C5  3  0   196.7251e-12
 .ends
 .end
+
 ```
 
 
 ```
 $ rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 75
 .SUBCKT F1 1 4
-* TYPE:   BUTTERWORTH
-* FILTER: LOWPASS
-* ORDER:  5
-* FREQ:   10.000000 MHz 
-* RS:     75.0
-* RL:     75.0
+* COMMAND: rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 75
+* TYPE:    BUTTERWORTH
+* FILTER:  LOWPASS
+* ORDER:   5
+* FREQ:    10.000000 MHz 
+* RS:      75.0
+* RL:      75.0
 L1  1  2   737.7190e-09
 
 C2  2  0   343.3566e-12
@@ -164,14 +169,16 @@ L3  2  3     2.3873e-06
 C4  3  0   343.3566e-12
 L5  3  4   737.7190e-09
 .ends
+.end
 
-.SUBCKT F2 1 3
-* TYPE:   BUTTERWORTH
-* FILTER: LOWPASS
-* ORDER:  5
-* FREQ:   10.000000 MHz 
-* RS:     75.0
-* RL:     75.0
+.SUBCKT F1 1 3
+* COMMAND: rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 75
+* TYPE:    BUTTERWORTH
+* FILTER:  LOWPASS
+* ORDER:   5
+* FREQ:    10.000000 MHz 
+* RS:      75.0
+* RL:      75.0
 C1  1  0   131.1500e-12
 L2  1  2     1.9314e-06
 
@@ -181,18 +188,20 @@ L4  2  3     1.9314e-06
 C5  3  0   131.1500e-12
 .ends
 .end
+
 ```
 
 
 ```
 $ rffilter.py -g butterworth -highpass -f 10e6 -n 5 -r 75
 .SUBCKT F1 1 4
-* TYPE:   BUTTERWORTH
-* FILTER: HIGHPASS
-* ORDER:  5
-* FREQ:   10.000000 MHz 
-* RS:     75.0
-* RL:     75.0
+* COMMAND: rffilter.py -g butterworth -highpass -f 10e6 -n 5 -r 75
+* TYPE:    BUTTERWORTH
+* FILTER:  HIGHPASS
+* ORDER:   5
+* FREQ:    10.000000 MHz 
+* RS:      75.0
+* RL:      75.0
 C1  1  2   343.3597e-12
 
 L2  2  0   737.7256e-09
@@ -201,14 +210,16 @@ C3  2  3   106.1033e-12
 L4  3  0   737.7256e-09
 C5  3  4   343.3597e-12
 .ends
+.end
 
-.SUBCKT F2 1 3
-* TYPE:   BUTTERWORTH
-* FILTER: HIGHPASS
-* ORDER:  5
-* FREQ:   10.000000 MHz 
-* RS:     75.0
-* RL:     75.0
+.SUBCKT F1 1 3
+* COMMAND: rffilter.py -g butterworth -highpass -f 10e6 -n 5 -r 75
+* TYPE:    BUTTERWORTH
+* FILTER:  HIGHPASS
+* ORDER:   5
+* FREQ:    10.000000 MHz 
+* RS:      75.0
+* RL:      75.0
 L1  1  0     1.9314e-06
 C2  1  2   131.1512e-12
 
@@ -218,6 +229,7 @@ C4  2  3   131.1512e-12
 L5  3  0     1.9314e-06
 .ends
 .end
+
 ```
 
 
@@ -227,14 +239,15 @@ Wide band bandpass filters.
 ```
 $ rffilter.py -g butterworth -bandpass -f 10e6 -bw 1e6 -n 4
 .SUBCKT F1 1 5
-* TYPE:   BUTTERWORTH
-* FILTER: BANDPASS
-* ORDER:  4
-* FREQ:   10.000000 MHz 
-* RS:     50.0
-* RL:     50.0
-* BW:     1.0000e+06
-* QL:     10.0
+* COMMAND: rffilter.py -g butterworth -bandpass -f 10e6 -bw 1e6 -n 4
+* TYPE:    BUTTERWORTH
+* FILTER:  BANDPASS
+* ORDER:   4
+* FREQ:    10.000000 MHz 
+* RS:      50.0
+* RL:      50.0
+* BW:      1.0000e+06
+* QL:      10.0
 L1  1  2     6.0906e-06
 C2  2  3    41.5890e-12
 
@@ -246,16 +259,18 @@ C6  4  5    17.2268e-12
 L7  5  0   103.9726e-09
 C8  5  0     2.4362e-09
 .ends
+.end
 
-.SUBCKT F2 1 5
-* TYPE:   BUTTERWORTH
-* FILTER: BANDPASS
-* ORDER:  4
-* FREQ:   10.000000 MHz 
-* RS:     50.0
-* RL:     50.0
-* BW:     1.0000e+06
-* QL:     10.0
+.SUBCKT F1 1 5
+* COMMAND: rffilter.py -g butterworth -bandpass -f 10e6 -bw 1e6 -n 4
+* TYPE:    BUTTERWORTH
+* FILTER:  BANDPASS
+* ORDER:   4
+* FREQ:    10.000000 MHz 
+* RS:      50.0
+* RL:      50.0
+* BW:      1.0000e+06
+* QL:      10.0
 L1  1  0   103.9726e-09
 C2  1  0     2.4362e-09
 L3  1  2    14.7040e-06
@@ -267,6 +282,7 @@ L7  3  4     6.0906e-06
 C8  4  5    41.5890e-12
 .ends
 .end
+
 ```
 
 
@@ -276,14 +292,15 @@ Narrow-band nodal filters.
 ```
 $ rffilter.py -k butterworth -nodal -f 10e6 -bw 1e6 -n 5
 .SUBCKT F1 1 5
-* TYPE:   BUTTERWORTH
-* FILTER: NODAL
-* ORDER:  5
-* FREQ:   10.000000 MHz 
-* RS:     50.0
-* RL:     50.0
-* BW:     1.0000e+06
-* QL:     10.0
+* COMMAND: rffilter.py -k butterworth -nodal -f 10e6 -bw 1e6 -n 5
+* TYPE:    BUTTERWORTH
+* FILTER:  NODAL
+* ORDER:   5
+* FREQ:    10.000000 MHz 
+* RS:      50.0
+* RL:      50.0
+* BW:      1.0000e+06
+* QL:      10.0
 *
 * ij    qi,kij           TD0           TDn           CBW
 * 01    0.6180  393.4310e-09             -    1.6181e+06
@@ -313,20 +330,22 @@ L13 5  0   128.7661e-09
 C14 5  0     1.7704e-09
 .ends
 .end
+
 ```
 
 
 ```
 $ rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -l 100e-9
 .SUBCKT F1 1 5
-* TYPE:   BUTTERWORTH
-* FILTER: NODAL
-* ORDER:  5
-* FREQ:   10.000000 MHz 
-* RS:     97.1
-* RL:     97.1
-* BW:     400.0000e+03
-* QL:     25.0
+* COMMAND: rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -l 100e-9
+* TYPE:    BUTTERWORTH
+* FILTER:  NODAL
+* ORDER:   5
+* FREQ:    10.000000 MHz 
+* RS:      97.1
+* RL:      97.1
+* BW:      400.0000e+03
+* QL:      25.0
 *
 * ij    qi,kij           TD0           TDn           CBW
 * 01    0.6180  983.6253e-09             -  647.2178e+03
@@ -356,63 +375,22 @@ L13 5  0   100.0000e-09
 C14 5  0     2.4317e-09
 .ends
 .end
-```
 
-
-```
-$ rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -r 100
-.SUBCKT F1 1 5
-* TYPE:   BUTTERWORTH
-* FILTER: NODAL
-* ORDER:  5
-* FREQ:   10.000000 MHz 
-* RS:     100.0
-* RL:     100.0
-* BW:     400.0000e+03
-* QL:     25.0
-*
-* ij    qi,kij           TD0           TDn           CBW
-* 01    0.6180  983.6253e-09             -  647.2178e+03
-* 12    1.0000    2.5752e-06    5.1503e-06  400.0018e+03
-* 23    0.5559    4.1667e-06    5.1503e-06  222.3575e+03
-* 34    0.5559    5.1503e-06    4.1667e-06  222.3575e+03
-* 45    1.0000    5.1503e-06    2.5752e-06  400.0018e+03
-* 56    0.6180             -  983.6253e-09  647.2178e+03
-*
-L1  1  0   103.0079e-09
-C2  1  0     2.3607e-09
-C3  1  2    98.3630e-12
-
-L4  2  0   103.0079e-09
-C5  2  0     2.3060e-09
-C6  2  3    54.6791e-12
-
-L7  3  0   103.0079e-09
-C8  3  0     2.3497e-09
-C9  3  4    54.6791e-12
-
-L10 4  0   103.0079e-09
-C11 4  0     2.3060e-09
-C12 4  5    98.3630e-12
-
-L13 5  0   103.0079e-09
-C14 5  0     2.3607e-09
-.ends
-.end
 ```
 
 
 ```
 $ rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -r 100,120
 .SUBCKT F1 1 5
-* TYPE:   BUTTERWORTH
-* FILTER: NODAL
-* ORDER:  5
-* FREQ:   10.000000 MHz 
-* RS:     100.0
-* RL:     120.0
-* BW:     400.0000e+03
-* QL:     25.0
+* COMMAND: rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -r 100,120
+* TYPE:    BUTTERWORTH
+* FILTER:  NODAL
+* ORDER:   5
+* FREQ:    10.000000 MHz 
+* RS:      100.0
+* RL:      120.0
+* BW:      400.0000e+03
+* QL:      25.0
 *
 * ij    qi,kij           TD0           TDn           CBW
 * 01    0.6180  983.6253e-09             -  647.2178e+03
@@ -442,8 +420,55 @@ L13 5  0   123.6095e-09
 C14 5  0     1.9594e-09
 .ends
 .end
+
 ```
 
+
+```
+$ rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5
+.SUBCKT F1 1 5
+* COMMAND: rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5
+* TYPE:    BUTTERWORTH
+* FILTER:  NODAL
+* ORDER:   5
+* FREQ:    10.000000 MHz 
+* RS:      50.0
+* RL:      50.0
+* BW:      400.0000e+03
+* QL:      25.0
+*
+* ij    qi,kij           TD0           TDn           CBW
+* 01    0.6180  983.6253e-09             -  647.2178e+03
+* 12    1.0000    2.5752e-06    5.1503e-06  400.0018e+03
+* 23    0.5559    4.1667e-06    5.1503e-06  222.3575e+03
+* 34    0.5559    5.1503e-06    4.1667e-06  222.3575e+03
+* 45    1.0000    5.1503e-06    2.5752e-06  400.0018e+03
+* 56    0.6180             -  983.6253e-09  647.2178e+03
+*
+L1  1  0    51.5040e-09
+C2  1  0     4.7214e-09
+C3  1  2   196.7259e-12
+
+L4  2  0    51.5040e-09
+C5  2  0     4.6120e-09
+C6  2  3   109.3582e-12
+
+L7  3  0    51.5040e-09
+C8  3  0     4.6994e-09
+C9  3  4   109.3582e-12
+
+L10 4  0    51.5040e-09
+C11 4  0     4.6120e-09
+C12 4  5   196.7259e-12
+
+L13 5  0    51.5040e-09
+C14 5  0     4.7214e-09
+.ends
+.end
+
+```
+
+![butterworth](examples/nodal.png)
 
 Narrow-band mesh filters.
 
@@ -451,14 +476,15 @@ Narrow-band mesh filters.
 ```
 $ rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -l 100e-9
 .SUBCKT F1 1 9
-* TYPE:   BUTTERWORTH
-* FILTER: MESH
-* ORDER:  4
-* FREQ:   10.000000 MHz 
-* RS:     0.3
-* RL:     0.3
-* BW:     400.0000e+03
-* QL:     25.0
+* COMMAND: rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -l 100e-9
+* TYPE:    BUTTERWORTH
+* FILTER:  MESH
+* ORDER:   4
+* FREQ:    10.000000 MHz 
+* RS:      0.3
+* RL:      0.3
+* BW:      400.0000e+03
+* QL:      25.0
 *
 * ij    qi,kij           TD0           TDn           CBW
 * 01    0.7654    1.2181e-06             -  522.6230e+03
@@ -483,6 +509,7 @@ L10 7  8   100.0000e-09
 C11 8  9     2.6212e-09
 .ends
 .end
+
 .end
 ```
 
@@ -490,14 +517,15 @@ C11 8  9     2.6212e-09
 ```
 $ rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100
 .SUBCKT F1 1 9
-* TYPE:   BUTTERWORTH
-* FILTER: MESH
-* ORDER:  4
-* FREQ:   10.000000 MHz 
-* RS:     100.0
-* RL:     100.0
-* BW:     400.0000e+03
-* QL:     25.0
+* COMMAND: rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100
+* TYPE:    BUTTERWORTH
+* FILTER:  MESH
+* ORDER:   4
+* FREQ:    10.000000 MHz 
+* RS:      100.0
+* RL:      100.0
+* BW:      400.0000e+03
+* QL:      25.0
 *
 * ij    qi,kij           TD0           TDn           CBW
 * 01    0.7654    1.2181e-06             -  522.6230e+03
@@ -522,6 +550,7 @@ L10 7  8    30.4531e-06
 C11 8  9     8.6073e-12
 .ends
 .end
+
 .end
 ```
 
@@ -529,14 +558,15 @@ C11 8  9     8.6073e-12
 ```
 $ rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100,120
 .SUBCKT F1 1 9
-* TYPE:   BUTTERWORTH
-* FILTER: MESH
-* ORDER:  4
-* FREQ:   10.000000 MHz 
-* RS:     100.0
-* RL:     120.0
-* BW:     400.0000e+03
-* QL:     25.0
+* COMMAND: rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100,120
+* TYPE:    BUTTERWORTH
+* FILTER:  MESH
+* ORDER:   4
+* FREQ:    10.000000 MHz 
+* RS:      100.0
+* RL:      120.0
+* BW:      400.0000e+03
+* QL:      25.0
 *
 * ij    qi,kij           TD0           TDn           CBW
 * 01    0.7654    1.2181e-06             -  522.6230e+03
@@ -561,6 +591,7 @@ L10 7  8    36.5437e-06
 C11 8  9     7.1511e-12
 .ends
 .end
+
 .end
 ```
 
@@ -571,17 +602,18 @@ Use the Zverev filter tables with an unloaded Q.
 ```
 $ rffilter.py -zverev butterworth -nodal -qu 2500 -bw 1e6 -f 10e6 -n 3
 .SUBCKT F1 1 3
-* TYPE:   BUTTERWORTH
-* FILTER: NODAL
-* ORDER:  3
-* FREQ:   10.000000 MHz 
-* RS:     50.0
-* RL:     50.0
-* BW:     1.0000e+06
-* QL:     10.0
-* QU:     2500.0
-* QO:     250.0
-* qo:     20.0
+* COMMAND: rffilter.py -zverev butterworth -nodal -qu 2500 -bw 1e6 -f 10e6 -n 3
+* TYPE:    BUTTERWORTH
+* FILTER:  NODAL
+* ORDER:   3
+* FREQ:    10.000000 MHz 
+* RS:      50.0
+* RL:      50.0
+* BW:      1.0000e+06
+* QL:      10.0
+* QU:      2500.0
+* QO:      250.0
+* qo:      20.0
 *
 * ij    qi,kij           TD0           TDn           CBW
 * 01    0.8041  511.9060e-09             -    1.2436e+06
@@ -604,23 +636,25 @@ L10 4  0    56.2147e-09
 C11 3  0     4.2825e-09
 .ends
 .end
+
 ```
 
 
 ```
 $ rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8
 .SUBCKT F1 1 8
-* TYPE:   BESSEL
-* FILTER: NODAL
-* ORDER:  8
-* FREQ:   10.000000 MHz 
-* RS:     50.0
-* RL:     50.0
-* BW:     1.0000e+06
-* QL:     10.0
-* QU:     2500.0
-* QO:     250.0
-* qo:     11.2
+* COMMAND: rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8
+* TYPE:    BESSEL
+* FILTER:  NODAL
+* ORDER:   8
+* FREQ:    10.000000 MHz 
+* RS:      50.0
+* RL:      50.0
+* BW:      1.0000e+06
+* QL:      10.0
+* QU:      2500.0
+* QO:      250.0
+* qo:      11.2
 *
 * ij    qi,kij           TD0           TDn           CBW
 * 01    0.0975   62.0704e-09             -   10.2564e+06
@@ -672,19 +706,21 @@ R29 8  9     1.0615e-03
 L30 9  0    42.2341e-09
 C31 8  0     5.9112e-09
 .ends
+.end
 
-.SUBCKT F2 1 8
-* TYPE:   BESSEL
-* FILTER: NODAL
-* ORDER:  8
-* FREQ:   10.000000 MHz 
-* RS:     50.0
-* RL:     50.0
-* BW:     1.0000e+06
-* QL:     10.0
-* QU:     2500.0
-* QO:     250.0
-* qo:     11.2
+.SUBCKT F1 1 8
+* COMMAND: rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8
+* TYPE:    BESSEL
+* FILTER:  NODAL
+* ORDER:   8
+* FREQ:    10.000000 MHz 
+* RS:      50.0
+* RL:      50.0
+* BW:      1.0000e+06
+* QL:      10.0
+* QU:      2500.0
+* QO:      250.0
+* qo:      11.2
 *
 * ij    qi,kij           TD0           TDn           CBW
 * 01    0.1192   75.8851e-09             -    8.3893e+06
@@ -736,19 +772,21 @@ R29 8  9     4.7973e-03
 L30 9  0   190.8790e-09
 C31 8  0     1.2597e-09
 .ends
+.end
 
-.SUBCKT F3 1 8
-* TYPE:   BESSEL
-* FILTER: NODAL
-* ORDER:  8
-* FREQ:   10.000000 MHz 
-* RS:     50.0
-* RL:     50.0
-* BW:     1.0000e+06
-* QL:     10.0
-* QU:     2500.0
-* QO:     250.0
-* qo:     11.2
+.SUBCKT F1 1 8
+* COMMAND: rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8
+* TYPE:    BESSEL
+* FILTER:  NODAL
+* ORDER:   8
+* FREQ:    10.000000 MHz 
+* RS:      50.0
+* RL:      50.0
+* BW:      1.0000e+06
+* QL:      10.0
+* QU:      2500.0
+* QO:      250.0
+* qo:      11.2
 *
 * ij    qi,kij           TD0           TDn           CBW
 * 01    0.1474   93.8378e-09             -    6.7843e+06
@@ -800,19 +838,21 @@ R29 8  9     8.0032e-03
 L30 9  0   318.4373e-09
 C31 8  0   662.5087e-12
 .ends
+.end
 
-.SUBCKT F4 1 8
-* TYPE:   BESSEL
-* FILTER: NODAL
-* ORDER:  8
-* FREQ:   10.000000 MHz 
-* RS:     50.0
-* RL:     50.0
-* BW:     1.0000e+06
-* QL:     10.0
-* QU:     2500.0
-* QO:     250.0
-* qo:     11.2
+.SUBCKT F1 1 8
+* COMMAND: rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8
+* TYPE:    BESSEL
+* FILTER:  NODAL
+* ORDER:   8
+* FREQ:    10.000000 MHz 
+* RS:      50.0
+* RL:      50.0
+* BW:      1.0000e+06
+* QL:      10.0
+* QU:      2500.0
+* QO:      250.0
+* qo:      11.2
 *
 * ij    qi,kij           TD0           TDn           CBW
 * 01    0.2034  129.4885e-09             -    4.9164e+06
@@ -864,19 +904,21 @@ R29 8  9    11.7371e-03
 L30 9  0   467.0039e-09
 C31 8  0   350.2500e-12
 .ends
+.end
 
-.SUBCKT F5 1 8
-* TYPE:   BESSEL
-* FILTER: NODAL
-* ORDER:  8
-* FREQ:   10.000000 MHz 
-* RS:     50.0
-* RL:     50.0
-* BW:     1.0000e+06
-* QL:     10.0
-* QU:     2500.0
-* QO:     250.0
-* qo:     11.2
+.SUBCKT F1 1 8
+* COMMAND: rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8
+* TYPE:    BESSEL
+* FILTER:  NODAL
+* ORDER:   8
+* FREQ:    10.000000 MHz 
+* RS:      50.0
+* RL:      50.0
+* BW:      1.0000e+06
+* QL:      10.0
+* QU:      2500.0
+* QO:      250.0
+* qo:      11.2
 *
 * ij    qi,kij           TD0           TDn           CBW
 * 01    0.1332   84.7978e-09             -    7.5075e+06
@@ -928,19 +970,21 @@ R29 8  9     6.5531e-03
 L30 9  0   260.7388e-09
 C31 8  0   834.2409e-12
 .ends
+.end
 
-.SUBCKT F6 1 8
-* TYPE:   BESSEL
-* FILTER: NODAL
-* ORDER:  8
-* FREQ:   10.000000 MHz 
-* RS:     50.0
-* RL:     50.0
-* BW:     1.0000e+06
-* QL:     10.0
-* QU:     2500.0
-* QO:     250.0
-* qo:     11.2
+.SUBCKT F1 1 8
+* COMMAND: rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8
+* TYPE:    BESSEL
+* FILTER:  NODAL
+* ORDER:   8
+* FREQ:    10.000000 MHz 
+* RS:      50.0
+* RL:      50.0
+* BW:      1.0000e+06
+* QL:      10.0
+* QU:      2500.0
+* QO:      250.0
+* qo:      11.2
 *
 * ij    qi,kij           TD0           TDn           CBW
 * 01    0.1772  112.8090e-09             -    5.6433e+06
@@ -992,19 +1036,21 @@ R29 8  9    10.2881e-03
 L30 9  0   409.3491e-09
 C31 8  0   443.1892e-12
 .ends
+.end
 
-.SUBCKT F7 1 8
-* TYPE:   BESSEL
-* FILTER: NODAL
-* ORDER:  8
-* FREQ:   10.000000 MHz 
-* RS:     50.0
-* RL:     50.0
-* BW:     1.0000e+06
-* QL:     10.0
-* QU:     2500.0
-* QO:     250.0
-* qo:     11.2
+.SUBCKT F1 1 8
+* COMMAND: rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8
+* TYPE:    BESSEL
+* FILTER:  NODAL
+* ORDER:   8
+* FREQ:    10.000000 MHz 
+* RS:      50.0
+* RL:      50.0
+* BW:      1.0000e+06
+* QL:      10.0
+* QU:      2500.0
+* QO:      250.0
+* qo:      11.2
 *
 * ij    qi,kij           TD0           TDn           CBW
 * 01    0.2476  157.6271e-09             -    4.0388e+06
@@ -1056,19 +1102,21 @@ R29 8  9    13.4953e-03
 L30 9  0   536.9600e-09
 C31 8  0   234.7389e-12
 .ends
+.end
 
-.SUBCKT F8 1 8
-* TYPE:   BESSEL
-* FILTER: NODAL
-* ORDER:  8
-* FREQ:   10.000000 MHz 
-* RS:     50.0
-* RL:     50.0
-* BW:     1.0000e+06
-* QL:     10.0
-* QU:     2500.0
-* QO:     250.0
-* qo:     11.2
+.SUBCKT F1 1 8
+* COMMAND: rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8
+* TYPE:    BESSEL
+* FILTER:  NODAL
+* ORDER:   8
+* FREQ:    10.000000 MHz 
+* RS:      50.0
+* RL:      50.0
+* BW:      1.0000e+06
+* QL:      10.0
+* QU:      2500.0
+* QO:      250.0
+* qo:      11.2
 *
 * ij    qi,kij           TD0           TDn           CBW
 * 01    0.4606  293.2271e-09             -    2.1711e+06
@@ -1121,6 +1169,7 @@ L30 9  0   685.4218e-09
 C31 8  0     7.1977e-12
 .ends
 .end
+
 ```
 
 
@@ -1130,14 +1179,15 @@ Build a 500 Hz bandwidth crystal filter.
 ```
 $ rffilter.py -g chebyshev_001 -n 8 -crystal -l .170 -f 4e6 -bw 500 -cp 2.05e-12
 .SUBCKT F1 1 25
-* TYPE:   CHEBYSHEV_001
-* FILTER: CRYSTAL_MESH
-* ORDER:  8
-* FREQ:   4.000392 MHz 
-* RS:     722.5
-* RL:     722.6
-* BW:     500.0000e+00
-* QL:     8000.0
+* COMMAND: rffilter.py -g chebyshev_001 -n 8 -crystal -l .170 -f 4e6 -bw 500 -cp 2.05e-12
+* TYPE:    CHEBYSHEV_001
+* FILTER:  CRYSTAL_MESH
+* ORDER:   8
+* FREQ:    4.000392 MHz 
+* RS:      722.5
+* RL:      722.6
+* BW:      500.0000e+00
+* QL:      8000.0
 *
 * ij    qi,kij           TD0           TDn           CBW
 * 01    0.8073    1.0279e-03             -  619.3484e+00
@@ -1198,6 +1248,7 @@ C38 22 24    2.0500e-12
 C39 24 25  108.1757e-12
 .ends
 .end
+
 ```
 
 
@@ -1208,14 +1259,15 @@ Build a 2400 Hz bandwidth crystal filter.  This filter is from an example in Ste
 ```
 $ rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12
 .SUBCKT F1 1 25
-* TYPE:   CHEBYSHEV_02
-* FILTER: CRYSTAL_MESH
-* ORDER:  8
-* FREQ:   4.915110 MHz 
-* RS:     1060.0
-* RL:     1059.7
-* BW:     2.4000e+03
-* QL:     2047.3
+* COMMAND: rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12
+* TYPE:    CHEBYSHEV_02
+* FILTER:  CRYSTAL_MESH
+* ORDER:   8
+* FREQ:    4.915110 MHz 
+* RS:      1060.0
+* RL:      1059.7
+* BW:      2.4000e+03
+* QL:      2047.3
 *
 * ij    qi,kij           TD0           TDn           CBW
 * 01    1.3800  366.0564e-06             -    1.7391e+03
@@ -1276,6 +1328,7 @@ C38 22 24    3.6600e-12
 C39 24 25   39.5128e-12
 .ends
 .end
+
 ```
 
 
@@ -1285,15 +1338,16 @@ C39 24 25   39.5128e-12
 ```
 $ rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000
 .SUBCKT F1 1 33
-* TYPE:   CHEBYSHEV_02
-* FILTER: CRYSTAL_MESH
-* ORDER:  8
-* FREQ:   4.915110 MHz 
-* RS:     1060.0
-* RL:     1059.7
-* BW:     2.4000e+03
-* QL:     2047.3
-* QU:     150000.0
+* COMMAND: rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000
+* TYPE:    CHEBYSHEV_02
+* FILTER:  CRYSTAL_MESH
+* ORDER:   8
+* FREQ:    4.915110 MHz 
+* RS:      1060.0
+* RL:      1059.7
+* BW:      2.4000e+03
+* QL:      2047.3
+* QU:      150000.0
 *
 * ij    qi,kij           TD0           TDn           CBW
 * 01    1.3800  366.0564e-06             -    1.7391e+03
@@ -1362,6 +1416,7 @@ C46 29 32    3.6600e-12
 C47 32 33   39.5133e-12
 .ends
 .end
+
 ```
 
 
@@ -1376,7 +1431,6 @@ Design, Measurement, and Tuning of Coupled-Resonator Filters" in MTT.
 
 ```
 $ rffilter.py -g chebyshev_02 -n 8 -bw 1000
-*
 * ij    qi,kij           TD0           TDn           CBW
 * 01    1.3800  878.5353e-06             -  724.6377e+00
 * 12    0.7225  883.6282e-06    3.3733e-03  722.5464e+00
@@ -1387,6 +1441,7 @@ $ rffilter.py -g chebyshev_02 -n 8 -bw 1000
 * 67    0.5601    5.1897e-03    2.3410e-03  560.1072e+00
 * 78    0.7225    3.3742e-03  883.4691e-06  722.5309e+00
 * 89    1.3803             -  878.7312e-06  724.4761e+00
+
 ```
 
 

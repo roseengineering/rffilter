@@ -1648,9 +1648,9 @@ def main(*args):
         CBW = to_coupling_bw(q, k, BW=BW)
         qk = np.insert(q, 1, k)
         print("*")
-        print("*       qi,kij           TD0           TDn           CBW")
+        print("* ij    qi,kij           TD0           TDn           CBW")
         for i in range(N + 1):
-            print('* K{:d}{:d} {:8.4f} {} {} {}'.format(i, i+1, qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i])))
+            print('* {:d}{:d}  {:8.4f} {} {} {}'.format(i, i+1, qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i])))
  
     def list_gfilters():
         print('{:16s}  {}'.format("G LOWPASS", "POLES"))

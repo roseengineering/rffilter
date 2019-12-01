@@ -112,7 +112,7 @@ Build a 500 Hz bandwidth crystal filter.
 Build a 2400 Hz bandwidth crystal filter.  This filter is from an example in Steder's 
 "Crystal Ladder Filters for All" paper in QEX.  
 
-{ run("rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12") }
+{ run("rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000") }
 """)
 
 """

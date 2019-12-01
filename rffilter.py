@@ -1545,6 +1545,9 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
         CX = -1 / ((2 * np.pi * fs)**2 * L)
         CS = 1 / (1 / XS[1][0::2] - 1 / CX)
         XS[1][0::2] = CS
+        XS[0][0::2] = LM
+        XS.insert(0, np.zeros(len(XS[0])))
+        XS[0][0::2] = -CM * np.ones(len(CS))
         return XS, XP, RE, np.max(CS)
 
     wo = 2 * np.pi * fo
@@ -1592,9 +1595,10 @@ def main(*args):
                     res.append(netitem(num, k, k + 1, x))
                     k, num = k + 1, num + 1
                     if kw.get('cp') and x > 0:
-                        # res.append(netitem(num, node, k, -kw['cp']))
-                        # num += 1
-                        pass
+                        res.append(netitem(num, k, k + 1, wo * x / QU, tag='R'))
+                        k, num = k + 1, num + 1
+                        res.append(netitem(num, node, k, -kw['cp']))
+                        num += 1
                     elif not np.isinf(QU) and x > 0:
                         res.append(netitem(num, k, k + 1, wo * x / QU, tag='R'))
                         k, num = k + 1, num + 1
@@ -1607,6 +1611,7 @@ def main(*args):
                         k, num = k + 1, num + 1
                     res.append(netitem(num, k, 0, x))
                     num += 1
+                res.append('')
 
         print(".SUBCKT F{} {a} {b}".format(subckt, a=1, b=k))
         print("* TYPE:   {}".format(kw['type']))

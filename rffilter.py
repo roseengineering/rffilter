@@ -1581,7 +1581,6 @@ def main(*args):
         nonlocal subckt
         if subckt > 0: print()
         subckt += 1
-        N = kw['n']
         fo = kw['f']
         QU = kw['qu']
         wo = 2 * np.pi * fo
@@ -1614,7 +1613,7 @@ def main(*args):
         print(".SUBCKT F{} {a} {b}".format(subckt, a=1, b=k))
         print("* TYPE:   {}".format(kw['type']))
         print("* FILTER: {}".format(kw['filter']))
-        print("* ORDER:  {}".format(N))
+        print("* ORDER:  {}".format(kw['n']))
         print("* FREQ:   {:.6f} MHz ".format(kw.get('fd', fo) / 1e6))
         print("* RS:     {:.1f}".format(RE[0]))
         print("* RL:     {:.1f}".format(RE[1]))
@@ -1633,24 +1632,26 @@ def main(*args):
             print("* qo:     {:.1f}".format(kw['qo']))
 
         if kw.get('q') is not None:
-            q = kw['q']
-            k = kw['k']
-            TD1 = np.ones(N + 1) * np.nan
-            TD2 = np.ones(N + 1) * np.nan
-            TD1[:-1] = to_group_delay(q, k, BW=BW)
-            TD2[1:] = to_group_delay(q[::-1], k[::-1], BW=BW)[::-1]
-            CBW = to_coupling_bw(q, k, BW=BW)
-            qk = np.insert(q, 1, k)
-            print("*")
-            print("*       qi,kij           TD1           TD2           CBW")
-            for i in range(N + 1):
-                print('* K{:d}{:d} {:8.4f} {} {} {}'.format(i, i+1, qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i])))
+            print_table(kw['q'], kw['k'], BW)
             print("*")
 
         for line in res: 
             print(line)
         print(".ends")
-            
+           
+    def print_table(q, k, BW):
+        N = len(k) + 1
+        TD1 = np.ones(N + 1) * np.nan
+        TD2 = np.ones(N + 1) * np.nan
+        TD1[:-1] = to_group_delay(q, k, BW=BW)
+        TD2[1:] = to_group_delay(q[::-1], k[::-1], BW=BW)[::-1]
+        CBW = to_coupling_bw(q, k, BW=BW)
+        qk = np.insert(q, 1, k)
+        print("*")
+        print("*       qi,kij           TD0           TDn           CBW")
+        for i in range(N + 1):
+            print('* K{:d}{:d} {:8.4f} {} {} {}'.format(i, i+1, qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i])))
+ 
     def list_gfilters():
         print('{:16s}  {}'.format("G LOWPASS", "POLES"))
         for name in sorted(LOWPASS.keys()):
@@ -1790,6 +1791,9 @@ def main(*args):
             XS, XP, RE, kw['fd'] = to_crystal_mesh(
                 q, k, kw['f'], kw['bw'], LM=kw['l'], CP=kw['cp'], QU=kw['qu'])
             netlist(XS, XP, RE, kw, 0)
+    elif kw.get('bw'):
+        for q, k in qk:
+            print_table(q, k, kw['bw'])
     else:
         raise ValueError('No filter configuration given')
 

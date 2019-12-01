@@ -93,6 +93,7 @@ Narrow-band nodal filters.
 { run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -l 100e-9") }
 { run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -r 100,120") }
 { run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5") }
+
 ![butterworth](examples/nodal.png)
 
 Narrow-band mesh filters.

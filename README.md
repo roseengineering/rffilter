@@ -63,10 +63,10 @@ $ rffilter.py -g
 G LOWPASS         POLES
 bessel            2  3  4  5  6  7  8  9 10
 butterworth       1  2  3  4  5  6  7  8  9 10 11
-chebyshev_001     3  4  5  6  7  8  9 10 11
-chebyshev_0044    3  4  5  6  7  8  9 10 11
-chebyshev_01      2  3  4  5  6  7  8  9
-chebyshev_02      3  4  5  6  7  8  9 10 11
+chebyshev_0.01    3  4  5  6  7  8  9 10 11
+chebyshev_0.044   3  4  5  6  7  8  9 10 11
+chebyshev_0.1     2  3  4  5  6  7  8  9
+chebyshev_0.2     3  4  5  6  7  8  9 10 11
 gaussian_12       3  4  5  6  7  8  9 10
 gaussian_6        3  4  5  6  7  8  9 10
 linear_phase_05   2  3  4  5  6  7  8  9 10
@@ -79,10 +79,10 @@ $ rffilter.py -k
 QK COUPLING       POLES
 bessel            2  3  4  5  6  7  8
 butterworth       2  3  4  5  6  7  8
-chebyshev_001     2  3  4  5  6  7  8
-chebyshev_01      2  3  4  5  6  7  8
-chebyshev_05      2  3  4  5  6  7  8
-chebyshev_1       2  3  4  5  6  7
+chebyshev_0.01    2  3  4  5  6  7  8
+chebyshev_0.1     2  3  4  5  6  7  8
+chebyshev_0.5     2  3  4  5  6  7  8
+chebyshev_1.0     2  3  4  5  6  7
 gaussian_12       3  4  5  6  7  8
 gaussian_6        3  4  5  6  7  8
 linear_phase_05   2  3  4  5  6  7  8
@@ -95,9 +95,9 @@ $ rffilter.py -zverev
 QK ZVEREV         POLES
 bessel            2  3  4  5  6  7  8
 butterworth       2  3  4  5  6  7  8
-chebyshev_001     2  3  4  5  6  7  8
-chebyshev_01      2  3  4  5  6  7  8
-chebyshev_05      2  3  4  5  6  7  8
+chebyshev_0.01    2  3  4  5  6  7  8
+chebyshev_0.1     2  3  4  5  6  7  8
+chebyshev_0.5     2  3  4  5  6  7  8
 gaussian          2  3  4  5  6  7  8
 gaussian_12       3  4  5  6  7  8
 gaussian_6        3  4  5  6  7  8
@@ -115,7 +115,7 @@ Design, Measurement, and Tuning of Coupled-Resonator Filters" in MTT.
 
 
 ```
-$ rffilter.py -g chebyshev_02 -n 8 -bw 1000
+$ rffilter.py -g chebyshev_0.2 -n 8 -bw 1000
 * ij    qi,kij           TD0           TDn           CBW
 * 01    1.3800  878.5353e-06             -  724.6377e+00
 * 12    0.7225  883.6282e-06    3.3733e-03  722.5464e+00
@@ -1389,10 +1389,10 @@ Build a 500 Hz bandwidth crystal filter.
 
 
 ```
-$ rffilter.py -g chebyshev_001 -n 8 -crystal -l .170 -f 4e6 -bw 500 -cp 2.05e-12
+$ rffilter.py -g chebyshev_0.01 -n 8 -crystal -l .170 -f 4e6 -bw 500 -cp 2.05e-12
 .SUBCKT F1 1 25
-* COMMAND: rffilter.py -g chebyshev_001 -n 8 -crystal -l .170 -f 4e6 -bw 500 -cp 2.05e-12
-* TYPE:    CHEBYSHEV_001
+* COMMAND: rffilter.py -g chebyshev_0.01 -n 8 -crystal -l .170 -f 4e6 -bw 500 -cp 2.05e-12
+* TYPE:    CHEBYSHEV_0.01
 * FILTER:  CRYSTAL_MESH
 * ORDER:   8
 * FREQ:    4.000392 MHz 
@@ -1469,10 +1469,10 @@ Build a 2400 Hz bandwidth crystal filter.  This filter is from an example in Ste
 
 
 ```
-$ rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 | tee examples/xtal.cir
+$ rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 | tee examples/xtal.cir
 .SUBCKT F1 1 25
-* COMMAND: rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12
-* TYPE:    CHEBYSHEV_02
+* COMMAND: rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12
+* TYPE:    CHEBYSHEV_0.2
 * FILTER:  CRYSTAL_MESH
 * ORDER:   8
 * FREQ:    4.915110 MHz 
@@ -1548,10 +1548,10 @@ C39 24   25     39.5128e-12
 
 
 ```
-$ rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000 | tee examples/xtalloss.cir
+$ rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000 | tee examples/xtalloss.cir
 .SUBCKT F1 1 33
-* COMMAND: rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000
-* TYPE:    CHEBYSHEV_02
+* COMMAND: rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000
+* TYPE:    CHEBYSHEV_0.2
 * FILTER:  CRYSTAL_MESH
 * ORDER:   8
 * FREQ:    4.915110 MHz 

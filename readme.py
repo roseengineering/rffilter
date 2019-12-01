@@ -83,7 +83,7 @@ at the center freqency for each resonator looking from either end, see
 Ness' "A Unified Approach to the
 Design, Measurement, and Tuning of Coupled-Resonator Filters" in MTT.
 
-{ run("rffilter.py -g chebyshev_02 -n 8 -bw 1000") }
+{ run("rffilter.py -g chebyshev_0.2 -n 8 -bw 1000") }
 
 Lowpass and highpass filters.
 
@@ -131,16 +131,16 @@ Use the Zverev filter tables with an unloaded Q.
 
 Build a 500 Hz bandwidth crystal filter.
 
-{ run("rffilter.py -g chebyshev_001 -n 8 -crystal -l .170 -f 4e6 -bw 500 -cp 2.05e-12") }
+{ run("rffilter.py -g chebyshev_0.01 -n 8 -crystal -l .170 -f 4e6 -bw 500 -cp 2.05e-12") }
 
 Build a 2400 Hz bandwidth crystal filter.  This filter is from an example in Steder's 
 "Crystal Ladder Filters for All" paper in QEX.  
 
-{ run("rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 | tee examples/xtal.cir") }
+{ run("rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 | tee examples/xtal.cir") }
 
 ![crystal](examples/xtal.png)
 
-{ run("rffilter.py -g chebyshev_02 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000 | tee examples/xtalloss.cir") }
+{ run("rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000 | tee examples/xtalloss.cir") }
 
 ![crystal lossy](examples/xtalloss.png)
 

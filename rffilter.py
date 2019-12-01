@@ -1603,6 +1603,7 @@ def main(*args):
                         res.append(netitem(num, k, k + 1, wo * x / QU, tag='R'))
                         k, num = k + 1, num + 1
             else:
+                if res: res.append('')
                 for j in range(len(XP)):
                     k = node
                     x = XP[j][i]
@@ -1611,7 +1612,6 @@ def main(*args):
                         k, num = k + 1, num + 1
                     res.append(netitem(num, k, 0, x))
                     num += 1
-                res.append('')
 
         print(".SUBCKT F{} {a} {b}".format(subckt, a=1, b=k))
         print("* TYPE:   {}".format(kw['type']))

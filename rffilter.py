@@ -1594,14 +1594,12 @@ def main(*args):
                     x = XS[j][i]
                     res.append(netitem(num, k, k + 1, x))
                     k, num = k + 1, num + 1
-                    if kw.get('cp') and x > 0:
+                    if not np.isinf(QU) and x > 0:
                         res.append(netitem(num, k, k + 1, wo * x / QU, tag='R'))
                         k, num = k + 1, num + 1
+                    if kw.get('cp') and x > 0:
                         res.append(netitem(num, node, k, -kw['cp']))
                         num += 1
-                    elif not np.isinf(QU) and x > 0:
-                        res.append(netitem(num, k, k + 1, wo * x / QU, tag='R'))
-                        k, num = k + 1, num + 1
             else:
                 if res: res.append('')
                 for j in range(len(XP)):

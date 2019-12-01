@@ -1709,7 +1709,6 @@ def main(*args):
             kw['l'] = np.array([ np.double(x) for x in args.pop(0).split(',') ])
         elif opt == '-f':
             kw['f'] = np.array([ np.double(x) for x in args.pop(0).split(',') ])
-            # kw['f'] = np.double(args.pop(0))
         elif opt == '-bw':
             kw['bw'] = np.double(args.pop(0))
         elif opt == '-qu':

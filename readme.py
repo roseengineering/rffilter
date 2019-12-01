@@ -73,7 +73,7 @@ The program takes the following command line options:
 -bw            : design bandwidth
 -qu            : unload Q of resonators
 -cp            : parallel capacitance, C0, of crystals
--losspass      : generate a lowpass filter
+-lowpass       : generate a lowpass filter
 -highpass      : generate a highpass filter
 -bandpass      : generate a wideband bandpass filter
 -bandstop      : generate a wideband bandstop filter

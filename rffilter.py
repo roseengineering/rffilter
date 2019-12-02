@@ -1555,11 +1555,11 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
     wo = 2 * np.pi * fo
     RM = wo * LM / QU
     CM = 1 / (wo**2 * LM)
-
     fp = to_fp(fo, CM, LM, CP or 5e-12)
-    fo = bisect(func, np.min(fo), np.max(fp))
-    XS, XP, RE = func(fo)[:3]
-    return XS, XP, RE, fo
+
+    fd = bisect(func, np.min(fo), np.max(fp))
+    XS, XP, RE = func(fd)[:3]
+    return XS, XP, RE, fd
 
 
 #######################################################
@@ -1796,8 +1796,9 @@ def main(*args):
         kw['filter'] = 'CRYSTAL_MESH'
         for q, k in qk:
             kw['q'], kw['k'] = q, k
-            XS, XP, RE, kw['fd'] = to_crystal_mesh(
+            XS, XP, RE, fd = to_crystal_mesh(
                 q, k, kw['f'], kw['bw'], LM=kw['l'], CP=kw['cp'], QU=kw['qu'])
+            kw['fd'] = fd
             netlist(XS, XP, RE, kw, 0)
     elif kw.get('bw'):
         for q, k in qk:

@@ -1482,7 +1482,7 @@ def to_nodal(q, k, fo, BW, R=None, L=None):
         CP[0::2] = C0
         return [CS], [LP, CP], RE
 
-def to_mesh(q, k, fo, BW, R=None, L=None):
+def to_mesh(q, k, fo, BW, R=None, L=None, LM=None, CM=None):
     with np.errstate(divide='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
@@ -1498,22 +1498,42 @@ def to_mesh(q, k, fo, BW, R=None, L=None):
             RE = np.ones(2) * R
             L0 = RE * QE / wo
             L0 = np.insert(L0, 1, np.ones(N-2) * L0[0])
-        C0 = -1 / (wo**2 * L0)
 
         # find CK and C0 using K inverter
         Z = wo * np.sqrt(L0[:-1] * L0[1:])
         CK = -1 / (wo * K * Z)
         CK = np.insert(np.ones(2) * -np.inf, 1, CK)
-        C0 = 1 / (1 / C0 - 1 / CK[:-1] - 1 / CK[1:])
+        C0 = -1 / (wo**2 * L0)
+
+        if LM is None:
+            C0 = 1 / (1 / C0 - 1 / CK[:-1] - 1 / CK[1:])
+            CS = np.zeros(2 * N - 1)
+            LS = np.zeros(2 * N - 1)
+            CP = np.zeros(2 * N - 1)
+
+            LS[0::2] = L0
+            CS[0::2] = C0
+            CP[1::2] = CK[1:-1]
+            XS, XP = [LS, CS], [CP]
+        else:
+            fs = 1 / (2 * np.pi * np.sqrt(LM * CM))
+            ws = 2 * np.pi * fs
+            CX = -1 / (ws**2 * L0)
+            CS = 1 / (1 / C0 - 1 / CX - 1 / CK[:-1] - 1 / CK[1:])
+
+            CSM = np.zeros(2 * N - 1)
+            CSS = np.zeros(2 * N - 1)
+            LSM = np.zeros(2 * N - 1)
+            CP = np.zeros(2 * N - 1)
+
+            CSM[0::2] = -CM
+            LSM[0::2] = LM
+            CSS[0::2] = CS
+            CP[1::2] = CK[1:-1]
+            XS, XP = [CSM, LSM, CSS], [CP]
 
         # result
-        CS = np.zeros(2 * N - 1)
-        LS = np.zeros(2 * N - 1)
-        CP = np.zeros(2 * N - 1)
-        LS[0::2] = L0
-        CS[0::2] = C0
-        CP[1::2] = CK[1:-1]
-        return [LS, CS], [CP], RE
+        return XS, XP, RE
 
 def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
 
@@ -1541,22 +1561,15 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
 
     def func(fo):
         L = to_leff(fo, CM, LM, CP, RM) 
-        XS, XP, RE = to_mesh(q, k, fo, BW, L=L)
-        fs = 1 / (2 * np.pi * np.sqrt(LM * CM))
-        CX = -1 / ((2 * np.pi * fs)**2 * L)
-
-        CS = 1 / (1 / XS[1][0::2] - 1 / CX)
-        XS[1][0::2] = CS
-        XS[0][0::2] = LM
-        XS.insert(0, np.zeros(len(XS[0])))
-        XS[0][0::2] = -CM * np.ones(len(CS))
+        XS, XP, RE = to_mesh(q, k, fo, BW, L=L, LM=LM, CM=CM)
+        CS = XS[-1]
         return XS, XP, RE, np.max(CS)
 
     wo = 2 * np.pi * fo
     RM = wo * LM / QU
     CM = 1 / (wo**2 * LM)
-    fp = to_fp(fo, CM, LM, CP or 5e-12)
 
+    fp = to_fp(fo, CM, LM, CP or 5e-12)
     fd = bisect(func, np.min(fo), np.max(fp))
     XS, XP, RE, _ = func(fd)
     return XS, XP, RE, fd
@@ -1810,9 +1823,4 @@ def main(*args):
 if __name__ == '__main__':
     import sys
     main(*sys.argv[1:])
-
-
-
-
-
 

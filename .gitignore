@@ -1,4 +1,7 @@
 makefile
 notes/
 *~
-example.dat
+examples/*.dat
+examples/*.lst
+examples/*.txt
+examples/*.cfg

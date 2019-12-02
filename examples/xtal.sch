@@ -1,6 +1,6 @@
 <Qucs Schematic 0.0.20>
 <Properties>
-  <View=0,0,894,992,1,0,20>
+  <View=0,0,894,1209,1,0,20>
   <Grid=10,10,1>
   <DataSet=xtal.dat>
   <DataDisplay=xtal.dpl>
@@ -22,7 +22,7 @@
 </Symbol>
 <Components>
   <.DC DC1 1 50 70 0 40 0 0 "26.85" 0 "0.001" 0 "1 pA" 0 "1 uV" 0 "no" 0 "150" 0 "no" 0 "none" 0 "CroutLU" 0>
-  <.SP SP1 1 60 160 0 65 0 0 "lin" 1 "4.912M" 1 "4.918M" 1 "201" 1 "no" 0 "1" 0 "2" 0 "no" 0 "no" 0>
+  <.SP SP1 1 60 160 0 65 0 0 "lin" 1 "4.912M" 1 "4.918M" 1 "401" 1 "no" 0 "1" 0 "2" 0 "no" 0 "no" 0>
   <Pac P1 1 350 160 18 -26 0 1 "1" 1 "1060" 1 "0 dBm" 0 "1 GHz" 0 "26.85" 0>
   <Pac P2 1 750 150 18 -26 0 1 "2" 1 "1060" 1 "0 dBm" 0 "1 GHz" 0 "26.85" 0>
   <SPICE X1 1 580 120 -26 -57 0 0 "xtal.cir" 1 "_net1,_net25" 0 "yes" 0 "none" 0>

@@ -158,23 +158,12 @@ Build a 2400 Hz bandwidth crystal filter.  This filter is from an example in Ste
 
 ![crystal lossy](examples/xtalloss.png)
 
-Unfortunately setting multiple frequencies is broken.  This gives the wrong series capacitor values.  Do not use.
+Using multiple frequencies. Not sure if this is broken or not.
 
-{ run("rffilter.py -k chebyshev_0.5 -bw 2500 -n 8 -l 70e-3 -crystal -cp 3.7e-12 -f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320,4999.895e3,5000.010e3,5000.485e3 | tee examples/broken.cir") }
+{ run("rffilter.py -k chebyshev_0.5 -bw 2500 -n 8 -l 70e-3 -crystal -cp 3.7e-12 -f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3 | tee examples/multiple.cir") }
+
+![multiple](examples/multiple.png)
 
 """)
 
 
-"""
-{ run("") }
-{ run("") }
-{ run("") }
-{ run("") }
-{ run("") }
-
-Install 
--------------
-
-Use 'pip install .' to install (or use 'pip install git+https://github.com/roseengineering/rffilter').
-
-"""

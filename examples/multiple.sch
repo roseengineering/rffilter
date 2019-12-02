@@ -2,10 +2,10 @@
 <Properties>
   <View=0,0,894,992,1,0,20>
   <Grid=10,10,1>
-  <DataSet=broken.dat>
-  <DataDisplay=broken.dpl>
+  <DataSet=multiple.dat>
+  <DataDisplay=multiple.dpl>
   <OpenDisplay=0>
-  <Script=broken.m>
+  <Script=multiple.m>
   <RunScript=0>
   <showFrame=0>
   <FrameText0=Title>
@@ -22,13 +22,13 @@
 </Symbol>
 <Components>
   <.DC DC1 1 50 70 0 40 0 0 "26.85" 0 "0.001" 0 "1 pA" 0 "1 uV" 0 "no" 0 "150" 0 "no" 0 "none" 0 "CroutLU" 0>
-  <.SP SP1 1 60 160 0 65 0 0 "lin" 1 "4M" 1 "6M" 1 "1001" 1 "no" 0 "1" 0 "2" 0 "no" 0 "no" 0>
-  <Pac P1 1 350 160 18 -26 0 1 "1" 1 "616" 1 "0 dBm" 0 "1 GHz" 0 "26.85" 0>
-  <Pac P2 1 750 150 18 -26 0 1 "2" 1 "616" 1 "0 dBm" 0 "1 GHz" 0 "26.85" 0>
+  <.SP SP1 1 60 160 0 65 0 0 "lin" 1 "5.000M" 1 "5.0035M" 1 "401" 1 "no" 0 "1" 0 "2" 0 "no" 0 "no" 0>
+  <Pac P1 1 350 160 18 -26 0 1 "1" 1 "758" 1 "0 dBm" 0 "1 GHz" 0 "26.85" 0>
+  <Pac P2 1 750 150 18 -26 0 1 "2" 1 "792.6" 1 "0 dBm" 0 "1 GHz" 0 "26.85" 0>
   <GND * 5 580 150 0 0 0 0>
   <GND * 5 750 180 0 0 0 0>
   <GND * 5 350 190 0 0 0 0>
-  <SPICE X1 1 580 120 -26 -57 0 0 "broken.cir" 1 "_net1,_net25" 0 "yes" 0 "none" 0>
+  <SPICE X1 1 580 120 -26 -57 0 0 "multiple.cir" 1 "_net1,_net25" 0 "yes" 0 "none" 0>
 </Components>
 <Wires>
   <350 120 350 130 "" 0 0 0 "">

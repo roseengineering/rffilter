@@ -1558,7 +1558,7 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
     fp = to_fp(fo, CM, LM, CP or 5e-12)
 
     fd = bisect(func, np.min(fo), np.max(fp))
-    XS, XP, RE = func(fd)[:3]
+    XS, XP, RE, _ = func(fd)
     return XS, XP, RE, fd
 
 

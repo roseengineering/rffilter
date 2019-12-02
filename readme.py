@@ -14,8 +14,7 @@ $ {command}
 
 print(f"""
 
-rffilter
-----------
+# rffilter
 
 Python 3 script for calculating RF filters.
 The script requires the numpy library.
@@ -24,8 +23,7 @@ For nodal and mesh filters (including crystal filters) the script
 will output resonator group delays from Ness as well as 
 resonator coupling bandwidths from Dishal.
 
-Library functions
------------------
+# Library functions
 
 The script provides the following public functions for import.
 
@@ -57,8 +55,7 @@ xs, xp, re     = to_mesh(q, k, fo, BW, R=None, L=None):
 xs, xp, re, fo = to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
 ```
 
-Command Line
--------------
+# Command Line
 
 The program takes the following command line options:
 
@@ -82,8 +79,7 @@ The program takes the following command line options:
 -crystal       : generate a narrow-band crystal bandpass filter
 ```
 
-Examples
---------
+# Examples
 
 ## List of filters types provided
 

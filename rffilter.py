@@ -1482,7 +1482,7 @@ def to_nodal(q, k, fo, BW, R=None, L=None):
         CP[0::2] = C0
         return [CS], [LP, CP], RE
 
-def to_mesh(q, k, fo, BW, R=None, L=None, LM=None, CM=None):
+def to_mesh(q, k, fo, BW, R=None, L=None, XM=None):
     with np.errstate(divide='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
@@ -1503,76 +1503,72 @@ def to_mesh(q, k, fo, BW, R=None, L=None, LM=None, CM=None):
         Z = wo * np.sqrt(L0[:-1] * L0[1:])
         CK = -1 / (wo * K * Z)
         CK = np.insert(np.ones(2) * -np.inf, 1, CK)
-        C0 = -1 / (wo**2 * L0)
 
-        if LM is None:
-            C0 = 1 / (1 / C0 - 1 / CK[:-1] - 1 / CK[1:])
-            CS = np.zeros(2 * N - 1)
-            LS = np.zeros(2 * N - 1)
-            CP = np.zeros(2 * N - 1)
-
-            LS[0::2] = L0
-            CS[0::2] = C0
-            CP[1::2] = CK[1:-1]
-            XS, XP = [LS, CS], [CP]
+        if XM is None:
+            C0 = 1 / (-wo**2 * L0 - 1 / CK[:-1] - 1 / CK[1:])
         else:
-            fs = 1 / (2 * np.pi * np.sqrt(LM * CM))
-            ws = 2 * np.pi * fs
-            CX = -1 / (ws**2 * L0)
-            CS = 1 / (1 / C0 - 1 / CX - 1 / CK[:-1] - 1 / CK[1:])
+            C0 = -1 / (wo * XM.imag + 1 / CK[:-1] + 1 / CK[1:])
 
-            CSM = np.zeros(2 * N - 1)
-            CSS = np.zeros(2 * N - 1)
-            LSM = np.zeros(2 * N - 1)
-            CP = np.zeros(2 * N - 1)
+        CS = np.zeros(2 * N - 1)
+        LS = np.zeros(2 * N - 1)
+        CP = np.zeros(2 * N - 1)
 
-            CSM[0::2] = -CM
-            LSM[0::2] = LM
-            CSS[0::2] = CS
-            CP[1::2] = CK[1:-1]
-            XS, XP = [CSM, LSM, CSS], [CP]
+        LS[0::2] = L0
+        CS[0::2] = C0
+        CP[1::2] = CK[1:-1]
+        return [LS, CS], [CP], RE
 
-        # result
-        return XS, XP, RE
 
 def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
 
-    def bisect(f, a, b, N=100):
-        for n in range(N):
-            c = (a + b) / 2
-            if np.abs(c - a) < .1: return b
-            if np.sign(f(c)[-1]) == np.sign(f(a)[-1]): a = c
-            else: b = c
-
-    def to_fp(fo, CM, LM, CP):
-        return 1 / (2 * np.pi * np.sqrt(LM * CM * CP / (CM + CP)))
-
-    def to_xeff(fo, CM, LM, CP, RM):
-        wo = 2 * np.pi * fo
-        a = RM + 1j * (wo * LM - 1 / (wo * CM))
-        if CP == 0: return a
-        b = -1j / (wo * CP)
-        return a * b / (a + b)
-
-    def to_leff(fo, CM, LM, CP, RM, df=1):
-        x1 = to_xeff(fo + df, CM, LM, CP, RM).imag
-        x0 = to_xeff(fo, CM, LM, CP, RM).imag
-        return (x1 - x0) / df / (4 * np.pi)
-
     def func(fo):
-        L = to_leff(fo, CM, LM, CP, RM) 
-        XS, XP, RE = to_mesh(q, k, fo, BW, L=L, LM=LM, CM=CM)
+        L = to_leff(fo, CM, LM, CP, QU) 
+        XM = to_xeff(fo, CM, LM, CP, QU) 
+        XS, XP, RE = to_mesh(q, k, fo, BW, L=L, XM=XM)
         CS = XS[-1]
         return XS, XP, RE, np.max(CS)
 
+    # np.set_printoptions(precision=4, linewidth=120)
+
     wo = 2 * np.pi * fo
-    RM = wo * LM / QU
+    LM = np.ones(len(k) + 1) * LM
     CM = 1 / (wo**2 * LM)
 
     fp = to_fp(fo, CM, LM, CP or 5e-12)
     fd = bisect(func, np.min(fo), np.max(fp))
     XS, XP, RE, _ = func(fd)
+
+    XS.insert(0, np.zeros_like(XS[0]))
+    XS[0][0::2] = -CM
+    XS[1][0::2] = LM
     return XS, XP, RE, fd
+
+
+# helper routines
+#######################################################
+
+def bisect(f, a, b, N=100):
+    for n in range(N):
+        c = (a + b) / 2
+        if np.abs(c - a) < .1: return b
+        if np.sign(f(c)[-1]) == np.sign(f(a)[-1]): a = c
+        else: b = c
+
+def to_fp(fo, CM, LM, CP):
+    return 1 / (2 * np.pi * np.sqrt(LM * CM * CP / (CM + CP)))
+
+def to_xeff(fo, CM, LM, CP, QU):
+    wo = 2 * np.pi * fo
+    RM = wo * LM / QU
+    a = RM + 1j * (wo * LM - 1 / (wo * CM))
+    if CP == 0: return a
+    b = -1j / (wo * CP)
+    return a * b / (a + b)
+
+def to_leff(fo, CM, LM, CP, QU, df=.1):
+    x1 = to_xeff(fo + df, CM, LM, CP, QU).imag
+    x0 = to_xeff(fo, CM, LM, CP, QU).imag
+    return (x1 - x0) / df / (4 * np.pi)
 
 
 #######################################################

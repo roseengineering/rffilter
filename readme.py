@@ -14,7 +14,7 @@ $ {command}
 
 print(f"""
 
-# rffilter
+# Rffilter
 
 Python 3 script for calculating RF filters.
 The script requires the numpy library.

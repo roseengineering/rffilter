@@ -1528,8 +1528,6 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
         CS = XS[-1]
         return XS, XP, RE, np.max(CS)
 
-    # np.set_printoptions(precision=4, linewidth=120)
-
     wo = 2 * np.pi * fo
     LM = np.ones(len(k) + 1) * LM
     CM = 1 / (wo**2 * LM)

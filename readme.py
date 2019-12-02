@@ -166,8 +166,7 @@ A crystal filter with multiple crystals of different frequencies.  No parallel c
 
 ![multiple](examples/multiple.png)
 
-The same crystal filter as above but with real world parallel capacitance on the crystal.  Plus no ripples running the design through a circuit simulator.
-
+The same crystal filter as above but with holder parallel capacitance across the crystals.  
 
 { run("rffilter.py -k chebyshev_0.5 -bw 2500 -n 8 -l 70e-3 -crystal -cp 3.7e-12 -f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3 | tee examples/broken.cir") }
 

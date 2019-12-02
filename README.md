@@ -1725,8 +1725,7 @@ C31 24   25    115.1531e-12
 
 ![multiple](examples/multiple.png)
 
-The same crystal filter as above but with real world parallel capacitance on the crystal.  Plus no ripples running the design through a circuit simulator.
-
+The same crystal filter as above but with holder parallel capacitance across the crystals.  
 
 
 ```

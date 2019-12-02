@@ -1591,8 +1591,11 @@ def main(*args):
 
         k, num = 1, 1
         res = []
+        ports = [ 1 ]
         for i in range(len(XS[0])):
             if i % 2 == n:
+                if kw.get('nodal') and k not in ports:
+                    ports.append(k)
                 node = k
                 for j in range(len(XS)):
                     x = XS[j][i]
@@ -1615,8 +1618,9 @@ def main(*args):
                     else:
                         res.append(netitem(num, k, 0, x))
                     num += 1
+        ports.append(k)
 
-        print(".SUBCKT F1 {a} {b}".format(a=1, b=k))
+        print(".SUBCKT F1 {}".format(' '.join([ str(i) for i in ports ])))
         print("* COMMAND  : {}".format(' '.join(sys.argv)))
         print("* TYPE     : {}".format(kw['type']))
         print("* FILTER   : {}".format(kw['filter']))

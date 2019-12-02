@@ -1,4 +1,4 @@
-.SUBCKT F1 1 5
+.SUBCKT F1 1 2 3 4 5
 * COMMAND  : rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5
 * TYPE     : BUTTERWORTH
 * FILTER   : NODAL

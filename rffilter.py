@@ -1542,7 +1542,9 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
     def func(fo):
         L = to_leff(fo, CM, LM, CP, RM) 
         XS, XP, RE = to_mesh(q, k, fo, BW, L=L)
+        fs = 1 / (2 * np.pi * np.sqrt(LM * CM))
         CX = -1 / ((2 * np.pi * fs)**2 * L)
+
         CS = 1 / (1 / XS[1][0::2] - 1 / CX)
         XS[1][0::2] = CS
         XS[0][0::2] = LM
@@ -1553,7 +1555,7 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
     wo = 2 * np.pi * fo
     RM = wo * LM / QU
     CM = 1 / (wo**2 * LM)
-    fs = fo
+
     fp = to_fp(fo, CM, LM, CP or 5e-12)
     fo = bisect(func, np.min(fo), np.max(fp))
     XS, XP, RE = func(fo)[:3]
@@ -1651,7 +1653,8 @@ def main(*args):
         qk = np.insert(q, 1, k)
         print("* ij    qi,kij           TD0           TDn           CBW")
         for i in range(N + 1):
-            print('* {:d}{:d}  {:8.4f} {} {} {}'.format(i, i+1, qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i])))
+            print('* {:d}{:d}  {:8.4f} {} {} {}'.format(i, i+1, 
+                  qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i])))
         print()
  
     def list_gfilters():
@@ -1754,20 +1757,20 @@ def main(*args):
     # print wide-band filters
 
     if kw.get('lowpass'):
-        kw['f'] = kw['f'][0]
         kw['filter'] = 'LOWPASS'
+        kw['f'] = kw['f'][0]
         XS, XP, RE = to_lowpass(g, kw['f'], R=kw['r'])
         netlist([XS], [XP], RE, kw, 0)
         netlist([XS], [XP], RE, kw, 1)
     elif kw.get('highpass'):
-        kw['f'] = kw['f'][0]
         kw['filter'] = 'HIGHPASS'
+        kw['f'] = kw['f'][0]
         XS, XP, RE = to_highpass(g, kw['f'], R=kw['r'])
         netlist([XS], [XP], RE, kw, 0)
         netlist([XS], [XP], RE, kw, 1)
     elif kw.get('bandpass'):
-        kw['f'] = kw['f'][0]
         kw['filter'] = 'BANDPASS'
+        kw['f'] = kw['f'][0]
         QL = kw['f'] / kw['bw']
         XS, XP, RE = to_bandpass(g, kw['f'], kw['bw'], R=kw['r'])
         netlist(XS, XP, RE, kw, 0)

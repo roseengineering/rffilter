@@ -1504,10 +1504,8 @@ def to_mesh(q, k, fo, BW, R=None, L=None, XM=None):
         CK = -1 / (wo * K * Z)
         CK = np.insert(np.ones(2) * -np.inf, 1, CK)
 
-        if XM is None:
-            C0 = 1 / (-wo**2 * L0 - 1 / CK[:-1] - 1 / CK[1:])
-        else:
-            C0 = -1 / (wo * XM.imag + 1 / CK[:-1] + 1 / CK[1:])
+        XM = wo * L0 if XM is None else XM.imag
+        C0 = -1 / (wo * XM + 1 / CK[:-1] + 1 / CK[1:])
 
         CS = np.zeros(2 * N - 1)
         LS = np.zeros(2 * N - 1)

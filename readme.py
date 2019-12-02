@@ -154,6 +154,8 @@ Build a 2400 Hz bandwidth crystal filter.  This filter is from an example in Ste
 
 ![crystal](examples/xtal.png)
 
+Same filter with an unloaded Q of 150000.
+
 { run("rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000 | tee examples/xtalloss.cir") }
 
 ![crystal lossy](examples/xtalloss.png)
@@ -164,9 +166,11 @@ A crystal filter with multiple crystals of different frequencies.  No parallel c
 
 The same crystal filter but this time with real world parallel capacitance on the crystal.  Unfortunately the ripples are pretty off when running it through a circuit simulator.  The design function might be broken.
 
+![multiple](examples/multiple.png)
+
 { run("rffilter.py -k chebyshev_0.5 -bw 2500 -n 8 -l 70e-3 -crystal -cp 3.7e-12 -f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3 | tee examples/broken.cir") }
 
-![multiple](examples/broken.png)
+![broken](examples/broken.png)
 
 """)
 

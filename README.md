@@ -71,7 +71,7 @@ The program takes the following command line options:
 Examples
 --------
 
-# List of filters types provided
+## List of filters types provided
 
 
 ```
@@ -123,7 +123,7 @@ linear_phase_5    2  3  4  5  6  7  8
 ```
 
 
-# Coupling bandwidth and group delay
+## Coupling bandwidth and group delay
 
 Print out coupling design information.  CBW is the coupling bandwidth between resonators and the bandwidth of the two resonators at the end.
 TD0 and TDn are the group delay
@@ -148,7 +148,7 @@ $ rffilter.py -g chebyshev_0.2 -n 8 -bw 1000
 ```
 
 
-# Nodal narrow-band filters.
+## Nodal narrow-band filters.
 
 
 ```
@@ -197,7 +197,7 @@ C14 5    0       4.7214e-09
 
 ![nodal](examples/nodal.png)
 
-# Narrow-band mesh filters.
+## Narrow-band mesh filters.
 
 
 ```
@@ -261,7 +261,7 @@ C23 16   17     34.7427e-12
 
 ![mesh lossy](examples/mesh.png)
 
-# Crystal mesh filters.
+## Crystal mesh filters.
 
 Build a 500 Hz bandwidth crystal filter.
 
@@ -664,8 +664,7 @@ C39 24   25     70.5414e-12
 
 ![broken](examples/broken.png)
 
-
-# Lowpass and highpass filters.
+## Lowpass and highpass filters.
 
 
 ```
@@ -710,7 +709,7 @@ C5  3    0     196.7251e-12
 
 ![lowpass](examples/lowpass.png)
 
-# Wide band bandpass filters.
+## Wide band bandpass filters.
 
 
 ```
@@ -763,7 +762,7 @@ C8  4    5      41.5890e-12
 ```
 
 
-# Use of Zverev filter tables with an unloaded Q.
+## Use of Zverev filter tables with an unloaded Q.
 
 
 ```
@@ -1340,7 +1339,7 @@ C23 8    0       7.1977e-12
 ```
 
 
-# More examples
+## More examples
 
 
 ```
@@ -1747,9 +1746,6 @@ C11 8    9       7.1511e-12
 .end
 
 ```
-
-
-
 
 
 

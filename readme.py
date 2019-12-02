@@ -85,13 +85,13 @@ The program takes the following command line options:
 Examples
 --------
 
-# List of filters types provided
+## List of filters types provided
 
 { run("rffilter.py -g") }
 { run("rffilter.py -k") }
 { run("rffilter.py -zverev") }
 
-# Coupling bandwidth and group delay
+## Coupling bandwidth and group delay
 
 Print out coupling design information.  CBW is the coupling bandwidth between resonators and the bandwidth of the two resonators at the end.
 TD0 and TDn are the group delay
@@ -101,17 +101,17 @@ Design, Measurement, and Tuning of Coupled-Resonator Filters" in MTT.
 
 { run("rffilter.py -g chebyshev_0.2 -n 8 -bw 1000") }
 
-# Nodal narrow-band filters.
+## Nodal narrow-band filters.
 
 { run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 | tee examples/nodal.cir") }
 ![nodal](examples/nodal.png)
 
-# Narrow-band mesh filters.
+## Narrow-band mesh filters.
 
 { run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 | tee examples/mesh.cir") }
 ![mesh lossy](examples/mesh.png)
 
-# Crystal mesh filters.
+## Crystal mesh filters.
 
 Build a 500 Hz bandwidth crystal filter.
 
@@ -138,22 +138,21 @@ The same crystal filter as above but with holder parallel capacitance across the
 { run("rffilter.py -k chebyshev_0.5 -bw 2500 -n 8 -l 70e-3 -crystal -cp 3.7e-12 -f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3 | tee examples/broken.cir") }
 ![broken](examples/broken.png)
 
-
-# Lowpass and highpass filters.
+## Lowpass and highpass filters.
 
 { run("rffilter.py -g butterworth -lowpass -f 10e6 -n 5 | tee examples/lowpass.cir") }
 ![lowpass](examples/lowpass.png)
 
-# Wide band bandpass filters.
+## Wide band bandpass filters.
 
 { run("rffilter.py -g butterworth -bandpass -f 10e6 -bw 1e6 -n 4") }
 
-# Use of Zverev filter tables with an unloaded Q.
+## Use of Zverev filter tables with an unloaded Q.
 
 { run("rffilter.py -zverev butterworth -nodal -qu 2500 -bw 1e6 -f 10e6 -n 3") }
 { run("rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8") }
 
-# More examples
+## More examples
 
 { run("rffilter.py -k butterworth -nodal -f 10e6 -bw 1e6 -n 5") }
 { run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -l 100e-9,100e-9,100e-9,100e-9,100e-9") }
@@ -164,9 +163,6 @@ The same crystal filter as above but with holder parallel capacitance across the
 { run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -l 100e-9") }
 { run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100") }
 { run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100,120") }
-
-
-
 
 """)
 

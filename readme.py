@@ -99,10 +99,14 @@ Design, Measurement, and Tuning of Coupled-Resonator Filters" in MTT.
 
 ## Nodal narrow-band filters.
 
-{ run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 | tee examples/nodal.cir") }
+Nodal filters have additional ports in their spice model for each resonators, besides
+the source and load port.  The port 1 is the input while the port with the highest number
+is the output.  The resonators ports are in numbered increasing port order.
+
+{ run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -qu 2000 | tee examples/nodal.cir") }
 ![nodal](examples/nodal.png)
 
-## Narrow-band mesh filters.
+## Mesh narrow-band filters.
 
 { run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 | tee examples/mesh.cir") }
 ![mesh lossy](examples/mesh.png)
@@ -133,7 +137,7 @@ The same crystal filter as above but with holder parallel capacitance across the
 
 ## Lowpass and highpass filters.
 
-{ run("rffilter.py -g butterworth -lowpass -f 10e6 -n 5 | tee examples/lowpass.cir") }
+{ run("rffilter.py -g butterworth -lowpass -f 10e6 -n 5") }
 ![lowpass](examples/lowpass.png)
 
 ## Wide band bandpass filters.

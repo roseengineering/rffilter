@@ -146,11 +146,15 @@ $ rffilter.py -g chebyshev_0.2 -n 8 -bw 1000
 
 ## Nodal narrow-band filters.
 
+Nodal filters have additional ports in their spice model for each resonators, besides
+the source and load port.  The port 1 is the input while the port with the highest number
+is the output.  The resonators ports are in numbered increasing port order.
+
 
 ```
-$ rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 | tee examples/nodal.cir
+$ rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -qu 2000 | tee examples/nodal.cir
 .SUBCKT F1 1 2 3 4 5
-* COMMAND  : rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5
+* COMMAND  : rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -qu 2000
 * TYPE     : BUTTERWORTH
 * FILTER   : NODAL
 * ORDER    : 5
@@ -159,6 +163,7 @@ $ rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 | tee examples/nodal.
 * RL       : 50.0
 * BW       : 400.0000e+03
 * QL       : 25.0
+* QU       : 2000.0
 
 * ij    qi,kij           TD0           TDn           CBW
 * 01    0.6180  983.6253e-09             -  647.2178e+03
@@ -168,23 +173,28 @@ $ rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 | tee examples/nodal.
 * 45    1.0000    5.1503e-06    2.5752e-06  400.0018e+03
 * 56    0.6180             -  983.6253e-09  647.2178e+03
 
-L1  1    0      51.5040e-09
+L1  1    1001   51.5040e-09
+R1  1001 0       1.6180e-03
 C2  1    0       4.7214e-09
 C3  1    2     196.7259e-12
 
-L4  2    0      51.5040e-09
+L4  2    1004   51.5040e-09
+R4  1004 0       1.6180e-03
 C5  2    0       4.6120e-09
 C6  2    3     109.3582e-12
 
-L7  3    0      51.5040e-09
+L7  3    1007   51.5040e-09
+R7  1007 0       1.6180e-03
 C8  3    0       4.6994e-09
 C9  3    4     109.3582e-12
 
-L10 4    0      51.5040e-09
+L10 4    1010   51.5040e-09
+R10 1010 0       1.6180e-03
 C11 4    0       4.6120e-09
 C12 4    5     196.7259e-12
 
-L13 5    0      51.5040e-09
+L13 5    1013   51.5040e-09
+R13 1013 0       1.6180e-03
 C14 5    0       4.7214e-09
 .ends
 .end
@@ -193,7 +203,7 @@ C14 5    0       4.7214e-09
 
 ![nodal](examples/nodal.png)
 
-## Narrow-band mesh filters.
+## Mesh narrow-band filters.
 
 
 ```
@@ -586,7 +596,7 @@ C39 24   25     70.5414e-12
 
 
 ```
-$ rffilter.py -g butterworth -lowpass -f 10e6 -n 5 | tee examples/lowpass.cir
+$ rffilter.py -g butterworth -lowpass -f 10e6 -n 5
 .SUBCKT F1 1 4
 * COMMAND  : rffilter.py -g butterworth -lowpass -f 10e6 -n 5
 * TYPE     : BUTTERWORTH

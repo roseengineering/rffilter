@@ -109,9 +109,6 @@ Design, Measurement, and Tuning of Coupled-Resonator Filters" in MTT.
 
 ## Crystal mesh filters.
 
-Build a 500 Hz bandwidth crystal filter.
-
-{ run("rffilter.py -g chebyshev_0.01 -n 8 -crystal -l .170 -f 4e6 -bw 500 -cp 2.05e-12") }
 
 Build a 2400 Hz bandwidth crystal filter.  This filter is from an example in Steder's 
 "Crystal Ladder Filters for All" paper in QEX.  
@@ -159,6 +156,10 @@ The same crystal filter as above but with holder parallel capacitance across the
 { run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -l 100e-9") }
 { run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100") }
 { run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100,120") }
+
+Build a 500 Hz bandwidth crystal filter.
+
+{ run("rffilter.py -g chebyshev_0.01 -n 8 -crystal -l .170 -f 4e6 -bw 500 -cp 2.05e-12") }
 
 """)
 

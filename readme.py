@@ -165,7 +165,9 @@ The same crystal filter as above but with holder parallel capacitance across the
 
 Build a 500 Hz bandwidth crystal filter.
 
-{ run("rffilter.py -g chebyshev_0.01 -n 8 -crystal -l .170 -f 4e6 -bw 500 -cp 2.05e-12") }
+Expose the ports.  Note, sequential ports must be connected together - and broken to short resonators for mesh filters.  See example.
+
+{ run("rffilter.py -g chebyshev_0.01 -n 8 -crystal -l .170 -f 4e6 -bw 500 -cp 2.05e-12 -expose") }
 
 """)
 

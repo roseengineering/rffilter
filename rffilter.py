@@ -1594,13 +1594,15 @@ def main(*args):
         ports = [ 1 ]
         for i in range(len(XS[0])):
             if i % 2 == n:
-                if kw.get('crystal') and k not in ports:
-                    ports.append(k)
-                    k = k + 1
-                    ports.append(k)
+
+                # if kw.get('crystal') and k not in ports:
+                #    ports.append(k)
+                #    k = k + 1
+                #    ports.append(k)
                 
                 if kw.get('nodal') and k not in ports:
                     ports.append(k)
+
                 node = k
                 for j in range(len(XS)):
                     x = XS[j][i]

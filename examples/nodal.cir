@@ -1,5 +1,5 @@
-.SUBCKT F1 1 2 3 4 5
-* COMMAND  : rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -qu 2000
+.SUBCKT F1 1 5
+* COMMAND  : rffilter.py -g butterworth -nodal -expose -f 10e6 -bw 400e3 -n 5 -qu 2000
 * TYPE     : BUTTERWORTH
 * FILTER   : NODAL
 * ORDER    : 5

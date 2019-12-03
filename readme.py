@@ -60,9 +60,9 @@ xs, xp, re, fo = to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
 The program takes the following command line options:
 
 ```
--g             : lowpass prototype element values
--k             : ideal q, k coupling coefficients
--zverev        : q, k coupling coefficients from Zverev's QO tables
+-g             : lowpass prototype element response types
+-k             : q, k coupling response types
+-zverev        : predistorted q, k coupling response types from Zverev.
 -n             : number of filter poles or resonators
 -r             : end resistors, can be given in common notation
 -l             : resonator inductor values, can be given in common notation
@@ -70,6 +70,7 @@ The program takes the following command line options:
 -bw            : design bandwidth
 -qu            : unload Q of resonators
 -cp            : parallel capacitance, C0, of crystals
+-expose        : expose resonators in spice netlist for nodal and mesh filters
 -lowpass       : generate a lowpass filter
 -highpass      : generate a highpass filter
 -bandpass      : generate a wideband bandpass filter
@@ -99,11 +100,12 @@ Design, Measurement, and Tuning of Coupled-Resonator Filters" in MTT.
 
 ## Nodal narrow-band filters.
 
-Nodal filters have additional ports in their spice model for each resonators, besides
-the source and load port.  The port 1 is the input while the port with the highest number
-is the output.  The resonators ports are in numbered increasing port order.
+Generate a narrow-band filter using LC resonators top coupled by capacitors.
+The -expose option expose the resonators of the filter as ports.
+The input port is the port 1 while the port with the highest number
+is the output port.  The exposed resonators ports are in numbered in increasing port order.
 
-{ run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -qu 2000 | tee examples/nodal.cir") }
+{ run("rffilter.py -g butterworth -nodal -expose -f 10e6 -bw 400e3 -n 5 -qu 2000 | tee examples/nodal.cir") }
 ![nodal](examples/nodal.png)
 
 ## Mesh narrow-band filters.

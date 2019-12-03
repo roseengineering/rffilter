@@ -1595,13 +1595,13 @@ def main(*args):
         for i in range(len(XS[0])):
             if i % 2 == n:
 
-                # if kw.get('crystal') and k not in ports:
-                #    ports.append(k)
-                #    k = k + 1
-                #    ports.append(k)
-                
-                if kw.get('nodal') and k not in ports:
-                    ports.append(k)
+                if kw.get('exposed') and k not in ports:
+                    if kw.get('crystal') or kw.get('mesh'):
+                        ports.append(k)
+                        k = k + 1
+                        ports.append(k)
+                    if kw.get('nodal'):
+                        ports.append(k)
 
                 node = k
                 for j in range(len(XS)):
@@ -1749,6 +1749,9 @@ def main(*args):
             kw['mesh'] = True
         elif opt == '-crystal':
             kw['crystal'] = True
+
+        elif opt == '-expose':
+            kw['expose'] = True
         else:
             raise ValueError('unknown option:', opt)
 

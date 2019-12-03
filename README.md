@@ -286,6 +286,7 @@ $ rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -c
 * FREQ     : 4.915464 MHz
 * RS       : 1153.4
 * RL       : 1153.2
+* CP       : 3.6600e-12
 * BW       : 2.4000e+03
 * QL       : 2048.1
 
@@ -366,6 +367,7 @@ $ rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -c
 * FREQ     : 4.915464 MHz
 * RS       : 1153.4
 * RL       : 1153.2
+* CP       : 3.6600e-12
 * BW       : 2.4000e+03
 * QL       : 2048.1
 * QU       : 150000.0
@@ -527,6 +529,7 @@ $ rffilter.py -k chebyshev_0.5 -bw 2500 -n 8 -l 70e-3 -crystal -cp 3.7e-12 -f 50
 * FREQ     : 5.001933 MHz
 * RS       : 810.3
 * RL       : 848.6
+* CP       : 3.7000e-12
 * BW       : 2.5000e+03
 * QL       : 2000.8
 
@@ -1693,6 +1696,7 @@ $ rffilter.py -k chebyshev_0.1 -n 8 -crystal -l .170 -f 4e6 -bw 500 -cp 2.05e-12
 * FREQ     : 4.000330 MHz
 * RS       : 459.7
 * RL       : 459.7
+* CP       : 2.0500e-12
 * BW       : 500.0000e+00
 * QL       : 8000.7
 

@@ -1635,6 +1635,9 @@ def main(*args):
         print("* FREQ     : {:.6f} MHz".format(fo / 1e6))
         print("* RS       : {:.1f}".format(RE[0]))
         print("* RL       : {:.1f}".format(RE[1]))
+ 
+        if kw.get('cp'):
+            print("* CP       : {}".format(unit(kw['cp']).strip()))
 
         if kw.get('bw'):
             BW = kw['bw']

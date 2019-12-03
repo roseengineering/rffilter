@@ -26,10 +26,10 @@
   <Eqn Eqn1 5 1080 -100 -31 17 0 0 "phi21=unwrap(angle(S[1,1]))" 1 "phase=rad2deg(angle(S[1,1]))" 1 "delay_ms=-diff(phi21,2*pi*frequency)" 1 "yes" 0>
   <GND * 5 90 200 0 0 0 0>
   <GND * 5 730 260 0 0 0 0>
-  <Pac P2 1 730 180 18 -26 0 1 "2" 1 "661.5" 1 "0 dBm" 0 "1 GHz" 0 "26.85" 0>
-  <Pac P1 1 90 170 -70 -26 1 1 "1" 1 "661.5" 1 "0 dBm" 0 "1 GHz" 0 "26.85" 0>
+  <Pac P2 1 730 180 18 -26 0 1 "2" 1 "460" 1 "0 dBm" 0 "1 GHz" 0 "26.85" 0>
+  <Pac P1 1 90 170 -70 -26 1 1 "1" 1 "460" 1 "0 dBm" 0 "1 GHz" 0 "26.85" 0>
   <GND * 5 680 210 0 0 0 0>
-  <SPICE X1 1 410 210 -171 -92 0 1 "xtaltune.cir" 1 "_net1,_net4,_net5,_net8,_net9,_net12,_net13,_net16,_net17,_net20,_net21,_net24,_net25,_net28,_net29,_net32" 0 "yes" 0 "none" 0>
+  <SPICE X1 1 410 210 -202 -93 0 1 "xtaltune.cir" 1 "_net1,_net4,_net5,_net8,_net9,_net12,_net13,_net16,_net17,_net20,_net21,_net24,_net25,_net28,_net29,_net32" 0 "yes" 0 "none" 0>
 </Components>
 <Wires>
   <730 210 730 260 "" 0 0 0 "">

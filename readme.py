@@ -105,7 +105,7 @@ The -expose option expose the resonators of the filter as ports.
 The input port is the port 1 while the port with the highest number
 is the output port.  The exposed resonators ports are in numbered in increasing port order.
 
-{ run("rffilter.py -g butterworth -nodal -expose -f 10e6 -bw 400e3 -n 5 -qu 2000 | tee examples/nodal.cir") }
+{ run("rffilter.py -k chebyshev_0.1 -nodal -expose -f 10e6 -bw 400e3 -n 5 -qu 2000 | tee examples/nodal.cir") }
 ![nodal](examples/nodal.png)
 
 ## Mesh narrow-band filters.

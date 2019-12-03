@@ -1595,7 +1595,7 @@ def main(*args):
         for i in range(len(XS[0])):
             if i % 2 == n:
 
-                if kw.get('exposed') and k not in ports:
+                if kw.get('expose') and k not in ports:
                     if kw.get('crystal') or kw.get('mesh'):
                         ports.append(k)
                         k = k + 1

@@ -149,9 +149,9 @@ $ rffilter.py -g chebyshev_0.2 -n 8 -bw 1000
 ## Nodal narrow-band filters.
 
 Generate a narrow-band filter using LC resonators top coupled by capacitors.
-The -expose option expose the resonators of the filter as ports.
+The -expose option exposes the resonators of the filter as ports.
 The input port is the port 1 while the port with the highest number
-is the output port.  The exposed resonators ports are in numbered in increasing port order.
+is the output port.  The exposed resonators ports are numbered in increasing port order.
 
 
 ```

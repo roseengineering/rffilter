@@ -6,9 +6,10 @@ Python 3 script for calculating RF filters.
 The script requires the numpy library.
 
 For nodal and mesh filters (including crystal filters) the script
-will print resonator group delays from Ness as well as 
-resonator coupling bandwidths from Dishal.  They will also 
-be printed if no filter frequency selection type is given.
+prints resonator group delays from Ness as well as 
+resonator coupling bandwidths from Dishal.  They are 
+also printed when no filter frequency selection type 
+is requested, provided the bandwidth is given.
 
 # Library functions
 
@@ -151,7 +152,7 @@ $ rffilter.py -g chebyshev_0.2 -n 8 -bw 1000
 Generate a narrow-band filter using LC resonators top coupled by capacitors.
 The -expose option exposes the resonators of the filter as ports.
 The input port is the port 1 while the port with the highest number
-is the output port.  The exposed resonators ports are numbered in increasing port order.
+is the output port.  The exposed resonators ports are numbered in increasing order.
 
 
 ```

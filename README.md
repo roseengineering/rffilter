@@ -8,7 +8,7 @@ The script requires the numpy library.
 For nodal and mesh filters (including crystal filters) the script
 will also print resonator group delays from Ness as well as 
 resonator coupling bandwidths from Dishal.  They will also 
-be print if no filter frequency selection type is given.
+be printed if no filter frequency selection type is given.
 
 # Library functions
 

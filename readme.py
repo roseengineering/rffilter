@@ -83,7 +83,7 @@ The program takes the following command line options:
 
 # Examples
 
-## List of filters response types provided
+## List of filter response types provided
 
 { run("rffilter.py -g") }
 { run("rffilter.py -k") }

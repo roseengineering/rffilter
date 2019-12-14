@@ -1642,21 +1642,19 @@ def main(*args):
             print("* CP       : {}".format(unit(kw['cp']).strip()))
 
         if kw.get('bw'):
-            BW = kw['bw']
-            QL = fo / BW
-            print("* BW       : {}".format(unit(BW).strip()))
+            QL = fo / kw['bw']
+            print("* BW       : {}".format(unit(kw['bw']).strip()))
             print("* QL       : {:.1f}".format(QL))
-
-        if not np.isinf(QU):  
             print("* QU       : {:.1f}".format(QU))
 
         if kw.get('qo'):
+            QL = fo / kw['bw']
             print("* QO       : {:.1f}".format(QU / QL))
             print("* qo       : {:.1f}".format(kw['qo']))
 
-        if kw.get('q') is not None:
+        if kw.get('k') is not None:
             print()
-            list_couplings(kw['q'], kw['k'], fo, BW)
+            list_couplings(kw['q'], kw['k'], fo, kw['bw'])
 
         for line in res: 
             print(line)

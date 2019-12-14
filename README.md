@@ -223,6 +223,7 @@ $ rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 | tee examples/mesh.ci
 * RL       : 50.0
 * BW       : 400.0000e+03
 * QL       : 25.0
+* QU       : inf
 
 * ij       q,k           TD0           TDn           CBW           Q,K
 * 01    0.3902  620.9908e-09             -    1.0252e+06    9.7545e+00
@@ -292,6 +293,7 @@ $ rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -c
 * CP       : 3.6600e-12
 * BW       : 2.4000e+03
 * QL       : 2048.1
+* QU       : inf
 
 * ij       q,k           TD0           TDn           CBW           Q,K
 * 01    1.3800  366.0564e-06             -    1.7391e+03    2.8264e+03
@@ -462,6 +464,7 @@ $ rffilter.py -k chebyshev_0.5 -bw 2500 -n 8 -l 70e-3 -crystal -f 5000.680e3,500
 * RL       : 615.9
 * BW       : 2.5000e+03
 * QL       : 2000.6
+* QU       : inf
 
 * ij       q,k           TD0           TDn           CBW           Q,K
 * 01    1.7850  454.5465e-06             -    1.4006e+03    3.5712e+03
@@ -535,6 +538,7 @@ $ rffilter.py -k chebyshev_0.5 -bw 2500 -n 8 -l 70e-3 -crystal -cp 3.7e-12 -f 50
 * CP       : 3.7000e-12
 * BW       : 2.5000e+03
 * QL       : 2000.8
+* QU       : inf
 
 * ij       q,k           TD0           TDn           CBW           Q,K
 * 01    1.7850  454.5465e-06             -    1.4006e+03    3.5714e+03
@@ -660,6 +664,7 @@ $ rffilter.py -g butterworth -bandpass -f 10e6 -bw 1e6 -n 4
 * RL       : 50.0
 * BW       : 1.0000e+06
 * QL       : 10.0
+* QU       : inf
 L1  1    2       6.0906e-06
 C2  2    3      41.5890e-12
 
@@ -683,6 +688,7 @@ C8  5    0       2.4362e-09
 * RL       : 50.0
 * BW       : 1.0000e+06
 * QL       : 10.0
+* QU       : inf
 L1  1    0     103.9726e-09
 C2  1    0       2.4362e-09
 L3  1    2      14.7040e-06
@@ -1290,6 +1296,7 @@ $ rffilter.py -k butterworth -nodal -f 10e6 -bw 1e6 -n 5
 * RL       : 50.0
 * BW       : 1.0000e+06
 * QL       : 10.0
+* QU       : inf
 
 * ij       q,k           TD0           TDn           CBW           Q,K
 * 01    0.6180  393.4310e-09             -    1.6181e+06    6.1800e+00
@@ -1335,6 +1342,7 @@ $ rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -l 100e-9,100e-9,100e
 * RL       : 97.1
 * BW       : 400.0000e+03
 * QL       : 25.0
+* QU       : inf
 
 * ij       q,k           TD0           TDn           CBW           Q,K
 * 01    0.6180  983.6253e-09             -  647.2178e+03   15.4507e+00
@@ -1380,6 +1388,7 @@ $ rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -r 100,120
 * RL       : 120.0
 * BW       : 400.0000e+03
 * QL       : 25.0
+* QU       : inf
 
 * ij       q,k           TD0           TDn           CBW           Q,K
 * 01    0.6180  983.6253e-09             -  647.2178e+03   15.4507e+00
@@ -1576,6 +1585,7 @@ $ rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -l 100e-9
 * RL       : 0.3
 * BW       : 400.0000e+03
 * QL       : 25.0
+* QU       : inf
 
 * ij       q,k           TD0           TDn           CBW           Q,K
 * 01    0.7654    1.2181e-06             -  522.6230e+03   19.1343e+00
@@ -1616,6 +1626,7 @@ $ rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100
 * RL       : 100.0
 * BW       : 400.0000e+03
 * QL       : 25.0
+* QU       : inf
 
 * ij       q,k           TD0           TDn           CBW           Q,K
 * 01    0.7654    1.2181e-06             -  522.6230e+03   19.1343e+00
@@ -1656,6 +1667,7 @@ $ rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100,120
 * RL       : 120.0
 * BW       : 400.0000e+03
 * QL       : 25.0
+* QU       : inf
 
 * ij       q,k           TD0           TDn           CBW           Q,K
 * 01    0.7654    1.2181e-06             -  522.6230e+03   19.1343e+00
@@ -1702,6 +1714,7 @@ $ rffilter.py -k chebyshev_0.1 -n 8 -crystal -l .170 -f 4e6 -bw 500 -cp 2.05e-12
 * CP       : 2.0500e-12
 * BW       : 500.0000e+00
 * QL       : 8000.7
+* QU       : inf
 
 * ij       q,k           TD0           TDn           CBW           Q,K
 * 01    1.2510    1.5928e-03             -  399.6803e+00   10.0088e+03

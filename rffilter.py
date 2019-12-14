@@ -1407,6 +1407,12 @@ def to_coupling_bw(q, k, BW):
     CBW = np.insert(K01, 1, KIJ) * BW
     return CBW
 
+def denormalize_qk(q, k, fo, BW):
+    QL = np.nan if fo is None else fo / BW
+    QE = np.array(q) * QL
+    K = np.array(k) / QL
+    return QE, K
+
 def to_group_delay(q, k, BW):
     QE = np.array(q) / BW
     K = np.array(k) * BW
@@ -1453,9 +1459,7 @@ def to_nodal(q, k, fo, BW, R=None, L=None):
     with np.errstate(divide='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
-        QL = fo / BW
-        QE = np.array(q) * QL
-        K = np.array(k) / QL
+        QE, K = denormalize_qk(q, k, fo, BW)
 
         # find L0, C0 and RE
         if L is not None:
@@ -1486,9 +1490,7 @@ def to_mesh(q, k, fo, BW, R=None, L=None, XM=None):
     with np.errstate(divide='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
-        QL = fo / BW
-        QE = np.array(q) * QL
-        K = np.array(k) / QL
+        QE, K = denormalize_qk(q, k, fo, BW)
 
         # find L0, C0 and RE
         if L is not None:
@@ -1654,7 +1656,7 @@ def main(*args):
 
         if kw.get('q') is not None:
             print()
-            list_couplings(kw['q'], kw['k'], BW)
+            list_couplings(kw['q'], kw['k'], fo, BW)
 
         for line in res: 
             print(line)
@@ -1662,18 +1664,20 @@ def main(*args):
         print('.end')
         print()
            
-    def list_couplings(q, k, BW):
+    def list_couplings(q, k, fo, BW):
         N = len(k) + 1
         TD1 = np.ones(N + 1) * np.nan
         TD2 = np.ones(N + 1) * np.nan
-        TD1[:-1] = to_group_delay(q, k, BW=BW)
-        TD2[1:] = to_group_delay(q[::-1], k[::-1], BW=BW)[::-1]
-        CBW = to_coupling_bw(q, k, BW=BW)
+        TD1[:-1] = to_group_delay(q, k, BW)
+        TD2[1:] = to_group_delay(q[::-1], k[::-1], BW)[::-1]
+        CBW = to_coupling_bw(q, k, BW)
+        Q, K = denormalize_qk(q, k, fo, BW)
         qk = np.insert(q, 1, k)
-        print("* ij    qi,kij           TD0           TDn           CBW")
+        QK = np.insert(Q, 1, K)
+        print("* ij       q,k           TD0           TDn           CBW           Q,K")
         for i in range(N + 1):
-            print('* {:d}{:d}  {:8.4f} {} {} {}'.format(i, i+1, 
-                  qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i])))
+            print('* {:d}{:d}  {:8.4f} {} {} {} {}'.format(i, i+1, 
+                  qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i]), unit(QK[i])))
         print()
  
     def list_gfilters():
@@ -1824,7 +1828,7 @@ def main(*args):
             netlist(XS, XP, RE, kw, 0)
     elif kw.get('bw'):
         for q, k in qk:
-            list_couplings(q, k, kw['bw'])
+            list_couplings(q, k, kw.get('f'), kw['bw'])
     else:
         raise ValueError('No filter configuration given')
 

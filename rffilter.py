@@ -1521,10 +1521,10 @@ def to_mesh(q, k, fo, BW, R=None, L=None, XM=None):
 
 def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
 
-    def func(fd):
-        L = to_leff(fd, CM, LM, CP, QU) # fs=fo
-        XM = to_xeff(fd, CM, LM, CP, QU) 
-        XS, XP, RE = to_mesh(q, k, fd, BW, L=L, XM=XM)
+    def func(fo):
+        L = to_leff(fo, CM, LM, CP, QU) 
+        XM = to_xeff(fo, CM, LM, CP, QU) 
+        XS, XP, RE = to_mesh(q, k, fo, BW, L=L, XM=XM)
         CS = XS[-1]
         return XS, XP, RE, np.max(CS)
 
@@ -1563,19 +1563,10 @@ def to_xeff(fo, CM, LM, CP, QU):
     b = -1j / (wo * CP)
     return a * b / (a + b)
 
-def to_leff(fo, CM, LM, CP, QU, df=.1, fs=None):
-    if fs is not None:
-        wo = 2 * np.pi * fo
-        ws = 2 * np.pi * fs
-        A = CP * LM * (wo**2 - ws**2)
-        leff = LM * (A**2 - A + 2 * wo**2 * CP * LM) / (
-               CP * LM * (wo**2 + ws**2) * (A - 1)**2)
-    else:
-        x1 = to_xeff(fo + df / 2, CM, LM, CP, QU).imag
-        x0 = to_xeff(fo - df / 2, CM, LM, CP, QU).imag
-        leff = (x1 - x0) / df / (4 * np.pi)
-    return leff
-
+def to_leff(fo, CM, LM, CP, QU, df=.1):
+    x1 = to_xeff(fo + df / 2, CM, LM, CP, QU).imag
+    x0 = to_xeff(fo - df / 2, CM, LM, CP, QU).imag
+    return (x1 - x0) / df / (4 * np.pi)
 
 
 #######################################################

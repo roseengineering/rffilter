@@ -275,6 +275,8 @@ C23 16   17     34.7427e-12
 ## Crystal mesh filters.
 
 
+### 1. The "Crystal Ladder Filters for All" filter.
+
 Build a 2400 Hz bandwidth crystal filter.  This filter is from an example in Steder's 
 "Crystal Ladder Filters for All" paper in QEX.  
 
@@ -467,6 +469,8 @@ C47 32   33     36.3139e-12
 ```
 
 ![crystal lossy](examples/xtalloss.png)
+
+### 2. The Dishal program's owners manual filter.
 
 A crystal filter with multiple crystals of different frequencies.  No parallel capacitance was used.
 The filter, less the holder capacitance, is an example from the Dishal program's owners manual.

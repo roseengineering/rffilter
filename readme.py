@@ -119,6 +119,8 @@ is the output port.  The exposed resonators ports are numbered in increasing ord
 ## Crystal mesh filters.
 
 
+### 1. The "Crystal Ladder Filters for All" filter.
+
 Build a 2400 Hz bandwidth crystal filter.  This filter is from an example in Steder's 
 "Crystal Ladder Filters for All" paper in QEX.  
 
@@ -129,6 +131,8 @@ Same filter with an unloaded Q of 150000.  See the above Steder article for a fi
 
 { run("rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000 | tee examples/xtalloss.cir") }
 ![crystal lossy](examples/xtalloss.png)
+
+### 2. The Dishal program's owners manual filter.
 
 A crystal filter with multiple crystals of different frequencies.  No parallel capacitance was used.
 The filter, less the holder capacitance, is an example from the Dishal program's owners manual.

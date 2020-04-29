@@ -1507,7 +1507,7 @@ def to_mesh(q, k, fo, BW, R=None, L=None, XM=None):
         CK = np.insert(np.ones(2) * -np.inf, 1, CK)
 
         # compute C0
-        XM = wo * L0 if XM is None else XM
+        XM = wo * L0 if XM is None else XM # XM includes any CM
         C0 = -1 / (wo * XM + 1 / CK[:-1] + 1 / CK[1:])
 
         CS = np.zeros(2 * N - 1)
@@ -1524,7 +1524,7 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
 
     def func(fo):
         L = to_leff(fo, CM, LM, CP, QU) 
-        XM = to_xeff(fo, CM, LM, CP, QU) # eff XM which includes CM
+        XM = to_xeff(fo, CM, LM, CP, QU) # XM includes the xtal series CM
         XS, XP, RE = to_mesh(q, k, fo, BW, L=L, XM=XM.imag)
 
         # compute unadjusted mesh frequecies

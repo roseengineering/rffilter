@@ -53,9 +53,9 @@ xs, xp, re = to_bandstop(g, fo, BW, R)
 
 # narrow-band filter design
 
-xs, xp, re     = to_nodal(q, k, fo, BW, R=None, L=None)
-xs, xp, re     = to_mesh(q, k, fo, BW, R=None, L=None)
-xs, xp, re, fo = to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf)
+xs, xp, re           = to_nodal(q, k, fo, BW, R=None, L=None)
+xs, xp, re           = to_mesh(q, k, fo, BW, R=None, L=None)
+xs, xp, re, mesh, fo = to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf)
 ```
 
 # Command Line

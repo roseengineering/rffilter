@@ -1557,7 +1557,7 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
 def bisect(f, a, b, N=100):
     for n in range(N):
         c = (a + b) / 2
-        if np.abs(c - a) < .1: return b
+        if np.abs(c - a) < .01: return b
         if np.sign(f(c)[-1]) == np.sign(f(a)[-1]): a = c
         else: b = c
 
@@ -1661,12 +1661,23 @@ def main(*args):
             print("* QO       : {:.1f}".format(QU / QL))
             print("* qo       : {:.1f}".format(kw['qo']))
 
-        if kw.get('k') is not None:
-            print()
-            list_couplings(kw['q'], kw['k'], fo, kw['bw'])
+        print()
 
+        if kw.get('k') is not None:
+            list_couplings(kw['q'], kw['k'], fo, kw['bw'])
+            print()
+
+        if kw.get('freqmesh') is not None:
+            MESH = kw['freqmesh']
+            N = len(kw['k']) + 1
+            print('* Xtal         Mesh       Offset')
+            for i in range(N):
+                print('*   {:2d} {:12.1f} {:12.1f}'.format(i+1, MESH[i], MESH[i] - fo))
+            print()
+ 
         for line in res: 
             print(line)
+
         print(".ends")
         print('.end')
         print()
@@ -1685,7 +1696,6 @@ def main(*args):
         for i in range(N + 1):
             print('* {:d}{:d}  {:8.4f} {} {} {} {}'.format(i, i+1, 
                   qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i]), unit(QK[i])))
-        print()
  
     def list_gfilters():
         print('{:16s}  {}'.format("G LOWPASS", "POLES"))
@@ -1832,6 +1842,7 @@ def main(*args):
             XS, XP, RE, MESH, fd = to_crystal_mesh(
                 q, k, kw['f'], kw['bw'], LM=kw['l'], CP=kw['cp'], QU=kw['qu'])
             kw['fd'] = fd
+            kw['freqmesh'] = MESH
             netlist(XS, XP, RE, kw, 0)
     elif kw.get('bw'):
         for q, k in qk:

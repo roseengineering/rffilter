@@ -1501,12 +1501,13 @@ def to_mesh(q, k, fo, BW, R=None, L=None, XM=None):
             L0 = RE * QE / wo
             L0 = np.insert(L0, 1, np.ones(N-2) * L0[0])
 
-        # find CK and C0 using K inverter
+        # find CK using K inverter
         Z = wo * np.sqrt(L0[:-1] * L0[1:])
         CK = -1 / (wo * K * Z)
         CK = np.insert(np.ones(2) * -np.inf, 1, CK)
 
-        XM = wo * L0 if XM is None else XM.imag
+        # compute C0
+        XM = wo * L0 if XM is None else XM
         C0 = -1 / (wo * XM + 1 / CK[:-1] + 1 / CK[1:])
 
         CS = np.zeros(2 * N - 1)
@@ -1523,23 +1524,29 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
 
     def func(fo):
         L = to_leff(fo, CM, LM, CP, QU) 
-        XM = to_xeff(fo, CM, LM, CP, QU) 
-        XS, XP, RE = to_mesh(q, k, fo, BW, L=L, XM=XM)
-        CS = XS[-1]
-        return XS, XP, RE, np.max(CS)
+        XM = to_xeff(fo, CM, LM, CP, QU) # eff XM which includes CM
+        XS, XP, RE = to_mesh(q, k, fo, BW, L=L, XM=XM.imag)
+        CS = XS[-1][0::2]
 
-    wo = 2 * np.pi * fo
+        # compute unadjusted mesh frequecies
+        CK = np.insert(np.ones(2) * -np.inf, 1, XP[0][1::2])
+        CMESH = 1/(1/CM - 1/CK[:-1] - 1/CK[1:])
+        MESH = 1 / (2 * np.pi * np.sqrt(LM * CMESH))
+
+        return XS, XP, RE, MESH, np.max(CS)
+
+    wo = np.ones(len(k) + 1) * 2 * np.pi * fo
     LM = np.ones(len(k) + 1) * LM
-    CM = 1 / (wo**2 * LM)
+    CM = 1 / (wo**2 * LM)  # series capacitance
 
     fp = to_fp(fo, CM, LM, CP or 5e-12)
     fd = bisect(func, np.min(fo), np.max(fp))
-    XS, XP, RE, _ = func(fd)
+    XS, XP, RE, MESH, _ = func(fd)
 
     XS.insert(0, np.zeros_like(XS[0]))
     XS[0][0::2] = -CM
     XS[1][0::2] = LM
-    return XS, XP, RE, fd
+    return XS, XP, RE, MESH, fd
 
 
 # helper routines
@@ -1820,7 +1827,7 @@ def main(*args):
         kw['filter'] = 'CRYSTAL_MESH'
         for q, k in qk:
             kw['q'], kw['k'] = q, k
-            XS, XP, RE, fd = to_crystal_mesh(
+            XS, XP, RE, MESH, fd = to_crystal_mesh(
                 q, k, kw['f'], kw['bw'], LM=kw['l'], CP=kw['cp'], QU=kw['qu'])
             kw['fd'] = fd
             netlist(XS, XP, RE, kw, 0)

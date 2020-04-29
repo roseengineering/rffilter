@@ -1555,9 +1555,10 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
 #######################################################
 
 def bisect(f, a, b, N=100):
+    err = .01
     for n in range(N):
         c = (a + b) / 2
-        if np.abs(c - a) < .01: return b
+        if np.abs(c - a) < err: return b
         if np.sign(f(c)[-1]) == np.sign(f(a)[-1]): a = c
         else: b = c
 
@@ -1671,11 +1672,10 @@ def main(*args):
             N = len(kw['k']) + 1
             fs = kw['f'] * np.ones(N)
             MESH = kw['freqmesh']
-            print('* Xtal     Freq xtal     Freq mesh   Mesh offset   Xtal offset  Total offset')
+            print('* Xtal     Freq xtal     Freq mesh   Mesh offset   Xtal offset')
             for i in range(N):
-                print('* {:<2d}   {:13.1f} {:13.1f} {:13.1f} {:13.1f} {:13.1f}'.format(i+1, 
-                      fs[i], MESH[i], MESH[i] - fo, fs[i] - np.max(fs),
-                      (MESH[i] - fo) + (fs[i] - np.max(fs))))
+                print('* {:<2d}   {:13.1f} {:13.1f} {:13.1f} {:13.1f}'.format(i+1, 
+                      fs[i], MESH[i], MESH[i] - fo, fs[i] - np.median(fs)))
             print()
  
         for line in res: 

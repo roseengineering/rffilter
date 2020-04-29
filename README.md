@@ -368,7 +368,7 @@ C39 24   25     36.3135e-12
 
 ![crystal](examples/xtal.png)
 
-Same filter with an unloaded Q of 150000.
+Same filter with an unloaded Q of 150000.  See the above Steder article for a figure of the loaded filter's response.
 
 
 ```
@@ -468,7 +468,8 @@ C47 32   33     36.3139e-12
 
 ![crystal lossy](examples/xtalloss.png)
 
-A crystal filter with multiple crystals of different frequencies.  No parallel capacitance was used.  The crystal values and their placements in the filter are from the Dishal program's owners manual, otherwise it is the same filter as the example from the Steder article.
+A crystal filter with multiple crystals of different frequencies.  No parallel capacitance was used.
+The filter, less the holder capacitance, is an example from the Dishal program's owners manual.
 
 
 ```
@@ -551,7 +552,8 @@ C31 24   25    118.9382e-12
 
 ![multiple](examples/multiple.png)
 
-The same crystal filter as above but with holder parallel capacitance across the crystals.  Again, the crystal values and their placements in the filter are from the Dishal program's owners manual, otherwise it is the same filter as the example from the Steder article.
+The same crystal filter as above but with holder parallel capacitance across the crystals.
+The filter is an example from the Dishal program's owners manual.
 
 
 ```

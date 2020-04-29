@@ -38,7 +38,7 @@ COUPLED = {
     [ 1.807,1.807,0.652,0.534,0.534,0.652 ],
     [ 1.796,1.796,0.655,0.533,0.519,0.533,0.655 ],
     [ 1.790,1.790,0.657,0.533,0.516,0.516,0.533,0.657 ],
-    [ 1.785,1.785,0.658,0.533,0.515,0.511,0.515,0.533,0.65 ],
+    [ 1.785,1.785,0.658,0.533,0.515,0.511,0.515,0.533,0.658 ],
     ],
     'CHEBYSHEV_1.0': [
     [ 2.210,2.210,0.739 ],
@@ -1528,8 +1528,8 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
         XS, XP, RE = to_mesh(q, k, fo, BW, L=L, XM=XM.imag)
 
         # compute unadjusted mesh frequecies
-        CK = np.insert(np.ones(2) * -np.inf, 1, XP[0][1::2])
         wo = 2 * np.pi * fo
+        CK = np.insert(np.ones(2) * -np.inf, 1, XP[0][1::2])
         CMEFF = 1 / (wo * (wo * L - XM.imag))
         CTOT = 1/(1/CMEFF - 1/CK[:-1] - 1/CK[1:])
         MESH = 1 / (2 * np.pi * np.sqrt(L * CTOT))

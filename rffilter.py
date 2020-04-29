@@ -1668,11 +1668,11 @@ def main(*args):
             print()
 
         if kw.get('freqmesh') is not None:
-            MESH = kw['freqmesh']
             N = len(kw['k']) + 1
-            print('* Xtal         Mesh       Offset')
+            MESH = kw['freqmesh']
+            print('* XTAL     Mesh (Hz)   Offset (Hz)')
             for i in range(N):
-                print('*   {:2d} {:12.1f} {:12.1f}'.format(i+1, MESH[i], MESH[i] - fo))
+                print('* {:<2d}   {:13.1f} {:13.1f}'.format(i+1, MESH[i], MESH[i] - fo))
             print()
  
         for line in res: 

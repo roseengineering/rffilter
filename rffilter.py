@@ -1526,13 +1526,15 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
         L = to_leff(fo, CM, LM, CP, QU) 
         XM = to_xeff(fo, CM, LM, CP, QU) # eff XM which includes CM
         XS, XP, RE = to_mesh(q, k, fo, BW, L=L, XM=XM.imag)
-        CS = XS[-1][0::2]
 
         # compute unadjusted mesh frequecies
         CK = np.insert(np.ones(2) * -np.inf, 1, XP[0][1::2])
-        CMESH = 1/(1/CM - 1/CK[:-1] - 1/CK[1:])
-        MESH = 1 / (2 * np.pi * np.sqrt(LM * CMESH))
+        wo = 2 * np.pi * fo
+        CMEFF = 1 / (wo * (wo * L - XM.imag))
+        CTOT = 1/(1/CMEFF - 1/CK[:-1] - 1/CK[1:])
+        MESH = 1 / (2 * np.pi * np.sqrt(L * CTOT))
 
+        CS = XS[-1][0::2]
         return XS, XP, RE, MESH, np.max(CS)
 
     wo = np.ones(len(k) + 1) * 2 * np.pi * fo

@@ -16,7 +16,6 @@ def unit(x):
 
 def main(filename):
     net = rf.Network(filename)
-    n = net.z[0][0].size
     print("# MHZ TDELAY")
     for f, gd in zip(net.f, net.group_delay):
         print('{:<8g}'.format(f / 1e6), end="")
@@ -26,5 +25,4 @@ def main(filename):
         print()
 
 main(*sys.argv[1:])
-
 

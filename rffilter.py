@@ -1686,7 +1686,7 @@ def main(*args):
             CK[:-1] = kw['CK']
             CS = kw['CS']
             print('* ij               CKij             CSi')
-            for i in range(N-1):
+            for i in range(N):
                 print('* {:<4s}    {}   {}'.format("%d%d" % (i+1, i+2), 
                       unit(CK[i]), unit(CS[i])))
             print()

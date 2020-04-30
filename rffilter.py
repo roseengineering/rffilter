@@ -172,6 +172,8 @@ LOWPASS = {
     [ 1,1.1812,1.4228,2.0967,1.5734,2.0967,1.4228,1.1812,1 ],
     [ 1,1.1898,1.4346,2.1199,1.6010,2.1700,1.5641,1.9445,0.8778,0.7378 ],
     [ 1,1.1957,1.4426,2.1346,1.6167,2.2054,1.6167,2.1346,1.4426,1.1957,1 ],
+    # special for Makhinson N6NWP article
+    [ 1,1.201,1.457,2.153,1.640,2.243,1.667,2.253,1.660,2.217,1.594,1.971,0.8928,0.7378 ],
     ],
     'CHEBYSHEV_0.2': [
     [ 1,1.228,1.153,1.228,1 ],
@@ -1672,10 +1674,10 @@ def main(*args):
             N = len(kw['k']) + 1
             fs = kw['f'] * np.ones(N)
             MESH = kw['freqmesh']
-            print('* Xtal     Freq xtal     Freq mesh   Mesh offset   Xtal offset')
+            print('* Xtal     Xtal freq     Mesh freq   Mesh offset   Xtal offset')
             for i in range(N):
                 print('* {:<2d}   {:13.1f} {:13.1f} {:13.1f} {:13.1f}'.format(i+1, 
-                      fs[i], MESH[i], MESH[i] - fo, fs[i] - np.median(fs)))
+                      fs[i], MESH[i], MESH[i] - fo, fs[i] - np.min(fs)))
             print()
  
         for line in res: 
@@ -1695,9 +1697,9 @@ def main(*args):
         Q, K = denormalize_qk(q, k, fo, BW)
         qk = np.insert(q, 1, k)
         QK = np.insert(Q, 1, K)
-        print("* ij       q,k           TD0           TDn           CBW           Q,K")
+        print("* ij        q,k           TD0           TDn           CBW           Q,K")
         for i in range(N + 1):
-            print('* {:d}{:d}  {:8.4f} {} {} {} {}'.format(i, i+1, 
+            print('* {:<4s} {:8.4f} {} {} {} {}'.format("%d%d" % (i, i+1), 
                   qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i]), unit(QK[i])))
  
     def list_gfilters():

@@ -649,7 +649,7 @@ C39 24   25     72.6241e-12
 
 ![broken](examples/broken.png)
 
-### 3. The Design Filter in N6NWP's QEX 1993 article.
+### 3. The Design Filter in N6NWP's QEX 1995 article.
 
 N6NWP recommends using the lowest frequency crystal for the reference mesh, while the Dishal program recommends using a crystal in the middle.   However both appear to work,
 only altering the overall level of the series capacitor values.

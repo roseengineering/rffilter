@@ -153,7 +153,13 @@ only altering the overall level of the series capacitor values.
 In general, you basically want to use the crystals that make all the mesh 
 offsets the same, except for the reference meshes.
 
+Here using the lowest crystal for the mesh.
+
 { run("rffilter.py -g chebyshev_0.1 -bw 2500 -n 12 -l .0155 -crystal -cp 5e-12 -f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0") }
+
+Here using a middle crystal for the mesh.
+
+{ run("rffilter.py -g chebyshev_0.1 -bw 2500 -n 12 -l .0155 -crystal -cp 5e-12 -f 8000017.0,7999966.0,7999940.0,7999945.0,7999985.0,8000000.0,7999996.0,7999991.0,7999939.0,7999933.0,7999945.0,8000026.0") }
 
 ## Lowpass and highpass filters.
 

@@ -146,7 +146,7 @@ The filter is an example from the Dishal program's owners manual.
 { run("rffilter.py -k chebyshev_0.5 -bw 2500 -n 8 -l 70e-3 -crystal -cp 3.7e-12 -f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3 | tee examples/broken.cir") }
 ![broken](examples/broken.png)
 
-### 3. The Design Filter in N6NWP's QEX 1993 article.
+### 3. The Design Filter in N6NWP's QEX 1995 article.
 
 N6NWP recommends using the lowest frequency crystal for the reference mesh, while the Dishal program recommends using a crystal in the middle.   However both appear to work,
 only altering the overall level of the series capacitor values.

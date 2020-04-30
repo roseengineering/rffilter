@@ -148,10 +148,9 @@ The filter is an example from the Dishal program's owners manual.
 
 ### 3. The Design Filter in N6NWP's QEX 1995 article.
 
-N6NWP recommends using the lowest frequency crystal for the reference mesh, while the Dishal program recommends using a crystal in the middle.   Both appear to work,
-only altering the overall level of the series capacitor values.
-In general, you basically want to use the crystals that make all the mesh 
-offsets the same, except for the reference meshes.
+N6NWP recommends using the lowest frequency crystal for the reference mesh, while the Dishal program recommends using a crystal in the middle.   
+Using the middle crystal for the reference mesh seems to require more pulling of the crystal.
+In general, you want the crystals meshes to use the same series capacitor, except for the reference meshes.
 
 Here using the lowest crystal for the mesh.
 

@@ -1685,10 +1685,10 @@ def main(*args):
             CK = np.ones(N) * np.nan
             CK[:-1] = kw['CK']
             CS = kw['CS']
-            print('* ij               CKij             CSi')
+            print('* ij              CKij            CSi')
             for i in range(N):
-                print('* {:<4s}    {}   {}'.format("%d%d" % (i+1, i+2), 
-                      unit(CK[i]), unit(CS[i])))
+                print('* {:<4s}   {}  {}'.format("%d%d" % (i+1, i+2), 
+                      unit(-CK[i]), unit(-CS[i])))
             print()
             
  

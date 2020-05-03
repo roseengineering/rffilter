@@ -1,6 +1,6 @@
 <Qucs Schematic 0.0.20>
 <Properties>
-  <View=0,0,894,1299,1,0,20>
+  <View=0,0,1161,1299,1,0,20>
   <Grid=10,10,1>
   <DataSet=lowpass.dat>
   <DataDisplay=lowpass.dpl>
@@ -29,6 +29,7 @@
   <GND * 5 350 190 0 0 0 0>
   <GND * 5 530 150 0 0 0 0>
   <SPICE X1 1 530 120 -26 -57 0 0 "lowpass.cir" 1 "_net1,_net4" 0 "yes" 0 "none" 0>
+  <Eqn Eqn1 5 920 130 -31 17 0 0 "phi21=unwrap(angle(S[1,1]))" 1 "phase=rad2deg(angle(S[1,1]))" 1 "delay=-diff(phi21,2*pi*frequency)" 1 "yes" 0>
 </Components>
 <Wires>
   <560 120 750 120 "" 0 0 0 "">
@@ -36,9 +37,10 @@
   <350 120 500 120 "" 0 0 0 "">
 </Wires>
 <Diagrams>
-  <Rect 300 777 577 477 3 #c0c0c0 1 00 1 9.5e+06 100000 1.05e+07 1 -0.0996759 0.2 1.09997 1 -1 0.2 1 315 0 225 "" "" "" "">
+  <Rect 300 777 577 477 3 #c0c0c0 1 00 1 5e+06 1e+06 1.5e+07 1 -0.0656125 0.2 1.09634 1 -1 0.2 1 315 0 225 "" "" "" "">
 	<"S[2,1]" #0000ff 0 3 0 0 0>
 	<"S[1,1]" #ff0000 0 3 0 0 0>
+	<"delay" #ff00ff 0 3 0 0 1>
   </Rect>
 </Diagrams>
 <Paintings>

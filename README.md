@@ -691,11 +691,9 @@ C39 24   25     72.6241e-12
 
 ### 3. The Design Filter in N6NWP's QEX 1995 article.
 
-N6NWP recommends using the lowest frequency crystal for the reference mesh, while the Dishal program recommends using a crystal in the middle.   
-Using the middle crystal for the reference mesh seems to require more pulling of the crystal.
-In general, you want the crystals meshes to use the same series capacitor, except for the reference meshes.
+N6NWP recommends using the lowest frequency crystal for the reference mesh, while the Dishal program recommends using a crystal in the middle.  Using the middle crystal for the reference mesh seems to require more pulling of the crystal.  In general, you want the crystals meshes to use the same series capacitor, except for the reference meshes.
 
-The following example uses the lowest crystal for the reference mesh.
+The following example uses the lowest crystal for the reference mesh:
 
 
 ```
@@ -831,13 +829,18 @@ C59 36   37    137.3105e-12
 
 ```
 
+![qexlow](examples/qexlow.png)
+
+The above crystal filter with 120,000 Q crystals:
+
 
 ```
 $ rffilter.py -g chebyshev_0.1 -bw 2500 -n 12 -l .0155 -crystal -cp 5e-12 -qu 120000 -f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0 > examples/qexloss.cir
 ```
 
+![qexloss](examples/qexloss.png)
 
-The following example uses a middle crystal for the reference mesh.
+The following example uses a middle crystal for the reference mesh:
 
 
 ```

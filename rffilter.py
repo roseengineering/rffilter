@@ -1676,8 +1676,8 @@ def main(*args):
             MESH = kw['freqmesh']
             print('* Xtal    Xtal freq     Mesh freq   Mesh offset   Xtal offset')
             for i in range(N):
-                print('* {:<2d}  {} {:13.1f} {:13.1f} {:13.1f}'.format(i+1, 
-                      unit(fs[i]), MESH[i], MESH[i] - fo, fs[i] - np.min(fs)))
+                print('* {:<2d}  {:13.1f} {:13.1f} {:13.1f} {:13.1f}'.format(i+1, 
+                      fs[i], MESH[i], MESH[i] - fo, fs[i] - np.min(fs)))
             print()
 
         if kw.get('CK') is not None:

@@ -1530,9 +1530,9 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
         XS, XP, RE = to_mesh(q, k, f, BW, L=L, XM=XM.imag)
 
         # compute unadjusted mesh frequecies
-        wo = 2 * np.pi * f
+        w = 2 * np.pi * f
         CK = np.insert(np.ones(2) * -np.inf, 1, XP[0][1::2])
-        CMEFF = 1 / (wo * (wo * L - XM.imag))
+        CMEFF = 1 / (w * (w * L - XM.imag))
         CTOT = 1/(1/CMEFF - 1/CK[:-1] - 1/CK[1:])
         MESH = 1 / (2 * np.pi * np.sqrt(L * CTOT))
 

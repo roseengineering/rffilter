@@ -1553,6 +1553,7 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
         if __name__ == "__main__": 
             print("Unable to design filter", file=sys.stderr)
             sys.exit(1)
+
     XS.insert(0, np.zeros_like(XS[0]))
     XS[0][0::2] = -CM
     XS[1][0::2] = LM

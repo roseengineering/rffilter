@@ -168,6 +168,7 @@ $ rffilter.py -k chebyshev_0.1 -nodal -expose -f 10e6 -bw 400e3 -n 5 -qu 2000 | 
 * BW       : 400.0000e+03
 * QL       : 25.0
 * QU       : 2000.0
+* qo       : 80.0
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     1.3010    2.0706e-06             -  307.4558e+03   32.5250e+00
@@ -223,6 +224,7 @@ $ rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 | tee examples/mesh.ci
 * BW       : 400.0000e+03
 * QL       : 25.0
 * QU       : inf
+* qo       : inf
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     0.3902  620.9908e-09             -    1.0252e+06    9.7545e+00
@@ -295,6 +297,7 @@ $ rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -c
 * BW       : 2.4000e+03
 * QL       : 2048.1
 * QU       : inf
+* qo       : inf
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     1.3800  366.0564e-06             -    1.7391e+03    2.8264e+03
@@ -397,6 +400,7 @@ $ rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -c
 * BW       : 2.4000e+03
 * QL       : 2048.1
 * QU       : 150000.0
+* qo       : 73.2
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     1.3800  366.0564e-06             -    1.7391e+03    2.8264e+03
@@ -509,6 +513,7 @@ $ rffilter.py -k chebyshev_0.5 -bw 2500 -n 8 -l 70e-3 -crystal -f 5000.680e3,500
 * BW       : 2.5000e+03
 * QL       : 2000.6
 * QU       : inf
+* qo       : inf
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     1.7850  454.5465e-06             -    1.4006e+03    3.5712e+03
@@ -604,6 +609,7 @@ $ rffilter.py -k chebyshev_0.5 -bw 2500 -n 8 -l 70e-3 -crystal -cp 3.7e-12 -f 50
 * BW       : 2.5000e+03
 * QL       : 2000.8
 * QU       : inf
+* qo       : inf
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     1.7850  454.5465e-06             -    1.4006e+03    3.5714e+03
@@ -710,6 +716,7 @@ $ rffilter.py -g chebyshev_0.1 -bw 2500 -n 12 -l .0155 -crystal -cp 5e-12 -f 800
 * BW       : 2.5000e+03
 * QL       : 3200.7
 * QU       : inf
+* qo       : inf
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     1.2010  305.8321e-06             -    2.0816e+03    3.8440e+03
@@ -857,6 +864,7 @@ $ rffilter.py -g chebyshev_0.1 -bw 2500 -n 12 -l .0155 -crystal -cp 5e-12 -f 800
 * BW       : 2.5000e+03
 * QL       : 3200.7
 * QU       : inf
+* qo       : inf
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     1.2010  305.8321e-06             -    2.0816e+03    3.8441e+03
@@ -1040,6 +1048,7 @@ $ rffilter.py -g butterworth -bandpass -f 10e6 -bw 1e6 -n 4
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : inf
+* qo       : inf
 
 L1  1    2       6.0906e-06
 C2  2    3      41.5890e-12
@@ -1065,6 +1074,7 @@ C8  5    0       2.4362e-09
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : inf
+* qo       : inf
 
 L1  1    0     103.9726e-09
 C2  1    0       2.4362e-09
@@ -1097,8 +1107,8 @@ $ rffilter.py -zverev butterworth -nodal -qu 2500 -bw 1e6 -f 10e6 -n 3
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : 2500.0
-* QO       : 250.0
-* qo       : 20.0
+* qo       : 250.0
+* qo_zverev: 20.0
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     0.8041  511.9060e-09             -    1.2436e+06    8.0410e+00
@@ -1138,8 +1148,8 @@ $ rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : 2500.0
-* QO       : 250.0
-* qo       : 11.2
+* qo       : 250.0
+* qo_zverev: 11.2
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     0.0975   62.0704e-09             -   10.2564e+06  975.0000e-03
@@ -1204,8 +1214,8 @@ C23 8    0       5.9112e-09
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : 2500.0
-* QO       : 250.0
-* qo       : 11.2
+* qo       : 250.0
+* qo_zverev: 11.2
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     0.1192   75.8851e-09             -    8.3893e+06    1.1920e+00
@@ -1270,8 +1280,8 @@ C23 8    0       1.2597e-09
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : 2500.0
-* QO       : 250.0
-* qo       : 11.2
+* qo       : 250.0
+* qo_zverev: 11.2
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     0.1474   93.8378e-09             -    6.7843e+06    1.4740e+00
@@ -1336,8 +1346,8 @@ C23 8    0     662.5087e-12
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : 2500.0
-* QO       : 250.0
-* qo       : 11.2
+* qo       : 250.0
+* qo_zverev: 11.2
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     0.2034  129.4885e-09             -    4.9164e+06    2.0340e+00
@@ -1402,8 +1412,8 @@ C23 8    0     350.2500e-12
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : 2500.0
-* QO       : 250.0
-* qo       : 11.2
+* qo       : 250.0
+* qo_zverev: 11.2
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     0.1332   84.7978e-09             -    7.5075e+06    1.3320e+00
@@ -1468,8 +1478,8 @@ C23 8    0     834.2409e-12
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : 2500.0
-* QO       : 250.0
-* qo       : 11.2
+* qo       : 250.0
+* qo_zverev: 11.2
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     0.1772  112.8090e-09             -    5.6433e+06    1.7720e+00
@@ -1534,8 +1544,8 @@ C23 8    0     443.1892e-12
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : 2500.0
-* QO       : 250.0
-* qo       : 11.2
+* qo       : 250.0
+* qo_zverev: 11.2
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     0.2476  157.6271e-09             -    4.0388e+06    2.4760e+00
@@ -1600,8 +1610,8 @@ C23 8    0     234.7389e-12
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : 2500.0
-* QO       : 250.0
-* qo       : 11.2
+* qo       : 250.0
+* qo_zverev: 11.2
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     0.4606  293.2271e-09             -    2.1711e+06    4.6060e+00
@@ -1674,6 +1684,7 @@ $ rffilter.py -k butterworth -nodal -f 10e6 -bw 1e6 -n 5
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : inf
+* qo       : inf
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     0.6180  393.4310e-09             -    1.6181e+06    6.1800e+00
@@ -1720,6 +1731,7 @@ $ rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -l 100e-9,100e-9,100e
 * BW       : 400.0000e+03
 * QL       : 25.0
 * QU       : inf
+* qo       : inf
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     0.6180  983.6253e-09             -  647.2178e+03   15.4507e+00
@@ -1766,6 +1778,7 @@ $ rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -r 100,120
 * BW       : 400.0000e+03
 * QL       : 25.0
 * QU       : inf
+* qo       : inf
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     0.6180  983.6253e-09             -  647.2178e+03   15.4507e+00
@@ -1898,6 +1911,7 @@ $ rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 -qu 2000
 * BW       : 400.0000e+03
 * QL       : 25.0
 * QU       : 2000.0
+* qo       : 80.0
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     0.3902  620.9908e-09             -    1.0252e+06    9.7545e+00
@@ -1967,6 +1981,7 @@ $ rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -l 100e-9
 * BW       : 400.0000e+03
 * QL       : 25.0
 * QU       : inf
+* qo       : inf
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     0.7654    1.2181e-06             -  522.6230e+03   19.1343e+00
@@ -2008,6 +2023,7 @@ $ rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100
 * BW       : 400.0000e+03
 * QL       : 25.0
 * QU       : inf
+* qo       : inf
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     0.7654    1.2181e-06             -  522.6230e+03   19.1343e+00
@@ -2049,6 +2065,7 @@ $ rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100,120
 * BW       : 400.0000e+03
 * QL       : 25.0
 * QU       : inf
+* qo       : inf
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     0.7654    1.2181e-06             -  522.6230e+03   19.1343e+00
@@ -2096,6 +2113,7 @@ $ rffilter.py -k chebyshev_0.1 -n 8 -crystal -l .170 -f 4e6 -bw 500 -cp 2.05e-12
 * BW       : 500.0000e+00
 * QL       : 8000.7
 * QU       : inf
+* qo       : inf
 
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     1.2510    1.5928e-03             -  399.6803e+00   10.0088e+03

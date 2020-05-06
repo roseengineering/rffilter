@@ -1662,7 +1662,7 @@ def main(*args):
 
         if kw.get('bw'):
             QL = fo / kw['bw']
-            print("* BW       : {:.1f}".format(kw['bw']))
+            print("* BW       : {}".format(unit(kw['bw']).strip()))
             print("* QL       : {:.1f}".format(QL))
             print("* QU       : {:.1f}".format(QU))
             print("* qo       : {:.1f}".format(QU / QL))

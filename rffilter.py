@@ -1524,13 +1524,13 @@ def to_mesh(q, k, fo, BW, R=None, L=None, XM=None):
 
 def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
 
-    def func(fo):
-        L = to_leff(fo, CM, LM, CP, QU) 
-        XM = to_xeff(fo, CM, LM, CP, QU) # XM includes the xtal series CM
-        XS, XP, RE = to_mesh(q, k, fo, BW, L=L, XM=XM.imag)
+    def func(f):
+        L = to_leff(f, CM, LM, CP, QU)
+        XM = to_xeff(f, CM, LM, CP, QU) # XM includes the xtal series CM
+        XS, XP, RE = to_mesh(q, k, f, BW, L=L, XM=XM.imag)
 
         # compute unadjusted mesh frequecies
-        wo = 2 * np.pi * fo
+        wo = 2 * np.pi * f
         CK = np.insert(np.ones(2) * -np.inf, 1, XP[0][1::2])
         CMEFF = 1 / (wo * (wo * L - XM.imag))
         CTOT = 1/(1/CMEFF - 1/CK[:-1] - 1/CK[1:])
@@ -1547,10 +1547,11 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
     fd = bisect(func, np.min(fo), np.max(fp))
     XS, XP, RE, MESH, _ = func(fd)
 
+    L = to_leff(fd, CM, LM, CP, QU)
     XS.insert(0, np.zeros_like(XS[0]))
     XS[0][0::2] = -CM
     XS[1][0::2] = LM
-    return XS, XP, RE, MESH, fd, to_leff(fd, CM, LM, CP, QU) / LM
+    return XS, XP, RE, MESH, fd, L / LM
 
 
 # helper routines

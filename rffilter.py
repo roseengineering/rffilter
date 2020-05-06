@@ -1534,8 +1534,8 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
         CK = np.insert(np.ones(2) * -np.inf, 1, XP[0][1::2])
         CMEFF = 1 / (w * (w * L - XM.imag))
         CTOT = 1/(1/CMEFF - 1/CK[:-1] - 1/CK[1:])
-        MESH = 1 / (2 * np.pi * np.sqrt(L * CTOT))
-
+        with np.errstate(invalid='ignore'):
+            MESH = 1 / (2 * np.pi * np.sqrt(L * CTOT))
         CS = XS[-1][0::2]
         return XS, XP, RE, MESH, np.max(CS)
 
@@ -1548,6 +1548,11 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
     XS, XP, RE, MESH, _ = func(fd)
 
     L = to_leff(fd, CM, LM, CP, QU)
+    if np.any(L < 0): 
+        L *= np.nan 
+        if __name__ == "__main__": 
+            print("Unable to design filter",file=sys.stderr)    
+            sys.exit(0)
     XS.insert(0, np.zeros_like(XS[0]))
     XS[0][0::2] = -CM
     XS[1][0::2] = LM
@@ -1678,7 +1683,7 @@ def main(*args):
             SKEW = kw['SKEW']
             print('* Xtal    Xtal freq     Mesh freq   Mesh offset   Xtal offset      LM Shift')
             for i in range(N):
-                print('* {:<2d}  {:13.1f} {:13.1f} {:13.1f} {:13.1f} {:12.3f}%'.format(i+1,
+                print('* {:<2d}  {:13.1f} {:13.1f} {:13.1f} {:13.1f} {:11.3f} %'.format(i+1,
                       fs[i], MESH[i], MESH[i] - fo, fs[i] - np.min(fs), (SKEW[i] - 1) * 100))
             print()
 

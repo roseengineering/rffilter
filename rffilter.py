@@ -1546,11 +1546,12 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
     fp = to_fp(fo, CM, LM, CP or 5e-12)
     fd = bisect(func, np.min(fo), np.max(fp))
     XS, XP, RE, MESH, _ = func(fd)
+    L = to_leff(fd, CM, LM, CP, QU) 
 
     XS.insert(0, np.zeros_like(XS[0]))
     XS[0][0::2] = -CM
     XS[1][0::2] = LM
-    return XS, XP, RE, MESH, fd
+    return XS, XP, RE, MESH, fd, L / LM
 
 
 # helper routines
@@ -1670,18 +1671,17 @@ def main(*args):
             list_couplings(kw['q'], kw['k'], fo, kw['bw'])
             print()
 
-        if kw.get('freqmesh') is not None:
+        if kw.get('MESH') is not None:
             N = len(kw['k']) + 1
             fs = kw['f'] * np.ones(N)
-            MESH = kw['freqmesh']
-            print('* Xtal    Xtal freq     Mesh freq   Mesh offset   Xtal offset')
+            MESH = kw['MESH']
+            SKEW = kw['SKEW']
+            print('* Xtal    Xtal freq     Mesh freq   Mesh offset   Xtal offset      LM Shift')
             for i in range(N):
-                print('* {:<2d}  {:13.1f} {:13.1f} {:13.1f} {:13.1f}'.format(i+1, 
-                      fs[i], MESH[i], MESH[i] - fo, fs[i] - np.min(fs)))
+                print('* {:<2d}  {:13.1f} {:13.1f} {:13.1f} {:13.1f} {:12.3f}%'.format(i+1,
+                      fs[i], MESH[i], MESH[i] - fo, fs[i] - np.min(fs), (SKEW[i] - 1) * 100))
             print()
 
-        if kw.get('CK') is not None:
-            N = len(kw['k']) + 1
             CK = np.ones(N) * np.nan
             CK[:-1] = kw['CK']
             CS = kw['CS']
@@ -1856,12 +1856,13 @@ def main(*args):
         kw['filter'] = 'CRYSTAL_MESH'
         for q, k in qk:
             kw['q'], kw['k'] = q, k
-            XS, XP, RE, MESH, fd = to_crystal_mesh(
+            XS, XP, RE, MESH, fd, SKEW = to_crystal_mesh(
                 q, k, kw['f'], kw['bw'], LM=kw['l'], CP=kw['cp'], QU=kw['qu'])
             kw['fd'] = fd
-            kw['freqmesh'] = MESH
-            kw['CS'] = XS[-1][0::2]
+            kw['MESH'] = MESH
+            kw['SKEW'] = SKEW
             kw['CK'] = XP[0][1::2]
+            kw['CS'] = XS[-1][0::2]
             netlist(XS, XP, RE, kw, 0)
     elif kw.get('bw'):
         for q, k in qk:

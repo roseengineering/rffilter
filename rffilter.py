@@ -1546,12 +1546,11 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
     fp = to_fp(fo, CM, LM, CP or 5e-12)
     fd = bisect(func, np.min(fo), np.max(fp))
     XS, XP, RE, MESH, _ = func(fd)
-    L = to_leff(fd, CM, LM, CP, QU) 
 
     XS.insert(0, np.zeros_like(XS[0]))
     XS[0][0::2] = -CM
     XS[1][0::2] = LM
-    return XS, XP, RE, MESH, fd, L / LM
+    return XS, XP, RE, MESH, fd, to_leff(fd, CM, LM, CP, QU) / LM
 
 
 # helper routines
@@ -1687,8 +1686,7 @@ def main(*args):
             CS = kw['CS']
             print('* ij              CKij            CSi')
             for i in range(N):
-                print('* {:<4s}   {}  {}'.format("%d%d" % (i+1, i+2), 
-                      unit(-CK[i]), unit(-CS[i])))
+                print('* {:<4s}   {}  {}'.format("%d%d" % (i+1, i+2), unit(-CK[i]), unit(-CS[i])))
             print()
             
  

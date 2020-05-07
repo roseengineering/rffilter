@@ -17,7 +17,6 @@ def butterworth_singlyterminated(n):
     for i in range(2, n + 1):
        g[i] = a[i-1] * a[i-2] / (c[i-2] * g[i-1])
     g[-1] = np.inf
-    if n % 2 == 0: g[-1] = 0  # rn+1
     return g
     
 def csv(row):

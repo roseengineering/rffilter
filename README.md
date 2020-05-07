@@ -75,7 +75,7 @@ The program takes the following command line options:
 
 
 ```
-$ rffilter.py -g
+$ python3 rffilter.py -g
 G LOWPASS         POLES
 bessel            2  3  4  5  6  7  8  9 10
 butterworth       1  2  3  4  5  6  7  8  9 10 11
@@ -91,7 +91,7 @@ linear_phase_5    2  3  4  5  6  7  8  9 10
 
 
 ```
-$ rffilter.py -k
+$ python3 rffilter.py -k
 QK COUPLING       POLES
 bessel            2  3  4  5  6  7  8
 butterworth       2  3  4  5  6  7  8
@@ -107,7 +107,7 @@ linear_phase_5    2  3  4  5  6  7  8
 
 
 ```
-$ rffilter.py -zverev
+$ python3 rffilter.py -zverev
 QK ZVEREV         POLES
 bessel            2  3  4  5  6  7  8
 butterworth       2  3  4  5  6  7  8
@@ -133,7 +133,7 @@ Design, Measurement, and Tuning of Coupled-Resonator Filters" in MTT.
 
 
 ```
-$ rffilter.py -g chebyshev_0.2 -n 8 -bw 1000
+$ python3 rffilter.py -g chebyshev_0.2 -n 8 -bw 1000
 * ij        q,k           TD0           TDn           CBW           Q,K
 * 01     1.3800  878.5353e-06             -  724.6377e+00             -
 * 12     0.7225  883.6282e-06    3.3733e-03  722.5464e+00             -
@@ -156,7 +156,7 @@ is the output port.  The exposed resonators ports are numbered in increasing ord
 
 
 ```
-$ rffilter.py -k chebyshev_0.1 -nodal -expose -f 10e6 -bw 400e3 -n 5 -qu 2000 | tee examples/nodal.cir
+$ python3 rffilter.py -k chebyshev_0.1 -nodal -expose -f 10e6 -bw 400e3 -n 5 -qu 2000 | tee examples/nodal.cir
 .SUBCKT F1 1 2 3 4 5
 * COMMAND  : rffilter.py -k chebyshev_0.1 -nodal -expose -f 10e6 -bw 400e3 -n 5 -qu 2000
 * TYPE     : CHEBYSHEV_0.1
@@ -212,7 +212,7 @@ C14 5    0      10.0619e-09
 
 
 ```
-$ rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 | tee examples/mesh.cir
+$ python3 rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 | tee examples/mesh.cir
 .SUBCKT F1 1 17
 * COMMAND  : rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8
 * TYPE     : BUTTERWORTH
@@ -284,7 +284,7 @@ Build a 2400 Hz bandwidth crystal filter.  This filter is from an example in Ste
 
 
 ```
-$ rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 | tee examples/xtal.cir
+$ python3 rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 | tee examples/xtal.cir
 .SUBCKT F1 1 25
 * COMMAND  : rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12
 * TYPE     : CHEBYSHEV_0.2
@@ -387,7 +387,7 @@ Same filter with an unloaded Q of 150000.  See the above Steder article for a fi
 
 
 ```
-$ rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000 | tee examples/xtalloss.cir
+$ python3 rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000 | tee examples/xtalloss.cir
 .SUBCKT F1 1 33
 * COMMAND  : rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000
 * TYPE     : CHEBYSHEV_0.2
@@ -501,7 +501,7 @@ The filter, less the holder capacitance, is an example from the Dishal program's
 
 
 ```
-$ rffilter.py -k chebyshev_0.5 -bw 2500 -n 8 -l 70e-3 -crystal -f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3 | tee examples/multiple.cir
+$ python3 rffilter.py -k chebyshev_0.5 -bw 2500 -n 8 -l 70e-3 -crystal -f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3 | tee examples/multiple.cir
 .SUBCKT F1 1 25
 * COMMAND  : rffilter.py -k chebyshev_0.5 -bw 2500 -n 8 -l 70e-3 -crystal -f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3
 * TYPE     : CHEBYSHEV_0.5
@@ -596,7 +596,7 @@ The filter is an example from the Dishal program's owners manual.
 
 
 ```
-$ rffilter.py -k chebyshev_0.5 -bw 2500 -n 8 -l 70e-3 -crystal -cp 3.7e-12 -f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3 | tee examples/broken.cir
+$ python3 rffilter.py -k chebyshev_0.5 -bw 2500 -n 8 -l 70e-3 -crystal -cp 3.7e-12 -f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3 | tee examples/broken.cir
 .SUBCKT F1 1 25
 * COMMAND  : rffilter.py -k chebyshev_0.5 -bw 2500 -n 8 -l 70e-3 -crystal -cp 3.7e-12 -f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3
 * TYPE     : CHEBYSHEV_0.5
@@ -703,7 +703,7 @@ The following example uses the lowest crystal for the reference mesh:
 
 
 ```
-$ rffilter.py -g chebyshev_0.1 -bw 2500 -n 12 -l .0155 -crystal -cp 5e-12 -f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0 | tee examples/qexlow.cir
+$ python3 rffilter.py -g chebyshev_0.1 -bw 2500 -n 12 -l .0155 -crystal -cp 5e-12 -f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0 | tee examples/qexlow.cir
 .SUBCKT F1 1 37
 * COMMAND  : rffilter.py -g chebyshev_0.1 -bw 2500 -n 12 -l .0155 -crystal -cp 5e-12 -f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0
 * TYPE     : CHEBYSHEV_0.1
@@ -842,7 +842,7 @@ The above crystal filter with 120,000 Q crystals:
 
 
 ```
-$ rffilter.py -g chebyshev_0.1 -bw 2500 -n 12 -l .0155 -crystal -cp 5e-12 -qu 120000 -f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0 > examples/qexloss.cir
+$ python3 rffilter.py -g chebyshev_0.1 -bw 2500 -n 12 -l .0155 -crystal -cp 5e-12 -qu 120000 -f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0 > examples/qexloss.cir
 ```
 
 ![qexloss](examples/qexloss.png)
@@ -851,7 +851,7 @@ The following example uses a middle crystal for the reference mesh:
 
 
 ```
-$ rffilter.py -g chebyshev_0.1 -bw 2500 -n 12 -l .0155 -crystal -cp 5e-12 -f 8000017.0,7999966.0,7999940.0,7999945.0,7999985.0,8000000.0,7999996.0,7999991.0,7999939.0,7999933.0,7999945.0,8000026.0 | tee examples/qexmiddle.cir
+$ python3 rffilter.py -g chebyshev_0.1 -bw 2500 -n 12 -l .0155 -crystal -cp 5e-12 -f 8000017.0,7999966.0,7999940.0,7999945.0,7999985.0,8000000.0,7999996.0,7999991.0,7999939.0,7999933.0,7999945.0,8000026.0 | tee examples/qexmiddle.cir
 .SUBCKT F1 1 37
 * COMMAND  : rffilter.py -g chebyshev_0.1 -bw 2500 -n 12 -l .0155 -crystal -cp 5e-12 -f 8000017.0,7999966.0,7999940.0,7999945.0,7999985.0,8000000.0,7999996.0,7999991.0,7999939.0,7999933.0,7999945.0,8000026.0
 * TYPE     : CHEBYSHEV_0.1
@@ -989,7 +989,7 @@ C59 36   37    131.3378e-12
 
 
 ```
-$ rffilter.py -g butterworth -lowpass -f 10e6 -n 5
+$ python3 rffilter.py -g butterworth -lowpass -f 10e6 -n 5
 .SUBCKT F1 1 4
 * COMMAND  : rffilter.py -g butterworth -lowpass -f 10e6 -n 5
 * TYPE     : BUTTERWORTH
@@ -1036,7 +1036,7 @@ C5  3    0     196.7251e-12
 
 
 ```
-$ rffilter.py -g butterworth -bandpass -f 10e6 -bw 1e6 -n 4
+$ python3 rffilter.py -g butterworth -bandpass -f 10e6 -bw 1e6 -n 4
 .SUBCKT F1 1 5
 * COMMAND  : rffilter.py -g butterworth -bandpass -f 10e6 -bw 1e6 -n 4
 * TYPE     : BUTTERWORTH
@@ -1095,7 +1095,7 @@ C8  4    5      41.5890e-12
 
 
 ```
-$ rffilter.py -zverev butterworth -nodal -qu 2500 -bw 1e6 -f 10e6 -n 3
+$ python3 rffilter.py -zverev butterworth -nodal -qu 2500 -bw 1e6 -f 10e6 -n 3
 .SUBCKT F1 1 3
 * COMMAND  : rffilter.py -zverev butterworth -nodal -qu 2500 -bw 1e6 -f 10e6 -n 3
 * TYPE     : BUTTERWORTH
@@ -1136,7 +1136,7 @@ C8  3    0       4.2825e-09
 
 
 ```
-$ rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8
+$ python3 rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8
 .SUBCKT F1 1 8
 * COMMAND  : rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8
 * TYPE     : BESSEL
@@ -1672,7 +1672,7 @@ C23 8    0       7.1977e-12
 
 
 ```
-$ rffilter.py -k butterworth -nodal -f 10e6 -bw 1e6 -n 5
+$ python3 rffilter.py -k butterworth -nodal -f 10e6 -bw 1e6 -n 5
 .SUBCKT F1 1 5
 * COMMAND  : rffilter.py -k butterworth -nodal -f 10e6 -bw 1e6 -n 5
 * TYPE     : BUTTERWORTH
@@ -1719,7 +1719,7 @@ C14 5    0       1.7704e-09
 
 
 ```
-$ rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -l 100e-9,100e-9,100e-9,100e-9,100e-9
+$ python3 rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -l 100e-9,100e-9,100e-9,100e-9,100e-9
 .SUBCKT F1 1 5
 * COMMAND  : rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -l 100e-9,100e-9,100e-9,100e-9,100e-9
 * TYPE     : BUTTERWORTH
@@ -1766,7 +1766,7 @@ C14 5    0       2.4317e-09
 
 
 ```
-$ rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -r 100,120
+$ python3 rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -r 100,120
 .SUBCKT F1 1 5
 * COMMAND  : rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -r 100,120
 * TYPE     : BUTTERWORTH
@@ -1813,7 +1813,7 @@ C14 5    0       1.9594e-09
 
 
 ```
-$ rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 75
+$ python3 rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 75
 .SUBCKT F1 1 4
 * COMMAND  : rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 75
 * TYPE     : BUTTERWORTH
@@ -1856,7 +1856,7 @@ C5  3    0     131.1500e-12
 
 
 ```
-$ rffilter.py -g butterworth -highpass -f 10e6 -n 5 -r 75
+$ python3 rffilter.py -g butterworth -highpass -f 10e6 -n 5 -r 75
 .SUBCKT F1 1 4
 * COMMAND  : rffilter.py -g butterworth -highpass -f 10e6 -n 5 -r 75
 * TYPE     : BUTTERWORTH
@@ -1899,7 +1899,7 @@ L5  3    0       1.9314e-06
 
 
 ```
-$ rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 -qu 2000
+$ python3 rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 -qu 2000
 .SUBCKT F1 1 25
 * COMMAND  : rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 -qu 2000
 * TYPE     : BUTTERWORTH
@@ -1969,7 +1969,7 @@ C31 24   25     34.7427e-12
 
 
 ```
-$ rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -l 100e-9
+$ python3 rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -l 100e-9
 .SUBCKT F1 1 9
 * COMMAND  : rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -l 100e-9
 * TYPE     : BUTTERWORTH
@@ -2011,7 +2011,7 @@ C11 8    9       2.6212e-09
 
 
 ```
-$ rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100
+$ python3 rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100
 .SUBCKT F1 1 9
 * COMMAND  : rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100
 * TYPE     : BUTTERWORTH
@@ -2053,7 +2053,7 @@ C11 8    9       8.6073e-12
 
 
 ```
-$ rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100,120
+$ python3 rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100,120
 .SUBCKT F1 1 9
 * COMMAND  : rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100,120
 * TYPE     : BUTTERWORTH
@@ -2100,7 +2100,7 @@ Expose the ports.  Note, sequential ports must be connected together - and broke
 
 
 ```
-$ rffilter.py -k chebyshev_0.1 -n 8 -crystal -l .170 -f 4e6 -bw 500 -cp 2.05e-12 -expose | tee examples/xtaltune.cir
+$ python3 rffilter.py -k chebyshev_0.1 -n 8 -crystal -l .170 -f 4e6 -bw 500 -cp 2.05e-12 -expose | tee examples/xtaltune.cir
 .SUBCKT F1 1 4 5 8 9 12 13 16 17 20 21 24 25 28 29 32
 * COMMAND  : rffilter.py -k chebyshev_0.1 -n 8 -crystal -l .170 -f 4e6 -bw 500 -cp 2.05e-12 -expose
 * TYPE     : CHEBYSHEV_0.1
@@ -2269,7 +2269,7 @@ Usage: python chebyshev.py [<ripple_in_db=.1> [<maximum_order=15>]]
 
 
 ```
-$ chebyshev.py
+$ python3 chebyshev.py
 N g0   g1 ... gn    gn+1
 1  [ 1.0000,0.3052,1.0000 ],
 2  [ 1.0000,0.8430,0.6220,0.7378 ],
@@ -2307,7 +2307,7 @@ N q1 qn k12 k23 k34 k45 k56 ...
 
 
 ```
-$ chebyshev.py .01 10
+$ python3 chebyshev.py .01 10
 N g0   g1 ... gn    gn+1
 1  [ 1.0000,0.0960,1.0000 ],
 2  [ 1.0000,0.4489,0.4078,0.9085 ],
@@ -2342,7 +2342,7 @@ Usage: python butterworth.py [<maximum_order=15>]
 
 
 ```
-$ butterworth.py 10
+$ python3 butterworth.py 10
 N g0   g1 ... gn    gn+1
 1  [ 1.0000,2.0000,1.0000 ],
 2  [ 1.0000,1.4142,1.4142,1.0000 ],
@@ -2367,5 +2367,41 @@ N q1 qn k12 k23 k34 k45 k56 ...
 9  [ 0.3473,0.3473,1.6969,0.8079,0.5893,0.5158,0.5158,0.5893,0.8079,1.6969 ],
 10 [ 0.3129,0.3129,1.8762,0.8825,0.6299,0.5330,0.5062,0.5330,0.6299,0.8825,1.8762 ],
 ```
+
+
+# buttersingly.py
+
+Python script buttersingly.py prints out a table of normalized low pass butterworth, ie maximally flat, singly terminated filter coefficients.
+
+Usage: python buttersingly.py [<maximum_order=15>]
+
+
+```
+$ python3 buttersingly.py 10
+N g0   g1 ... gn    gn+1
+1  [ 1.0000,1.0000,inf ],
+2  [ 1.0000,0.7071,1.4142,inf ],
+3  [ 1.0000,0.5000,1.3333,1.5000,inf ],
+4  [ 1.0000,0.3827,1.0824,1.5772,1.5307,inf ],
+5  [ 1.0000,0.3090,0.8944,1.3820,1.6944,1.5451,inf ],
+6  [ 1.0000,0.2588,0.7579,1.2016,1.5529,1.7593,1.5529,inf ],
+7  [ 1.0000,0.2225,0.6560,1.0550,1.3972,1.6588,1.7988,1.5576,inf ],
+8  [ 1.0000,0.1951,0.5776,0.9371,1.2588,1.5283,1.7287,1.8246,1.5607,inf ],
+9  [ 1.0000,0.1736,0.5155,0.8414,1.1408,1.4037,1.6202,1.7772,1.8424,1.5628,inf ],
+10 [ 1.0000,0.1564,0.4654,0.7626,1.0406,1.2921,1.5100,1.6869,1.8121,1.8552,1.5643,inf ],
+
+N q1 qn k12 k23 k34 k45 k56 ...
+1  [ 1.0000,inf ],
+2  [ 0.7071,0.0000,1.0000 ],
+3  [ 0.5000,inf,1.2247,0.7071 ],
+4  [ 0.3827,0.0000,1.5538,0.7654,0.6436 ],
+5  [ 0.3090,inf,1.9021,0.8995,0.6535,0.6180 ],
+6  [ 0.2588,0.0000,2.2579,1.0479,0.7321,0.6050,0.6050 ],
+7  [ 0.2225,inf,2.6174,1.2021,0.8237,0.6569,0.5789,0.5974 ],
+8  [ 0.1951,0.0000,2.9791,1.3593,0.9207,0.7210,0.6152,0.5631,0.5926 ],
+9  [ 0.1736,inf,3.3422,1.5184,1.0207,0.7902,0.6631,0.5893,0.5526,0.5893 ],
+10 [ 0.1564,0.0000,3.7062,1.6786,1.1225,0.8624,0.7159,0.6266,0.5720,0.5454,0.5870 ],
+```
+
 
 

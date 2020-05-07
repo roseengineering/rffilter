@@ -7,7 +7,7 @@ def run(command):
     proc.wait()
     return f"""
 ```
-$ {command}
+$ python3 {command}
 {buf}\
 ```
 """
@@ -275,6 +275,15 @@ Python script butterworth.py prints out a table of normalized low pass butterwor
 Usage: python butterworth.py [<maximum_order=15>]
 
 { run("butterworth.py 10") }
+
+# buttersingly.py
+
+Python script buttersingly.py prints out a table of normalized low pass butterworth, ie maximally flat, singly terminated filter coefficients.
+
+Usage: python buttersingly.py [<maximum_order=15>]
+
+{ run("buttersingly.py 10") }
+
 """)
 
 

@@ -16,8 +16,9 @@ def chebyshev(delta, n):
     g = np.ones(n + 2)
     g[1] = 2 * A[0] / gamma
     for i in range(2, n + 1):
-       g[i] = 4.0 * A[i-2] * A[i-1] / (B[i-2] * g[i-1])
-    g[n+1] = 1 if n % 2 == 1 else np.tanh(beta / 4)**2
+        g[i] = 4.0 * A[i-2] * A[i-1] / (B[i-2] * g[i-1])
+    if n % 2 == 0:
+        g[n+1] = np.tanh(beta / 4)**2  # is this right! shouldn't it be coth!
     return np.array(g)
 
 def csv(row):

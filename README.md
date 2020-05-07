@@ -81,7 +81,7 @@ bessel            2  3  4  5  6  7  8  9 10
 butterworth       1  2  3  4  5  6  7  8  9 10 11
 chebyshev_0.01    3  4  5  6  7  8  9 10 11
 chebyshev_0.044   3  4  5  6  7  8  9 10 11
-chebyshev_0.1     2  3  4  5  6  7  8  9 12
+chebyshev_0.1     1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
 chebyshev_0.2     3  4  5  6  7  8  9 10 11
 gaussian_12       3  4  5  6  7  8  9 10
 gaussian_6        3  4  5  6  7  8  9 10

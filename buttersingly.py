@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 
 import numpy as np
 from rffilter import to_coupling_qk
@@ -16,7 +17,7 @@ def butterworth_singlyterminated(n):
     for i in range(2, n + 1):
        g[i] = a[i-1] * a[i-2] / (c[i-2] * g[i-1])
     g[-1] = np.inf
-    if n % 2 == 0: g[-1] = 0
+    if n % 2 == 0: g[-1] = 0  # rn+1
     return g
     
 def csv(row):
@@ -24,7 +25,7 @@ def csv(row):
 
 def main(stop=15):
     stop = int(stop)
-    print("N g0   g1 ... gn    rs")
+    print("N g0   g1 ... gn    rn+1")
     for n in range(1, stop + 1):
         g = butterworth_singlyterminated(n)
         print('    [ {} ], # {}'.format(csv(g), n))

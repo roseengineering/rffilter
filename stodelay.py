@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 
 # convert s-parameters to reflected time delay
 # $ python stodelay.py <filename>.s?p

@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 
 import numpy as np
 from rffilter import to_coupling_qk
@@ -18,7 +19,7 @@ def chebyshev(delta, n):
     for i in range(2, n + 1):
         g[i] = 4.0 * A[i-2] * A[i-1] / (B[i-2] * g[i-1])
     if n % 2 == 0:
-        g[n+1] = np.tanh(beta / 4)**2  # rs
+        g[n+1] = np.tanh(beta / 4)**2  # rn+1
     return np.array(g)
 
 def csv(row):
@@ -28,7 +29,7 @@ def main(delta=.1, stop=15):
     delta = float(delta)
     stop = int(stop)
     print("ripple = {}".format(delta))
-    print("N g0   g1 ... gn    rs")
+    print("N g0   g1 ... gn    rn+1")
     for n in range(1, stop + 1):
         g = chebyshev(delta, n)
         print('    [ {} ], # {}'.format(csv(g), n))

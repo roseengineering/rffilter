@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 
 import os, subprocess 
 
@@ -7,7 +8,7 @@ def run(command):
     proc.wait()
     return f"""
 ```
-$ python3 {command}
+$ {command}
 {buf}\
 ```
 """

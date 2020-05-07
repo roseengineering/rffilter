@@ -76,33 +76,33 @@ The program takes the following command line options:
 
 ```
 $ python3 rffilter.py -g
-G LOWPASS         POLES
-bessel            2  3  4  5  6  7  8  9 10
-butterworth       1  2  3  4  5  6  7  8  9 10 11
-chebyshev_0.01    3  4  5  6  7  8  9 10 11
-chebyshev_0.044   3  4  5  6  7  8  9 10 11
-chebyshev_0.1     1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
-chebyshev_0.2     3  4  5  6  7  8  9 10 11
-gaussian_12       3  4  5  6  7  8  9 10
-gaussian_6        3  4  5  6  7  8  9 10
-linear_phase_05   2  3  4  5  6  7  8  9 10
-linear_phase_5    2  3  4  5  6  7  8  9 10
+G LOWPASS           POLES
+bessel              2  3  4  5  6  7  8  9 10
+butterworth         1  2  3  4  5  6  7  8  9 10 11
+chebyshev_0.01      3  4  5  6  7  8  9 10 11
+chebyshev_0.044     3  4  5  6  7  8  9 10 11
+chebyshev_0.1       1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+chebyshev_0.2       3  4  5  6  7  8  9 10 11
+gaussian_12         3  4  5  6  7  8  9 10
+gaussian_6          3  4  5  6  7  8  9 10
+linear_phase_0.05   2  3  4  5  6  7  8  9 10
+linear_phase_0.5    2  3  4  5  6  7  8  9 10
 ```
 
 
 ```
 $ python3 rffilter.py -k
-QK COUPLING       POLES
-bessel            2  3  4  5  6  7  8
-butterworth       2  3  4  5  6  7  8
-chebyshev_0.01    2  3  4  5  6  7  8
-chebyshev_0.1     2  3  4  5  6  7  8
-chebyshev_0.5     2  3  4  5  6  7  8
-chebyshev_1.0     2  3  4  5  6  7
-gaussian_12       3  4  5  6  7  8
-gaussian_6        3  4  5  6  7  8
-linear_phase_05   2  3  4  5  6  7  8
-linear_phase_5    2  3  4  5  6  7  8
+QK COUPLING         POLES
+bessel              2  3  4  5  6  7  8
+butterworth         2  3  4  5  6  7  8
+chebyshev_0.01      2  3  4  5  6  7  8
+chebyshev_0.1       2  3  4  5  6  7  8
+chebyshev_0.5       2  3  4  5  6  7  8
+chebyshev_1.0       2  3  4  5  6  7
+gaussian_12         3  4  5  6  7  8
+gaussian_6          3  4  5  6  7  8
+linear_phase_0.05   2  3  4  5  6  7  8
+linear_phase_0.5    2  3  4  5  6  7  8
 ```
 
 

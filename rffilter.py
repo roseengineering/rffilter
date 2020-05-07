@@ -3,7 +3,8 @@
 import numpy as np
 
 COUPLED = {
-    # q1 qn k12 k23 k34 k45 k56 k67 k78
+    # From the Electronic Filter Design Handbook
+    # q1 qn k12 k23 k34 k45 k56 k67 k78 ...
     'BUTTERWORTH': [
     [ 1.414,1.414,0.707 ],
     [ 1.000,1.000,0.707,0.707 ],
@@ -57,7 +58,7 @@ COUPLED = {
     [ 0.187,0.242,3.325,1.660,1.293,0.695,0.674,2.203 ],
     [ 0.139,0.242,4.284,2.079,1.484,1.246,0.678,0.697,2.286 ],
     ],
-    'LINEAR_PHASE_05': [
+    'LINEAR_PHASE_0.05': [
     [ 0.648,2.109,0.856 ],
     [ 0.433,2.254,1.489,0.652 ],
     [ 0.493,0.718,1.632,0.718,0.739 ],
@@ -66,7 +67,7 @@ COUPLED = {
     [ 0.316,0.484,2.490,1.442,1.446,0.927,0.579,1.260 ],
     [ 0.335,0.363,2.585,1.484,1.602,1.160,0.596,0.868,1.733 ],
     ],
-    'LINEAR_PHASE_5': [
+    'LINEAR_PHASE_0.5': [
     [ 0.825,1.980,0.783 ],
     [ 0.553,2.425,1.330,0.635 ],
     [ 0.581,1.026,1.575,0.797,0.656 ],
@@ -119,7 +120,7 @@ LOWPASS = {
     [ 1,0.078,0.2313,0.377,0.5108,0.6306,0.7407,0.8639,1.0863,2.2649,1 ], 
     [ 1,0.0672,0.1998,0.327,0.4454,0.5528,0.6493,0.742,0.8561,1.0781,2.2641,1 ]
     ],
-    'LINEAR_PHASE_05': [
+    'LINEAR_PHASE_0.05': [
     [ 1,0.64800,2.10850,1 ],
     [ 1,0.43280,1.04270,2.25420,1 ],
     [ 1,0.33630,0.79630,1.14280,2.24590,1 ],
@@ -130,7 +131,7 @@ LOWPASS = {
     [ 1,0.17180,0.41460,0.54980,0.61320,0.67740,0.72520,0.84500,1.04470,2.28340,1 ],
     [ 1,0.16010,0.38670,0.51250,0.57020,0.62430,0.65570,0.73190,0.81780,1.07670,2.23870,1 ]
     ],
-    'LINEAR_PHASE_5': [
+    'LINEAR_PHASE_0.5': [
     [ 1,0.8245,1.9800,1 ],
     [ 1,0.5534,1.0218,2.4250,1 ],
     [ 1,0.4526,0.7967,1.2669,2.0504,1 ],
@@ -1724,18 +1725,18 @@ def main(*args):
                   qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i]), unit(QK[i])))
  
     def list_gfilters():
-        print('{:16s}  {}'.format("G LOWPASS", "POLES"))
+        print('{:18s}  {}'.format("G LOWPASS", "POLES"))
         for name in sorted(LOWPASS.keys()):
-            print('{:16s}'.format(name.lower()), end='')
+            print('{:18s}'.format(name.lower()), end='')
             for g in LOWPASS[name]:
                 n = len(g) - 2
                 print(' {:2d}'.format(n), end='')
             print()
 
     def list_kfilters():
-        print('{:16s}  {}'.format("QK COUPLING", "POLES"))
+        print('{:18s}  {}'.format("QK COUPLING", "POLES"))
         for name in sorted(COUPLED.keys()):
-            print('{:16s}'.format(name.lower()), end='')
+            print('{:18s}'.format(name.lower()), end='')
             for k in COUPLED[name]:
                 n = len(k) - 1
                 print(' {:2d}'.format(n), end='')

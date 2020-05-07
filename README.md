@@ -2273,7 +2273,8 @@ Usage: python chebyshev.py [<ripple_in_db=.1> [<maximum_order=15>]]
 
 ```
 $ python3 chebyshev.py
-N g0   g1 ... gn    gn+1
+ripple = 0.1
+N g0   g1 ... gn    rs
     [ 1.0000,0.3052,1.0000 ], # 1
     [ 1.0000,0.8430,0.6220,0.7378 ], # 2
     [ 1.0000,1.0316,1.1474,1.0316,1.0000 ], # 3
@@ -2311,7 +2312,8 @@ N q1 qn k12 k23 k34 k45 k56 ...
 
 ```
 $ python3 chebyshev.py .01 10
-N g0   g1 ... gn    gn+1
+ripple = 0.01
+N g0   g1 ... gn    rs
     [ 1.0000,0.0960,1.0000 ], # 1
     [ 1.0000,0.4489,0.4078,0.9085 ], # 2
     [ 1.0000,0.6292,0.9703,0.6292,1.0000 ], # 3
@@ -2346,7 +2348,7 @@ Usage: python butterworth.py [<maximum_order=15>]
 
 ```
 $ python3 butterworth.py 10
-N g0   g1 ... gn    gn+1
+N g0   g1 ... gn    rs
     [ 1.0000,2.0000,1.0000 ], # 1
     [ 1.0000,1.4142,1.4142,1.0000 ], # 2
     [ 1.0000,1.0000,2.0000,1.0000,1.0000 ], # 3
@@ -2381,7 +2383,7 @@ Usage: python buttersingly.py [<maximum_order=15>]
 
 ```
 $ python3 buttersingly.py 10
-N g0   g1 ... gn    gn+1
+N g0   g1 ... gn    rs
     [ 1.0000,1.0000,inf ], # 1
     [ 1.0000,0.7071,1.4142,inf ], # 2
     [ 1.0000,0.5000,1.3333,1.5000,inf ], # 3

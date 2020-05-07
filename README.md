@@ -79,6 +79,7 @@ $ python3 rffilter.py -g
 G LOWPASS           POLES
 bessel              2  3  4  5  6  7  8  9 10
 butterworth         1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+butterworth_singly  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
 chebyshev_0.01      1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
 chebyshev_0.1       1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
 chebyshev_0.2       1  2  3  4  5  6  7  8  9 10 11 12 13 14 15

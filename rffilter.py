@@ -1817,9 +1817,9 @@ def main(*args):
             print()
 
     def list_zverev():
-        print('{:16s}  {}'.format("QK ZVEREV", "POLES"))
+        print('{:18s}  {}'.format("QK ZVEREV", "POLES"))
         for name in sorted(ZVEREV.keys()):
-            print('{:16s}'.format(name.lower()), end='')
+            print('{:18s}'.format(name.lower()), end='')
             prev = 0
             for z in ZVEREV[name]:
                 n = len(z) - 3

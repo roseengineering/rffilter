@@ -111,18 +111,18 @@ linear_phase_0.5    2  3  4  5  6  7  8
 
 ```
 $ python3 rffilter.py -zverev
-QK ZVEREV         POLES
-bessel            2  3  4  5  6  7  8
-butterworth       2  3  4  5  6  7  8
-chebyshev_0.01    2  3  4  5  6  7  8
-chebyshev_0.1     2  3  4  5  6  7  8
-chebyshev_0.5     2  3  4  5  6  7  8
-gaussian          2  3  4  5  6  7  8
-gaussian_12       3  4  5  6  7  8
-gaussian_6        3  4  5  6  7  8
-legendre          3  4  5  6  7  8
-linear_phase_05   2  3  4  5  6  7  8
-linear_phase_5    2  3  4  5  6  7  8
+QK ZVEREV           POLES
+bessel              2  3  4  5  6  7  8
+butterworth         2  3  4  5  6  7  8
+chebyshev_0.01      2  3  4  5  6  7  8
+chebyshev_0.1       2  3  4  5  6  7  8
+chebyshev_0.5       2  3  4  5  6  7  8
+gaussian            2  3  4  5  6  7  8
+gaussian_12         3  4  5  6  7  8
+gaussian_6          3  4  5  6  7  8
+legendre            3  4  5  6  7  8
+linear_phase_05     2  3  4  5  6  7  8
+linear_phase_5      2  3  4  5  6  7  8
 ```
 
 

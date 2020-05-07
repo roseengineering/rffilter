@@ -259,6 +259,15 @@ $ python stodelay.py 2n3904e_6ma.s1p
 30         83.5676e-12
 ```
 
+# chebyshev.py
+
+Python script chebyshev.py prints out a table of normalized low pass chebyshev coefficients.
+
+Usage: python chebyshev.py <ripple_in_db=.1> <maximum_order=15>
+
+{ run("chebyshev.py") }
+{ run("chebyshev.py .01 10") }
+
 """)
 
 

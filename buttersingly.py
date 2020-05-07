@@ -23,7 +23,7 @@ def csv(row):
 
 def main(stop=15):
     stop = int(stop)
-    print("N g0   g1 ... gn    gn+1")
+    print("N g0   g1 ... gn    rs")
     for n in range(1, stop + 1):
         g = butterworth_singlyterminated(n)
         print('    [ {} ], # {}'.format(csv(g), n))

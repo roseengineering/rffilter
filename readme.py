@@ -261,13 +261,20 @@ $ python stodelay.py 2n3904e_6ma.s1p
 
 # chebyshev.py
 
-Python script chebyshev.py prints out a table of normalized low pass chebyshev coefficients.
+Python script chebyshev.py prints out a table of normalized low pass chebyshev filter coefficients.
 
-Usage: python chebyshev.py <ripple_in_db=.1> <maximum_order=15>
+Usage: python chebyshev.py [<ripple_in_db=.1> [<maximum_order=15>]]
 
 { run("chebyshev.py") }
 { run("chebyshev.py .01 10") }
 
+# butterworth.py
+
+Python script butterworth.py prints out a table of normalized low pass butterworth, ie maximally flat, filter coefficients.
+
+Usage: python butterworth.py [<maximum_order=15>]
+
+{ run("butterworth.py 10") }
 """)
 
 

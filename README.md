@@ -992,25 +992,6 @@ C59 36   37    131.3378e-12
 
 ```
 $ rffilter.py -g butterworth -lowpass -f 10e6 -n 5
-.SUBCKT F0 1 4
-* COMMAND  : rffilter.py -g butterworth -lowpass -f 10e6 -n 5
-* TYPE     : BUTTERWORTH
-* FILTER   : LOWPASS
-* ORDER    : 5
-* FREQ     : 10.000000 MHz
-* RS       : 50.0
-* RL       : 50.0
-
-L1  1    2     491.7888e-09
-
-C2  2    0     515.0254e-12
-L3  2    3       1.5915e-06
-
-C4  3    0     515.0254e-12
-L5  3    4     491.7888e-09
-.ends
-.end
-
 .SUBCKT F1 1 3
 * COMMAND  : rffilter.py -g butterworth -lowpass -f 10e6 -n 5
 * TYPE     : BUTTERWORTH
@@ -1030,6 +1011,25 @@ C5  3    0     196.7155e-12
 .ends
 .end
 
+.SUBCKT F0 1 4
+* COMMAND  : rffilter.py -g butterworth -lowpass -f 10e6 -n 5
+* TYPE     : BUTTERWORTH
+* FILTER   : LOWPASS
+* ORDER    : 5
+* FREQ     : 10.000000 MHz
+* RS       : 50.0
+* RL       : 50.0
+
+L1  1    2     491.7888e-09
+
+C2  2    0     515.0254e-12
+L3  2    3       1.5915e-06
+
+C4  3    0     515.0254e-12
+L5  3    4     491.7888e-09
+.ends
+.end
+
 ```
 
 ![lowpass](examples/lowpass.png)
@@ -1039,6 +1039,31 @@ C5  3    0     196.7155e-12
 
 ```
 $ rffilter.py -g butterworth -bandpass -f 10e6 -bw 1e6 -n 4
+.SUBCKT F1 1 5
+* COMMAND  : rffilter.py -g butterworth -bandpass -f 10e6 -bw 1e6 -n 4
+* TYPE     : BUTTERWORTH
+* FILTER   : BANDPASS
+* ORDER    : 4
+* FREQ     : 10.000000 MHz
+* RS       : 50.0
+* RL       : 50.0
+* BW       : 1.0000e+06
+* QL       : 10.0
+* QU       : inf
+* qo       : inf
+
+L1  1    0     103.9685e-09
+C2  1    0       2.4363e-09
+L3  1    2      14.7043e-06
+C4  2    3      17.2264e-12
+
+L5  3    0      43.0661e-09
+C6  3    0       5.8817e-09
+L7  3    4       6.0909e-06
+C8  4    5      41.5874e-12
+.ends
+.end
+
 .SUBCKT F0 1 5
 * COMMAND  : rffilter.py -g butterworth -bandpass -f 10e6 -bw 1e6 -n 4
 * TYPE     : BUTTERWORTH
@@ -1062,31 +1087,6 @@ C6  4    5      17.2264e-12
 
 L7  5    0     103.9685e-09
 C8  5    0       2.4363e-09
-.ends
-.end
-
-.SUBCKT F1 1 5
-* COMMAND  : rffilter.py -g butterworth -bandpass -f 10e6 -bw 1e6 -n 4
-* TYPE     : BUTTERWORTH
-* FILTER   : BANDPASS
-* ORDER    : 4
-* FREQ     : 10.000000 MHz
-* RS       : 50.0
-* RL       : 50.0
-* BW       : 1.0000e+06
-* QL       : 10.0
-* QU       : inf
-* qo       : inf
-
-L1  1    0     103.9685e-09
-C2  1    0       2.4363e-09
-L3  1    2      14.7043e-06
-C4  2    3      17.2264e-12
-
-L5  3    0      43.0661e-09
-C6  3    0       5.8817e-09
-L7  3    4       6.0909e-06
-C8  4    5      41.5874e-12
 .ends
 .end
 
@@ -1816,25 +1816,6 @@ C14 5    0       1.9593e-09
 
 ```
 $ rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 75
-.SUBCKT F0 1 4
-* COMMAND  : rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 75
-* TYPE     : BUTTERWORTH
-* FILTER   : LOWPASS
-* ORDER    : 5
-* FREQ     : 10.000000 MHz
-* RS       : 75.0
-* RL       : 75.0
-
-L1  1    2     737.6832e-09
-
-C2  2    0     343.3503e-12
-L3  2    3       2.3873e-06
-
-C4  3    0     343.3503e-12
-L5  3    4     737.6832e-09
-.ends
-.end
-
 .SUBCKT F1 1 3
 * COMMAND  : rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 75
 * TYPE     : BUTTERWORTH
@@ -1854,30 +1835,30 @@ C5  3    0     131.1437e-12
 .ends
 .end
 
-```
-
-
-```
-$ rffilter.py -g butterworth -highpass -f 10e6 -n 5 -r 75
 .SUBCKT F0 1 4
-* COMMAND  : rffilter.py -g butterworth -highpass -f 10e6 -n 5 -r 75
+* COMMAND  : rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 75
 * TYPE     : BUTTERWORTH
-* FILTER   : HIGHPASS
+* FILTER   : LOWPASS
 * ORDER    : 5
 * FREQ     : 10.000000 MHz
 * RS       : 75.0
 * RL       : 75.0
 
-C1  1    2     343.3764e-12
+L1  1    2     737.6832e-09
 
-L2  2    0     737.7392e-09
-C3  2    3     106.1033e-12
+C2  2    0     343.3503e-12
+L3  2    3       2.3873e-06
 
-L4  3    0     737.7392e-09
-C5  3    4     343.3764e-12
+C4  3    0     343.3503e-12
+L5  3    4     737.6832e-09
 .ends
 .end
 
+```
+
+
+```
+$ rffilter.py -g butterworth -highpass -f 10e6 -n 5 -r 75
 .SUBCKT F1 1 3
 * COMMAND  : rffilter.py -g butterworth -highpass -f 10e6 -n 5 -r 75
 * TYPE     : BUTTERWORTH
@@ -1894,6 +1875,25 @@ L3  2    0     596.8310e-09
 C4  2    3     131.1536e-12
 
 L5  3    0       1.9315e-06
+.ends
+.end
+
+.SUBCKT F0 1 4
+* COMMAND  : rffilter.py -g butterworth -highpass -f 10e6 -n 5 -r 75
+* TYPE     : BUTTERWORTH
+* FILTER   : HIGHPASS
+* ORDER    : 5
+* FREQ     : 10.000000 MHz
+* RS       : 75.0
+* RL       : 75.0
+
+C1  1    2     343.3764e-12
+
+L2  2    0     737.7392e-09
+C3  2    3     106.1033e-12
+
+L4  3    0     737.7392e-09
+C5  3    4     343.3764e-12
 .ends
 .end
 

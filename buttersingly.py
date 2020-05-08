@@ -24,17 +24,17 @@ def csv(row):
 
 def main(stop=15):
     stop = int(stop)
-    print("N g0   g1 ... gn    gn+1")
+    print("    # g0 g1 ... gn gn+1")
     for n in range(1, stop + 1):
         g = butterworth_singlyterminated(n)
-        print('    [ {} ], # {}'.format(csv(g), n))
+        print('    [ {} ], # n={}'.format(csv(g), n))
     print()
-    print("N q1 qn k12 k23 k34 k45 k56 ...")
+    print("    # q1 qn k12 k23 k34 k45 k56 ...")
     for n in range(1, stop + 1):
         g = butterworth_singlyterminated(n)
         with np.errstate(divide='ignore'):
             qk = to_coupling_qk(g)
-        print('    [ {} ], # {}'.format(csv(np.concatenate(qk)), n))
+        print('    [ {} ], # n={}'.format(csv(np.concatenate(qk)), n))
 
 if __name__ == '__main__':
     import sys

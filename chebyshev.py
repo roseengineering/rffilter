@@ -29,16 +29,16 @@ def main(delta=.1, stop=15):
     delta = float(delta)
     stop = int(stop)
     print("ripple = {}".format(delta))
-    print("N g0   g1 ... gn    gn+1")
+    print("    # g0 g1 ... gn gn+1")
     for n in range(1, stop + 1):
         g = chebyshev(delta, n)
-        print('    [ {} ], # {}'.format(csv(g), n))
+        print('    [ {} ], # n={}'.format(csv(g), n))
     print()
-    print("N q1 qn k12 k23 k34 k45 k56 ...")
+    print("    # q1 qn k12 k23 k34 k45 k56 ...")
     for n in range(1, stop + 1):
         g = chebyshev(delta, n)
         qk = to_coupling_qk(g)
-        print('    [ {} ], # {}'.format(csv(np.concatenate(qk)), n))
+        print('    [ {} ], # n={}'.format(csv(np.concatenate(qk)), n))
 
 if __name__ == '__main__':
     import sys

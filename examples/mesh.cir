@@ -1,4 +1,4 @@
-.SUBCKT F1 1 17
+.SUBCKT F0 1 17
 * COMMAND  : rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8
 * TYPE     : BUTTERWORTH
 * FILTER   : MESH

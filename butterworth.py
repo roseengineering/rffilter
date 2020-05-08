@@ -19,7 +19,7 @@ def csv(row):
 
 def main(stop=15):
     stop = int(stop)
-    print("N g0   g1 ... gn    rn+1")
+    print("N g0   g1 ... gn    gn+1")
     for n in range(1, stop + 1):
         g = butterworth(n)
         print('    [ {} ], # {}'.format(csv(g), n))

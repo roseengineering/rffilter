@@ -1516,13 +1516,13 @@ def to_bandpass(g, fo, BW, R):
     QL = fo / BW 
     LS, CP, RE = to_lowpass(g, fo / QL, R)
     CS, LP, RE = to_highpass(g, fo * QL, R)
-    return [ LS, CS ], [ LP, CP ], RE[0]
+    return [ LS, CS ], [ LP, CP ], RE
 
 def to_bandstop(g, fo, BW, R):
     QL = fo / BW 
     LS, CP, RE = to_lowpass(g, fo * QL, R)
     CS, LP, RE = to_highpass(g, fo / QL, R)
-    return [ LS, CS ], [ LP, CP ], RE[0]
+    return [ LS, CS ], [ LP, CP ], RE
 
 # narrow bandwidth filters
 #######################################################
@@ -1907,8 +1907,8 @@ def main(*args):
         kw['f'] = kw['f'][0]
         QL = kw['f'] / kw['bw']
         XS, XP, RE = to_bandpass(g, kw['f'], kw['bw'], R=kw['r'])
-        netlist(XS, XP, RE, kw, 1)
-        netlist(XS, XP, RE, kw, 0)
+        netlist(XS, XP, RE[0], kw, 1)
+        netlist(XS, XP, RE[1], kw, 0)
 
     # print narrow-band filters
 

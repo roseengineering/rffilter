@@ -20,7 +20,7 @@ def chebyshev(delta, n):
         g[i] = 4.0 * A[i-2] * A[i-1] / (B[i-2] * g[i-1])
     if n % 2 == 0:
         g[n+1] = np.tanh(beta / 4)**2  # rn+1
-    return np.array(g)
+    return g
 
 def csv(row):
     return ','.join([ '{:.4f}'.format(x) for x in row ])

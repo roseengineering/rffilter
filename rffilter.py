@@ -1496,29 +1496,33 @@ def to_lowpass(g, fo, R):
     wo = 2 * np.pi * fo
     LS = g[1:-1] * R / wo
     CP = -g[1:-1] / (wo * R)
-    RE = g[[0,-1]] * R
-    if N % 2 == 0: RE[1] = 1/RE[1]
-    return LS, CP, RE
+    ge = g[[0,-1]]
+    RE0 = R * (np.array([ge[0], 1/ge[1]]) if N % 2 == 0 else ge)
+    RE1 = R * (np.array([ge[0], 1/ge[1]]) if N % 2 != 0 else ge)
+    return [ LS, LS ], [ CP, CP ] , [ RE0, RE1 ]
 
 def to_highpass(g, fo, R):
+    N = len(g) - 2
     g = np.array(g)
     wo = 2 * np.pi * fo
     CS = -1 / (g[1:-1] * wo * R)
     LP = R / (g[1:-1] * wo)
-    RE = g[[0,-1]] * R
-    return CS, LP, RE
+    ge = g[[0,-1]]
+    RE0 = R * (np.array([ge[0], 1/ge[1]]) if N % 2 == 0 else ge)
+    RE1 = R * (np.array([ge[0], 1/ge[1]]) if N % 2 != 0 else ge)
+    return [ CS, CS ], [ LP, LP ] , [ RE0, RE1 ]
 
 def to_bandpass(g, fo, BW, R):
     QL = fo / BW 
     LS, CP, RE = to_lowpass(g, fo / QL, R)
     CS, LP, RE = to_highpass(g, fo * QL, R)
-    return [ LS, CS ], [ LP, CP ], RE
+    return [ LS[0], CS[0] ], [ LP[0], CP[0] ], RE[0]
 
 def to_bandstop(g, fo, BW, R):
     QL = fo / BW 
     LS, CP, RE = to_lowpass(g, fo * QL, R)
     CS, LP, RE = to_highpass(g, fo / QL, R)
-    return [ LS, CS ], [ LP, CP ], RE
+    return [ LS[0], CS[0] ], [ LP[0], CP[0] ], RE[0]
 
 # narrow bandwidth filters
 #######################################################
@@ -1890,14 +1894,14 @@ def main(*args):
         kw['filter'] = 'LOWPASS'
         kw['f'] = kw['f'][0]
         XS, XP, RE = to_lowpass(g, kw['f'], R=kw['r'])
-        netlist([XS], [XP], RE, kw, 0)
-        netlist([XS], [XP], RE, kw, 1)
+        netlist([XS[0]], [XP[0]], RE[0], kw, 0)
+        netlist([XS[1]], [XP[1]], RE[1], kw, 1)
     elif kw.get('highpass'):
         kw['filter'] = 'HIGHPASS'
         kw['f'] = kw['f'][0]
         XS, XP, RE = to_highpass(g, kw['f'], R=kw['r'])
-        netlist([XS], [XP], RE, kw, 0)
-        netlist([XS], [XP], RE, kw, 1)
+        netlist([XS[0]], [XP[0]], RE[0], kw, 0)
+        netlist([XS[1]], [XP[1]], RE[1], kw, 1)
     elif kw.get('bandpass'):
         kw['filter'] = 'BANDPASS'
         kw['f'] = kw['f'][0]

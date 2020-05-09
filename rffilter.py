@@ -1818,7 +1818,12 @@ def main(*args):
                     prev = n
             print()
 
-    defaults = { 'r': 50, 'qu': np.inf, 'cp': 0 }
+    defaults = { 
+        'r': np.array([np.double(1)]), 
+        'f': np.array([np.double(1 / (2 * np.pi))]),
+        'qu': np.inf, 
+        'cp': 0 
+    }
     args = list(args)
     kw = dict(defaults)
     while args:

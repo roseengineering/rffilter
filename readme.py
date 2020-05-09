@@ -109,12 +109,12 @@ The -expose option exposes the resonators of the filter as ports.
 The input port is the port 1 while the port with the highest number
 is the output port.  The exposed resonators ports are numbered in increasing order.
 
-{ run("rffilter.py -k chebyshev_0.1 -nodal -expose -f 10e6 -bw 400e3 -n 5 -qu 2000 | tee examples/nodal.cir") }
+{ run("rffilter.py -k chebyshev_0.1 -nodal -expose -f 10e6 -bw 400e3 -n 5 -r 50 -qu 2000 | tee examples/nodal.cir") }
 ![nodal](examples/nodal.png)
 
 ## Mesh narrow-band filters.
 
-{ run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 | tee examples/mesh.cir") }
+{ run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 -r 50 | tee examples/mesh.cir") }
 ![mesh lossy](examples/mesh.png)
 
 ## Crystal mesh filters.
@@ -167,26 +167,26 @@ The following example uses a middle crystal for the reference mesh:
 
 ## Lowpass and highpass filters.
 
-{ run("rffilter.py -g butterworth -lowpass -f 10e6 -n 5") }
+{ run("rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 50") }
 ![lowpass](examples/lowpass.png)
 
 ## Wide band bandpass filters.
 
-{ run("rffilter.py -g butterworth -bandpass -f 10e6 -bw 1e6 -n 4") }
+{ run("rffilter.py -g butterworth -bandpass -f 10e6 -bw 1e6 -n 4 -r 50") }
 
 ## Use of Zverev filter tables with an unloaded Q.
 
-{ run("rffilter.py -zverev butterworth -nodal -qu 2500 -bw 1e6 -f 10e6 -n 3") }
-{ run("rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8") }
+{ run("rffilter.py -zverev butterworth -nodal -qu 2500 -bw 1e6 -f 10e6 -n 3 -r 50") }
+{ run("rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50") }
 
 ## More examples
 
-{ run("rffilter.py -k butterworth -nodal -f 10e6 -bw 1e6 -n 5") }
+{ run("rffilter.py -k butterworth -nodal -f 10e6 -bw 1e6 -n 5 -r 50") }
 { run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -l 100e-9,100e-9,100e-9,100e-9,100e-9") }
 { run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -r 100,120") }
 { run("rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 75") }
 { run("rffilter.py -g butterworth -highpass -f 10e6 -n 5 -r 75") }
-{ run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 -qu 2000") }
+{ run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 -r 50 -qu 2000") }
 { run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -l 100e-9") }
 { run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100") }
 { run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100,120") }

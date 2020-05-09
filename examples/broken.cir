@@ -3,7 +3,7 @@
 * TYPE     : CHEBYSHEV_0.5
 * FILTER   : CRYSTAL_MESH
 * ORDER    : 8
-* FREQ     : 5.001933 MHz
+* FREQ     : 5.0019e+06
 * RS       : 810.2
 * RL       : 848.6
 * CP       : 3.7000e-12

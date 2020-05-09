@@ -3,7 +3,7 @@
 * TYPE     : CHEBYSHEV_0.1
 * FILTER   : NODAL
 * ORDER    : 5
-* FREQ     : 10.000000 MHz
+* FREQ     : 10.0000e+06
 * RS       : 50.0
 * RL       : 50.0
 * BW       : 400.0000e+03

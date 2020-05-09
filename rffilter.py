@@ -1723,7 +1723,7 @@ def main(*args):
         print("* TYPE     : {}".format(kw['type']))
         print("* FILTER   : {}".format(kw['filter']))
         print("* ORDER    : {}".format(kw['n']))
-        print("* FREQ     : {:.6f} MHz".format(fo / 1e6))
+        print("* FREQ     : {}".format(unit(fo).strip()))
         print("* RS       : {:.1f}".format(RE[0]))
         print("* RL       : {:.1f}".format(RE[1]))
  

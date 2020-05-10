@@ -51,7 +51,7 @@ The program takes the following command line options:
 ```
 -g             : lowpass prototype element response types
 -k             : q, k coupling response types
--zverev        : predistorted q, k coupling response types from Zverev.
+-z             : predistorted q, k coupling response types from Zverev.
 -n             : number of filter poles or resonators
 -r             : end resistors, can be given in common notation
 -l             : resonator inductor values, can be given in common notation
@@ -71,7 +71,7 @@ The program takes the following command line options:
 
 # Examples
 
-## List of filter response types provided
+## List filter response types
 
 
 ```
@@ -110,7 +110,7 @@ linear_phase_0.5    2  3  4  5  6  7  8
 
 
 ```
-$ rffilter.py -zverev
+$ rffilter.py -z
 QK ZVEREV           POLES
 bessel              2  3  4  5  6  7  8
 butterworth         2  3  4  5  6  7  8
@@ -126,6 +126,39 @@ linear_phase_5      2  3  4  5  6  7  8
 ```
 
 
+## List filter element values
+
+
+```
+$ rffilter.py -g bessel
+N  g0 g1 ... gn gn+1
+2  1.0000,0.5755,2.1478,1.0000
+3  1.0000,0.3374,0.9705,2.2034,1.0000
+4  1.0000,0.2334,0.6725,1.0815,2.2404,1.0000
+5  1.0000,0.1743,0.5072,0.8040,1.1110,2.2582,1.0000
+6  1.0000,0.1365,0.4002,0.6392,0.8538,1.1126,2.2645,1.0000
+7  1.0000,0.1106,0.3259,0.5249,0.7020,0.8690,1.1052,2.2659,1.0000
+8  1.0000,0.0919,0.2719,0.4409,0.5936,0.7303,0.8695,1.0956,2.2656,1.0000
+9  1.0000,0.0780,0.2313,0.3770,0.5108,0.6306,0.7407,0.8639,1.0863,2.2649,1.0000
+10 1.0000,0.0672,0.1998,0.3270,0.4454,0.5528,0.6493,0.7420,0.8561,1.0781,2.2641,1.0000
+```
+
+
+```
+$ rffilter.py -k butterworth
+N  q1 qn k12 k23 k34 k45 k56 ...
+2  1.4140,1.4140,0.7070
+3  1.0000,1.0000,0.7070,0.7070
+4  0.7650,0.7650,0.8410,0.5410,0.8410
+5  0.6180,0.6180,1.0000,0.5560,0.5560,1.0000
+6  0.5180,0.5180,1.1690,0.6050,0.5180,0.6050,1.1690
+7  0.4450,0.4450,1.3420,0.6670,0.5270,0.5270,0.6670,1.3420
+8  0.3900,0.3900,1.5190,0.7360,0.5540,0.5100,0.5540,0.7360,1.5190
+```
+
+
+Also works for "-z", pass "-qo <qo>" to set the maximum qo.
+
 ## Coupling bandwidth and group delay
 
 Print out coupling design information.  CBW is the coupling bandwidth between resonators and the bandwidth of the two resonators at the end.
@@ -138,15 +171,15 @@ Design, Measurement, and Tuning of Coupled-Resonator Filters" in MTT.
 ```
 $ rffilter.py -g chebyshev_0.2 -n 8 -bw 1000
 * ij        q,k           TD0           TDn           CBW           Q,K
-* 01     1.3804  878.7899e-06             -  724.4277e+00  219.6975e-06
-* 12     0.7225  883.3736e-06    3.3734e-03  722.5458e+00    4.5399e+03
-* 23     0.5602    2.3407e-03    5.1905e-03  560.2135e+00    3.5199e+03
-* 34     0.5349    1.8522e-03    2.8023e-03  534.9422e+00    3.3611e+03
-* 45     0.5298    3.8312e-03    3.8313e-03  529.7652e+00    3.3286e+03
-* 56     0.5349    2.8023e-03    1.8521e-03  534.9399e+00    3.3611e+03
-* 67     0.5602    5.1904e-03    2.3407e-03  560.2141e+00    3.5199e+03
-* 78     0.7225    3.3735e-03  883.3482e-06  722.5478e+00    4.5399e+03
-* 89     1.3804             -  878.8103e-06  724.4110e+00  219.7026e-06
+* 01     1.3804  878.7899e-06             -  724.4277e+00             -
+* 12     0.7225  883.3736e-06    3.3734e-03  722.5458e+00             -
+* 23     0.5602    2.3407e-03    5.1905e-03  560.2135e+00             -
+* 34     0.5349    1.8522e-03    2.8023e-03  534.9422e+00             -
+* 45     0.5298    3.8312e-03    3.8313e-03  529.7652e+00             -
+* 56     0.5349    2.8023e-03    1.8521e-03  534.9399e+00             -
+* 67     0.5602    5.1904e-03    2.3407e-03  560.2141e+00             -
+* 78     0.7225    3.3735e-03  883.3482e-06  722.5478e+00             -
+* 89     1.3804             -  878.8103e-06  724.4110e+00             -
 ```
 
 
@@ -1098,9 +1131,9 @@ C8  5    0       2.4363e-09
 
 
 ```
-$ rffilter.py -zverev butterworth -nodal -qu 2500 -bw 1e6 -f 10e6 -n 3 -r 50
+$ rffilter.py -z butterworth -nodal -qu 2500 -bw 1e6 -f 10e6 -n 3 -r 50
 .SUBCKT F1 1 3
-* COMMAND  : rffilter.py -zverev butterworth -nodal -qu 2500 -bw 1e6 -f 10e6 -n 3 -r 50
+* COMMAND  : rffilter.py -z butterworth -nodal -qu 2500 -bw 1e6 -f 10e6 -n 3 -r 50
 * TYPE     : BUTTERWORTH
 * FILTER   : NODAL
 * ORDER    : 3
@@ -1139,9 +1172,9 @@ C8  3    0       4.2825e-09
 
 
 ```
-$ rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
+$ rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
 .SUBCKT F1 1 8
-* COMMAND  : rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
+* COMMAND  : rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
 * TYPE     : BESSEL
 * FILTER   : NODAL
 * ORDER    : 8
@@ -1207,7 +1240,7 @@ C23 8    0       5.9112e-09
 .end
 
 .SUBCKT F1 1 8
-* COMMAND  : rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
+* COMMAND  : rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
 * TYPE     : BESSEL
 * FILTER   : NODAL
 * ORDER    : 8
@@ -1273,7 +1306,7 @@ C23 8    0       1.2597e-09
 .end
 
 .SUBCKT F1 1 8
-* COMMAND  : rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
+* COMMAND  : rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
 * TYPE     : BESSEL
 * FILTER   : NODAL
 * ORDER    : 8
@@ -1339,7 +1372,7 @@ C23 8    0     662.5087e-12
 .end
 
 .SUBCKT F1 1 8
-* COMMAND  : rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
+* COMMAND  : rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
 * TYPE     : BESSEL
 * FILTER   : NODAL
 * ORDER    : 8
@@ -1405,7 +1438,7 @@ C23 8    0     350.2500e-12
 .end
 
 .SUBCKT F1 1 8
-* COMMAND  : rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
+* COMMAND  : rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
 * TYPE     : BESSEL
 * FILTER   : NODAL
 * ORDER    : 8
@@ -1471,7 +1504,7 @@ C23 8    0     834.2409e-12
 .end
 
 .SUBCKT F1 1 8
-* COMMAND  : rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
+* COMMAND  : rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
 * TYPE     : BESSEL
 * FILTER   : NODAL
 * ORDER    : 8
@@ -1537,7 +1570,7 @@ C23 8    0     443.1892e-12
 .end
 
 .SUBCKT F1 1 8
-* COMMAND  : rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
+* COMMAND  : rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
 * TYPE     : BESSEL
 * FILTER   : NODAL
 * ORDER    : 8
@@ -1603,7 +1636,7 @@ C23 8    0     234.7389e-12
 .end
 
 .SUBCKT F1 1 8
-* COMMAND  : rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
+* COMMAND  : rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
 * TYPE     : BESSEL
 * FILTER   : NODAL
 * ORDER    : 8

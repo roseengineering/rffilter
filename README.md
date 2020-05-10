@@ -193,7 +193,7 @@ is the output port.  The exposed resonators ports are numbered in increasing ord
 
 ```
 $ rffilter.py -k chebyshev_0.1 -nodal -expose -f 10e6 -bw 400e3 -n 5 -r 50 -qu 2000 | tee examples/nodal.cir
-.SUBCKT F1 1 2 3 4 5
+.SUBCKT F0 1 2 3 4 5
 * COMMAND  : rffilter.py -k chebyshev_0.1 -nodal -expose -f 10e6 -bw 400e3 -n 5 -r 50 -qu 2000
 * TYPE     : CHEBYSHEV_0.1
 * FILTER   : NODAL
@@ -1026,7 +1026,7 @@ C59 36   37    131.3378e-12
 
 ```
 $ rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 50
-.SUBCKT F1 1 3
+.SUBCKT F0 1 3
 * COMMAND  : rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 50
 * TYPE     : BUTTERWORTH
 * FILTER   : LOWPASS
@@ -1073,7 +1073,7 @@ L5  3    4     491.7888e-09
 
 ```
 $ rffilter.py -g butterworth -bandpass -f 10e6 -bw 1e6 -n 4 -r 50
-.SUBCKT F1 1 5
+.SUBCKT F0 1 5
 * COMMAND  : rffilter.py -g butterworth -bandpass -f 10e6 -bw 1e6 -n 4 -r 50
 * TYPE     : BUTTERWORTH
 * FILTER   : BANDPASS
@@ -1132,7 +1132,7 @@ C8  5    0       2.4363e-09
 
 ```
 $ rffilter.py -z butterworth -nodal -qu 2500 -bw 1e6 -f 10e6 -n 3 -r 50
-.SUBCKT F1 1 3
+.SUBCKT F0 1 3
 * COMMAND  : rffilter.py -z butterworth -nodal -qu 2500 -bw 1e6 -f 10e6 -n 3 -r 50
 * TYPE     : BUTTERWORTH
 * FILTER   : NODAL
@@ -1173,7 +1173,7 @@ C8  3    0       4.2825e-09
 
 ```
 $ rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
-.SUBCKT F1 1 8
+.SUBCKT F0 1 8
 * COMMAND  : rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
 * TYPE     : BESSEL
 * FILTER   : NODAL
@@ -1239,7 +1239,7 @@ C23 8    0       5.9112e-09
 .ends
 .end
 
-.SUBCKT F1 1 8
+.SUBCKT F0 1 8
 * COMMAND  : rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
 * TYPE     : BESSEL
 * FILTER   : NODAL
@@ -1305,7 +1305,7 @@ C23 8    0       1.2597e-09
 .ends
 .end
 
-.SUBCKT F1 1 8
+.SUBCKT F0 1 8
 * COMMAND  : rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
 * TYPE     : BESSEL
 * FILTER   : NODAL
@@ -1371,7 +1371,7 @@ C23 8    0     662.5087e-12
 .ends
 .end
 
-.SUBCKT F1 1 8
+.SUBCKT F0 1 8
 * COMMAND  : rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
 * TYPE     : BESSEL
 * FILTER   : NODAL
@@ -1437,7 +1437,7 @@ C23 8    0     350.2500e-12
 .ends
 .end
 
-.SUBCKT F1 1 8
+.SUBCKT F0 1 8
 * COMMAND  : rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
 * TYPE     : BESSEL
 * FILTER   : NODAL
@@ -1503,7 +1503,7 @@ C23 8    0     834.2409e-12
 .ends
 .end
 
-.SUBCKT F1 1 8
+.SUBCKT F0 1 8
 * COMMAND  : rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
 * TYPE     : BESSEL
 * FILTER   : NODAL
@@ -1569,7 +1569,7 @@ C23 8    0     443.1892e-12
 .ends
 .end
 
-.SUBCKT F1 1 8
+.SUBCKT F0 1 8
 * COMMAND  : rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
 * TYPE     : BESSEL
 * FILTER   : NODAL
@@ -1635,7 +1635,7 @@ C23 8    0     234.7389e-12
 .ends
 .end
 
-.SUBCKT F1 1 8
+.SUBCKT F0 1 8
 * COMMAND  : rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50
 * TYPE     : BESSEL
 * FILTER   : NODAL
@@ -1709,7 +1709,7 @@ C23 8    0       7.1977e-12
 
 ```
 $ rffilter.py -k butterworth -nodal -f 10e6 -bw 1e6 -n 5 -r 50
-.SUBCKT F1 1 5
+.SUBCKT F0 1 5
 * COMMAND  : rffilter.py -k butterworth -nodal -f 10e6 -bw 1e6 -n 5 -r 50
 * TYPE     : BUTTERWORTH
 * FILTER   : NODAL
@@ -1756,7 +1756,7 @@ C14 5    0       1.7704e-09
 
 ```
 $ rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -l 100e-9,100e-9,100e-9,100e-9,100e-9
-.SUBCKT F1 1 5
+.SUBCKT F0 1 5
 * COMMAND  : rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -l 100e-9,100e-9,100e-9,100e-9,100e-9
 * TYPE     : BUTTERWORTH
 * FILTER   : NODAL
@@ -1803,7 +1803,7 @@ C14 5    0       2.4317e-09
 
 ```
 $ rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -r 100,120
-.SUBCKT F1 1 5
+.SUBCKT F0 1 5
 * COMMAND  : rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -r 100,120
 * TYPE     : BUTTERWORTH
 * FILTER   : NODAL
@@ -1850,7 +1850,7 @@ C14 5    0       1.9593e-09
 
 ```
 $ rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 75
-.SUBCKT F1 1 3
+.SUBCKT F0 1 3
 * COMMAND  : rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 75
 * TYPE     : BUTTERWORTH
 * FILTER   : LOWPASS
@@ -1893,7 +1893,7 @@ L5  3    4     737.6832e-09
 
 ```
 $ rffilter.py -g butterworth -highpass -f 10e6 -n 5 -r 75
-.SUBCKT F1 1 3
+.SUBCKT F0 1 3
 * COMMAND  : rffilter.py -g butterworth -highpass -f 10e6 -n 5 -r 75
 * TYPE     : BUTTERWORTH
 * FILTER   : HIGHPASS

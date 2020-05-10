@@ -66,7 +66,7 @@ The program takes the following command line options:
 ```
 -g             : lowpass prototype element response types
 -k             : q, k coupling response types
--zverev        : predistorted q, k coupling response types from Zverev.
+-z             : predistorted q, k coupling response types from Zverev.
 -n             : number of filter poles or resonators
 -r             : end resistors, can be given in common notation
 -l             : resonator inductor values, can be given in common notation
@@ -86,11 +86,18 @@ The program takes the following command line options:
 
 # Examples
 
-## List of filter response types provided
+## List filter response types
 
 { run("rffilter.py -g") }
 { run("rffilter.py -k") }
-{ run("rffilter.py -zverev") }
+{ run("rffilter.py -z") }
+
+## List filter element values
+
+{ run("rffilter.py -g bessel") }
+{ run("rffilter.py -k butterworth") }
+
+Also works for "-z", pass "-qo <qo>" to set the maximum qo.
 
 ## Coupling bandwidth and group delay
 
@@ -176,8 +183,8 @@ The following example uses a middle crystal for the reference mesh:
 
 ## Use of Zverev filter tables with an unloaded Q.
 
-{ run("rffilter.py -zverev butterworth -nodal -qu 2500 -bw 1e6 -f 10e6 -n 3 -r 50") }
-{ run("rffilter.py -zverev bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50") }
+{ run("rffilter.py -z butterworth -nodal -qu 2500 -bw 1e6 -f 10e6 -n 3 -r 50") }
+{ run("rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50") }
 
 ## More examples
 

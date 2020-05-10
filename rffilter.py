@@ -1461,7 +1461,6 @@ def zverev_k(name, n, qo=np.inf):
 
 def lowpass_g(name, n):
     for g in LOWPASS.get(name, []):
-        N = len(g) - 2
         if len(g) - 2 == n: 
             return g
 
@@ -1471,6 +1470,9 @@ def coupling_qk(name, n):
         k = res[2:]
         if len(k) + 1 == n: 
             return q, k
+
+def to_csv(row):
+    return ','.join([ '{:.4f}'.format(x) for x in row ])
 
 def to_coupling_qk(g):
     N = len(g) - 2
@@ -1801,6 +1803,22 @@ def main(*args):
             print('* {:<4s} {:8.4f} {} {} {} {}'.format("%d%d" % (i, i+1), 
                   qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i]), unit(QK[i])))
  
+    def list_gnormalized(name):
+        print("N  g0 g1 ... gn gn+1")
+        for g in LOWPASS[name]:
+            print("{:<2d} {}".format(len(g) - 2, to_csv(g)))
+
+    def list_knormalized(name):
+        print("N  q1 qn k12 k23 k34 k45 k56 ...")
+        for qk in COUPLED[name]:
+            print("{:<2d} {}".format(len(qk) - 1, to_csv(qk)))
+
+    def list_znormalized(name):
+        print("N  qo IL q1 qn k12 k23 k34 k45 k56 ...")
+        for z in ZVEREV[name]:
+            if z[0] <= kw.get('QO', np.inf): 
+                print("{:<2d} {}".format(len(z) - 3, to_csv(z)))
+
     def list_gfilters():
         print('{:18s}  {}'.format("G LOWPASS", "POLES"))
         for name in sorted(LOWPASS.keys()):
@@ -1833,7 +1851,6 @@ def main(*args):
 
     defaults = { 
         'r': np.array([np.double(1)]), 
-        'f': np.array([np.double(1 / (2 * np.pi))]),
         'qu': np.inf, 
         'cp': 0 
     }
@@ -1849,9 +1866,9 @@ def main(*args):
         elif opt == '-k':
             if not args: return list_kfilters() 
             kw['k'] = args.pop(0).upper()
-        elif opt == '-zverev':
+        elif opt == '-z':
             if not args: return list_zverev() 
-            kw['zverev'] = args.pop(0).upper()
+            kw['z'] = args.pop(0).upper()
 
         elif opt == '-n':
             kw['n'] = np.int(args.pop(0))
@@ -1867,6 +1884,8 @@ def main(*args):
             kw['qu'] = np.double(args.pop(0))
         elif opt == '-cp':
             kw['cp'] = np.double(args.pop(0))
+        elif opt == '-qo':
+            kw['QO'] = np.double(args.pop(0))
 
         elif opt == '-lowpass':
             kw['lowpass'] = True
@@ -1891,14 +1910,22 @@ def main(*args):
     # get filter type
 
     if kw.get('g'):
+        if kw.get('n') is None:
+            return list_gnormalized(kw['g'])
         kw['type'] = kw['g']
         g = lowpass_g(kw['type'], kw['n'])
         qk = [ to_coupling_qk(g) ]
+
     elif kw.get('k'):
+        if kw.get('n') is None:
+            return list_knormalized(kw['k'])
         kw['type'] = kw['k']
         qk = [ coupling_qk(kw['type'], kw['n']) ]
-    elif kw.get('zverev'):
-        kw['type'] = kw['zverev']
+
+    elif kw.get('z'):
+        if kw.get('n') is None:
+            return list_znormalized(kw['z'])
+        kw['type'] = kw['z']
         QL = kw['f'] / kw['bw']
         QO = kw['qu'] / QL
         qk = list(zverev_k(kw['type'], kw['n'], QO))

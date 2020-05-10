@@ -87,6 +87,7 @@ chebyshev_0.5       1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
 chebyshev_1.0       1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
 gaussian_12         3  4  5  6  7  8  9 10
 gaussian_6          3  4  5  6  7  8  9 10
+legendre            3  4  5  6  7  8  9 10
 linear_phase_0.05   2  3  4  5  6  7  8  9 10
 linear_phase_0.5    2  3  4  5  6  7  8  9 10
 ```

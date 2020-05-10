@@ -1733,7 +1733,7 @@ def main(*args):
                     num += 1
         ports.append(k)
 
-        print(".SUBCKT F{} {}".format(n, ' '.join([ str(i) for i in ports ])))
+        print(".SUBCKT F0 {}".format(' '.join([ str(i) for i in ports ])))
         print("* COMMAND  : {}".format(' '.join(sys.argv)))
         print("* TYPE     : {}".format(kw['type']))
         print("* FILTER   : {}".format(kw['filter']))

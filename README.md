@@ -32,17 +32,20 @@ td   = to_group_delay(q, k, BW)
 
 # wide-band filter design
 
-xs, xp, re = to_lowpass(g, fo, R)
-xs, xp, re = to_highpass(g, fo, R)
-xs, xp, re = to_bandpass(g, fo, BW, R)
-xs, xp, re = to_bandstop(g, fo, BW, R)
+sij, pij, re = to_lowpass(g, fo, R)
+sij, pij, re = to_highpass(g, fo, R)
+sij, pij, re = to_bandpass(g, fo, BW, R)
+sij, pij, re = to_bandstop(g, fo, BW, R)
 
 # narrow-band filter design
 
-xs, xp, re           = to_nodal(q, k, fo, BW, R=None, L=None)
-xs, xp, re           = to_mesh(q, k, fo, BW, R=None, L=None)
-xs, xp, re, mesh, fo = to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf)
+sij, pij, re           = to_nodal(q, k, fo, BW, R=None, L=None)
+sij, pij, re           = to_mesh(q, k, fo, BW, R=None, L=None)
+sij, pij, re, mesh, fo = to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf)
 ```
+
+Where sij are series component values and pij are the parallel components
+values.  re are the end resisitors.
 
 # Command Line
 

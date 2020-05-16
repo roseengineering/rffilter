@@ -1747,13 +1747,16 @@ def main(*args):
 
         if kw.get('bw'):
             QL = fo / kw['bw']
+            qo = QU / QL
             print("* BW       : {}".format(unit(kw['bw']).strip()))
             print("* QL       : {:.1f}".format(QL))
             print("* QU       : {:.1f}".format(QU))
-            print("* qo       : {:.1f}".format(QU / QL))
+            print("* qo       : {:.1f}".format(qo))
+            if kw.get('k') is not None and 2 * (len(kw['k']) + 1) > qo:
+                print("* WARNING qo is too low")
 
-        if kw.get('qo'):
-            print("* qo_zverev: {:.1f}".format(kw['qo']))
+        if kw.get('qmin'):
+            print("* qmin     : {:.1f}".format(kw['qmin']))
 
         print()
 
@@ -1929,7 +1932,7 @@ def main(*args):
         QL = kw['f'] / kw['bw']
         QO = kw['qu'] / QL
         qk = list(zverev_k(kw['type'], kw['n'], QO))
-        kw['qo'] = zverev_qo(kw['type'], kw['n'], QO)
+        kw['qmin'] = zverev_qo(kw['type'], kw['n'], QO)
     else:
         raise ValueError('No filter type given')
 

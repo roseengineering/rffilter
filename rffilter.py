@@ -1649,7 +1649,7 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf):
 #######################################################
 
 def bisect(f, a, b, N=100):
-    err = .01
+    err = 1e-5
     for n in range(N):
         c = (a + b) / 2
         if np.abs(c - a) < err: return b

@@ -1853,7 +1853,6 @@ def main(*args):
             print()
 
     defaults = { 
-        'r': np.array([np.double(1)]), 
         'qu': np.inf, 
         'cp': 0 
     }
@@ -1965,14 +1964,14 @@ def main(*args):
         kw['f'] = kw['f'][0]
         for q, k in qk:
             kw['q'], kw['k'] = q, k
-            XS, XP, RE = to_nodal(q, k, kw['f'], kw['bw'], R=kw['r'], L=kw.get('l'))
+            XS, XP, RE = to_nodal(q, k, kw['f'], kw['bw'], R=kw.get('r'), L=kw.get('l'))
             netlist(XS, XP, RE, kw, 1)
     elif kw.get('mesh'):
         kw['filter'] = 'MESH'
         kw['f'] = kw['f'][0]
         for q, k in qk:
             kw['q'], kw['k'] = q, k
-            XS, XP, RE = to_mesh(q, k, kw['f'], kw['bw'], R=kw['r'], L=kw.get('l'))
+            XS, XP, RE = to_mesh(q, k, kw['f'], kw['bw'], R=kw.get('r'), L=kw.get('l'))
             netlist(XS, XP, RE, kw, 0)
     elif kw.get('crystal'):
         kw['filter'] = 'CRYSTAL_MESH'

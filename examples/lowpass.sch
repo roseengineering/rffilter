@@ -22,14 +22,14 @@
 </Symbol>
 <Components>
   <.DC DC1 1 50 70 0 40 0 0 "26.85" 0 "0.001" 0 "1 pA" 0 "1 uV" 0 "no" 0 "150" 0 "no" 0 "none" 0 "CroutLU" 0>
-  <.SP SP1 1 60 160 0 65 0 0 "lin" 1 "5M" 1 "15M" 1 "201" 1 "no" 0 "1" 0 "2" 0 "no" 0 "no" 0>
+  <.SP SP1 1 60 160 0 65 0 0 "lin" 1 "5M" 1 "15M" 1 "401" 1 "no" 0 "1" 0 "2" 0 "no" 0 "no" 0>
   <Pac P1 1 350 160 18 -26 0 1 "1" 1 "50" 1 "0 dBm" 0 "1 GHz" 0 "26.85" 0>
   <Pac P2 1 750 150 18 -26 0 1 "2" 1 "50" 1 "0 dBm" 0 "1 GHz" 0 "26.85" 0>
   <GND * 5 750 180 0 0 0 0>
   <GND * 5 350 190 0 0 0 0>
   <GND * 5 530 150 0 0 0 0>
-  <SPICE X1 1 530 120 -26 -57 0 0 "lowpass.cir" 1 "_net1,_net4" 0 "yes" 0 "none" 0>
-  <Eqn Eqn1 5 920 130 -31 17 0 0 "phi21=unwrap(angle(S[1,1]))" 1 "phase=rad2deg(angle(S[1,1]))" 1 "delay=-diff(phi21,2*pi*frequency)" 1 "yes" 0>
+  <Eqn Eqn1 5 920 130 -31 17 0 0 "phi21=unwrap(angle(S[2,1]))" 1 "delay=-diff(phi21,2*pi*frequency)" 1 "yes" 0>
+  <SPICE X1 1 530 120 -26 -57 0 0 "/home/george/share/github-rffilter/examples/lowpass.cir" 1 "_net1,_net4" 0 "yes" 0 "none" 0>
 </Components>
 <Wires>
   <560 120 750 120 "" 0 0 0 "">

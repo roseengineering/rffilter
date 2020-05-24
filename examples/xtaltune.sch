@@ -1,6 +1,6 @@
 <Qucs Schematic 0.0.20>
 <Properties>
-  <View=-92,-199,1497,974,1,0,254>
+  <View=-92,-199,1497,959,1,0,300>
   <Grid=10,10,1>
   <DataSet=xtaltune.dat>
   <DataDisplay=xtaltune.dpl>
@@ -29,7 +29,7 @@
   <SPICE X1 1 410 210 -202 -93 0 1 "xtaltune.cir" 1 "_net1,_net4,_net5,_net8,_net9,_net12,_net13,_net16,_net17,_net20,_net21,_net24,_net25,_net28,_net29,_net32" 0 "yes" 0 "none" 0>
   <Pac P1 1 60 170 -70 -26 1 1 "1" 1 "459.7" 1 "0 dBm" 0 "1 GHz" 0 "26.85" 0>
   <GND * 5 60 220 0 0 0 0>
-  <Eqn Eqn1 5 1080 -100 -31 17 0 0 "phi21=unwrap(angle(S[1,1]))" 1 "phase=rad2deg(angle(S[1,1]))" 1 "delay=-diff(phi21,2*pi*frequency)" 1 "yes" 0>
+  <Eqn Eqn1 5 1080 -100 -31 17 0 0 "phi21=unwrap(angle(S[2,1]))" 1 "phi11=unwrap(angle(S[1,1]))" 1 "delay=-diff(phi21,2*pi*frequency)" 1 "td=-diff(phi11,2*pi*frequency)" 1 "yes" 0>
 </Components>
 <Wires>
   <730 210 730 260 "" 0 0 0 "">
@@ -63,18 +63,17 @@
   <590 240 620 240 "" 0 0 0 "">
 </Wires>
 <Diagrams>
-  <Rect 60 857 577 477 3 #c0c0c0 1 00 1 4e+06 100 4.0008e+06 1 0.0003 1 1 1 -1 0.2 1 315 0 225 "" "" "" "">
+  <Rect 60 857 577 477 3 #c0c0c0 1 00 1 4e+06 50 4.00065e+06 1 -0.0999887 0.2 1.1 1 -1 0.2 1 315 0 225 "" "" "" "">
 	<"S[2,1]" #0000ff 0 3 0 0 0>
 	<"S[1,1]" #ff0000 0 3 0 0 0>
+	<"delay" #ff00ff 0 3 0 0 1>
   </Rect>
   <Polar 910 345 305 305 3 #c0c0c0 1 00 1 0 1 1 1 0 0.5 1 1 0 1 1 315 0 225 "" "" "" "">
 	<"S[1,1]" #0000ff 0 3 0 0 0>
 	  <Mkr 4.00065e+06 240 -306 4 1 0>
   </Polar>
-  <Rect 750 887 577 477 3 #c0c0c0 1 00 1 4e+06 100 4.0008e+06 1 -1 0.2 1 1 -215.453 50 213.915 315 0 225 "" "" "" "">
-	<"delay" #0000ff 0 3 0 0 0>
-	  <Mkr 4.00033e+06 14 -458 8 0 0>
-	<"phase" #ff0000 0 3 0 0 1>
+  <Rect 860 877 577 477 3 #c0c0c0 1 00 1 4e+06 50 4.00065e+06 1 -0.165882 0.02 0.0308942 1 -214.088 50 215.096 315 0 225 "" "" "" "">
+	<"td" #0000ff 0 3 0 0 0>
   </Rect>
 </Diagrams>
 <Paintings>

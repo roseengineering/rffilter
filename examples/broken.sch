@@ -29,7 +29,7 @@
   <GND * 5 750 180 0 0 0 0>
   <GND * 5 350 190 0 0 0 0>
   <SPICE X1 1 580 120 -26 -57 0 0 "broken.cir" 1 "_net1,_net25" 0 "yes" 0 "none" 0>
-  <Eqn Eqn1 5 960 170 -31 17 0 0 "phi21=unwrap(angle(S[1,1]))" 1 "phase=rad2deg(angle(S[1,1]))" 1 "delay=-diff(phi21,2*pi*frequency)" 1 "yes" 0>
+  <Eqn Eqn1 5 960 170 -31 17 0 0 "phi21=unwrap(angle(S[2,1]))" 1 "delay=-diff(phi21,2*pi*frequency)" 1 "yes" 0>
 </Components>
 <Wires>
   <350 120 350 130 "" 0 0 0 "">

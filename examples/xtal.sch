@@ -29,7 +29,7 @@
   <GND * 5 580 150 0 0 0 0>
   <GND * 5 750 180 0 0 0 0>
   <GND * 5 350 190 0 0 0 0>
-  <Eqn Eqn1 5 970 150 -31 17 0 0 "phi21=unwrap(angle(S[1,1]))" 1 "phase=rad2deg(angle(S[1,1]))" 1 "delay=-diff(phi21,2*pi*frequency)" 1 "yes" 0>
+  <Eqn Eqn1 5 970 150 -31 17 0 0 "phi21=unwrap(angle(S[2,1]))" 1 "delay=-diff(phi21,2*pi*frequency)" 1 "yes" 0>
 </Components>
 <Wires>
   <350 120 350 130 "" 0 0 0 "">

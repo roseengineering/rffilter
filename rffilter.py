@@ -1769,10 +1769,10 @@ def main(*args):
             fs = kw['f'] * np.ones(N)
             MESH = kw['MESH']
             SKEW = kw['SKEW']
-            print('* Xtal    Xtal freq     Mesh freq   Mesh offset   Xtal offset      LM Shift')
+            print('* Xtal    Xtal freq     Mesh freq   Mesh offset      LM Shift')
             for i in range(N):
-                print('* {:<2d}  {:13.1f} {:13.1f} {:13.1f} {:13.1f} {:11.3f} %'.format(i+1,
-                      fs[i], MESH[i], MESH[i] - fo, fs[i] - np.min(fs), (SKEW[i] - 1) * 100))
+                print('* {:<2d}  {:13.1f} {:13.1f} {:13.1f} {:11.3f} %'.format(i+1,
+                      fs[i], MESH[i], MESH[i] - fo, (SKEW[i] - 1) * 100))
             print()
 
             CK = np.ones(N) * np.nan

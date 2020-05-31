@@ -3,7 +3,7 @@
 import os, subprocess 
 
 def run(command):
-    proc = subprocess.Popen("PYTHONPATH=. python " + command, shell=True, stdout=subprocess.PIPE)
+    proc = subprocess.Popen("PYTHONPATH=. python3 " + command, shell=True, stdout=subprocess.PIPE)
     buf = proc.stdout.read().decode()
     proc.wait()
     return f"""
@@ -241,11 +241,19 @@ Usage: python butterworth.py [<maximum_order=15>]
 
 # buttersingly.py
 
-Python script buttersingly.py prints out a table of normalized low pass butterworth, ie maximally flat, singly terminated filter coefficients.
+Python script buttersingly.py prints out a table of normalized low pass butterworth (maximally flat) singly terminated filter coefficients.
 
 Usage: python buttersingly.py [<maximum_order=15>]
 
 { run("buttersingly.py 10") }
+
+# cohn.py
+
+Python script cohn.py prints out a table of normalized low pass Cohn filter coefficients.
+
+Usage: python cohn.py [<maximum_order=15>]
+
+{ run("cohn.py 10") }
 
 """)
 

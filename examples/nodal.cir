@@ -1,7 +1,7 @@
 .SUBCKT F0 1 2 3 4 5
-* COMMAND  : rffilter.py -k chebyshev_0.1 -nodal -expose -f 10e6 -bw 400e3 -n 5 -r 50 -qu 2000
-* TYPE     : CHEBYSHEV_0.1
-* FILTER   : NODAL
+* COMMAND  : rffilter.py --k chebyshev_0.1 --nodal --expose --f 10e6 --bw 400e3 --n 5 --re 50 --qu 2000
+* TYPE     : chebyshev_0.1
+* FILTER   : nodal
 * ORDER    : 5
 * FREQ     : 10.0000e+06
 * RS       : 50.0

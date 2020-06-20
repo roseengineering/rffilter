@@ -1,7 +1,7 @@
 .SUBCKT F0 1 17
-* COMMAND  : rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 -r 50
-* TYPE     : BUTTERWORTH
-* FILTER   : MESH
+* COMMAND  : rffilter.py --g butterworth --mesh --f 10e6 --bw 400e3 --n 8 --re 50
+* TYPE     : butterworth
+* FILTER   : mesh
 * ORDER    : 8
 * FREQ     : 10.0000e+06
 * RS       : 50.0

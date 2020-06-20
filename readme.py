@@ -66,41 +66,22 @@ values.  re are the end resisitors.
 
 The program takes the following command line options:
 
-```
--g             : lowpass prototype element response types
--k             : q, k coupling response types
--z             : predistorted q, k coupling response types from Zverev.
--n             : number of filter poles or resonators
--r             : end resistors, can be given in common notation
--l             : resonator inductor values, can be given in common notation
--f             : design frequency
--bw            : design bandwidth
--qu            : unload Q of resonators
--cp            : parallel capacitance, C0, of crystals
--expose        : expose resonators in spice netlist for nodal and mesh filters
--lowpass       : generate a lowpass filter
--highpass      : generate a highpass filter
--bandpass      : generate a wideband bandpass filter
--bandstop      : generate a wideband bandstop filter
--nodal         : generate a narrow-band nodal bandpass filter
--mesh          : generate a narrow-band mesh bandpass filter
--crystal       : generate a narrow-band crystal bandpass filter
-```
+{ run("rffilter.py --help") }
 
 # Examples
 
 ## List filter response types
 
-{ run("rffilter.py -g") }
-{ run("rffilter.py -k") }
-{ run("rffilter.py -z") }
+{ run("rffilter.py --list-g") }
+{ run("rffilter.py --list-k") }
+{ run("rffilter.py --list-z") }
 
 ## List filter element values
 
-{ run("rffilter.py -g bessel") }
-{ run("rffilter.py -k butterworth") }
+{ run("rffilter.py --list-elements --g bessel") }
+{ run("rffilter.py --list-elements --k butterworth") }
 
-Also works for "-z", pass "-qo <qo>" to set the maximum qo.
+It also works for "--z".  Pass "--qo <qo>" to set the maximum qo.
 
 ## Coupling bandwidth and group delay
 
@@ -110,7 +91,7 @@ at the center freqency for each resonator looking from either end, see
 Ness' "A Unified Approach to the
 Design, Measurement, and Tuning of Coupled-Resonator Filters" in MTT.
 
-{ run("rffilter.py -g chebyshev_0.2 -n 8 -bw 1000") }
+{ run("rffilter.py --g chebyshev_0.2 --n 8 --bw 1000") }
 
 ## Nodal narrow-band filters.
 
@@ -119,12 +100,12 @@ The -expose option exposes the resonators of the filter as ports.
 The input port is the port 1 while the port with the highest number
 is the output port.  The exposed resonators ports are numbered in increasing order.
 
-{ run("rffilter.py -k chebyshev_0.1 -nodal -expose -f 10e6 -bw 400e3 -n 5 -r 50 -qu 2000 | tee examples/nodal.cir") }
+{ run("rffilter.py --k chebyshev_0.1 --nodal --expose --f 10e6 --bw 400e3 --n 5 --re 50 --qu 2000 | tee examples/nodal.cir") }
 ![nodal](examples/nodal.png)
 
 ## Mesh narrow-band filters.
 
-{ run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 -r 50 | tee examples/mesh.cir") }
+{ run("rffilter.py --g butterworth --mesh --f 10e6 --bw 400e3 --n 8 --re 50 | tee examples/mesh.cir") }
 ![mesh lossy](examples/mesh.png)
 
 ## Crystal mesh filters.
@@ -135,12 +116,12 @@ is the output port.  The exposed resonators ports are numbered in increasing ord
 Build a 2400 Hz bandwidth crystal filter.  This filter is from an example in Steder's 
 "Crystal Ladder Filters for All" paper in QEX.  
 
-{ run("rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 | tee examples/xtal.cir") }
+{ run("rffilter.py --g chebyshev_0.2 --n 8 --crystal --l 69.7e-3 --f 4913.57e3 --bw 2400 --cp 3.66e-12 | tee examples/xtal.cir") }
 ![crystal](examples/xtal.png)
 
 Same filter with an unloaded Q of 150000.  See the above Steder article for a figure of the loaded filter's response.
 
-{ run("rffilter.py -g chebyshev_0.2 -n 8 -crystal -l 69.7e-3 -f 4913.57e3 -bw 2400 -cp 3.66e-12 -qu 150000 | tee examples/xtalloss.cir") }
+{ run("rffilter.py --g chebyshev_0.2 --n 8 --crystal --l 69.7e-3 --f 4913.57e3 --bw 2400 --cp 3.66e-12 --qu 150000 | tee examples/xtalloss.cir") }
 ![crystal lossy](examples/xtalloss.png)
 
 ### 2. The Dishal program's owners manual filter.
@@ -148,13 +129,13 @@ Same filter with an unloaded Q of 150000.  See the above Steder article for a fi
 A crystal filter with multiple crystals of different frequencies.  No parallel capacitance was used.
 The filter, less the holder capacitance, is an example from the Dishal program's owners manual.
 
-{ run("rffilter.py -k chebyshev_0.5 -bw 2500 -n 8 -l 70e-3 -crystal -f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3 | tee examples/multiple.cir") }
+{ run("rffilter.py --k chebyshev_0.5 --bw 2500 --n 8 --l 70e-3 --crystal --f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3 | tee examples/multiple.cir") }
 ![multiple](examples/multiple.png)
 
 The same crystal filter as above but with holder parallel capacitance across the crystals.
 The filter is an example from the Dishal program's owners manual.
 
-{ run("rffilter.py -k chebyshev_0.5 -bw 2500 -n 8 -l 70e-3 -crystal -cp 3.7e-12 -f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3 | tee examples/broken.cir") }
+{ run("rffilter.py --k chebyshev_0.5 --bw 2500 --n 8 --l 70e-3 --crystal --cp 3.7e-12 --f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3 | tee examples/broken.cir") }
 ![broken](examples/broken.png)
 
 ### 3. The Design Filter in N6NWP's QEX 1995 article.
@@ -163,49 +144,49 @@ N6NWP recommends using the lowest frequency crystal for the reference mesh, whil
 
 The following example uses the lowest crystal for the reference mesh:
 
-{ run("rffilter.py -g chebyshev_0.1 -bw 2500 -n 12 -l .0155 -crystal -cp 5e-12 -f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0 | tee examples/qexlow.cir") }
+{ run("rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal --cp 5e-12 --f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0 | tee examples/qexlow.cir") }
 ![qexlow](examples/qexlow.png)
 
 The above crystal filter with 120,000 Q crystals:
 
-{ run("rffilter.py -g chebyshev_0.1 -bw 2500 -n 12 -l .0155 -crystal -cp 5e-12 -qu 120000 -f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0 > examples/qexloss.cir") }
+{ run("rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal --cp 5e-12 --qu 120000 --f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0 > examples/qexloss.cir") }
 ![qexloss](examples/qexloss.png)
 
 The following example uses a middle crystal for the reference mesh:
 
-{ run("rffilter.py -g chebyshev_0.1 -bw 2500 -n 12 -l .0155 -crystal -cp 5e-12 -f 8000017.0,7999966.0,7999940.0,7999945.0,7999985.0,8000000.0,7999996.0,7999991.0,7999939.0,7999933.0,7999945.0,8000026.0 | tee examples/qexmiddle.cir") }
+{ run("rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal --cp 5e-12 --f 8000017.0,7999966.0,7999940.0,7999945.0,7999985.0,8000000.0,7999996.0,7999991.0,7999939.0,7999933.0,7999945.0,8000026.0 | tee examples/qexmiddle.cir") }
 
 ## Lowpass and highpass filters.
 
-{ run("rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 50") }
+{ run("rffilter.py --g butterworth --lowpass --f 10e6 --n 5 --re 50") }
 ![lowpass](examples/lowpass.png)
 
 ## Wide band bandpass filters.
 
-{ run("rffilter.py -g butterworth -bandpass -f 10e6 -bw 1e6 -n 4 -r 50") }
+{ run("rffilter.py --g butterworth --bandpass --f 10e6 --bw 1e6 --n 4 --re 50") }
 
 ## Use of Zverev filter tables with an unloaded Q.
 
-{ run("rffilter.py -z butterworth -nodal -qu 2500 -bw 1e6 -f 10e6 -n 3 -r 50") }
-{ run("rffilter.py -z bessel -nodal -qu 2500 -bw 1e6 -f 10e6 -n 8 -r 50") }
+{ run("rffilter.py --z butterworth --nodal --qu 2500 --bw 1e6 --f 10e6 --n 3 --re 50") }
+{ run("rffilter.py --z bessel --nodal --qu 2500 --bw 1e6 --f 10e6 --n 8 --re 50") }
 
 ## More examples
 
-{ run("rffilter.py -k butterworth -nodal -f 10e6 -bw 1e6 -n 5 -r 50") }
-{ run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -l 100e-9,100e-9,100e-9,100e-9,100e-9") }
-{ run("rffilter.py -g butterworth -nodal -f 10e6 -bw 400e3 -n 5 -r 100,120") }
-{ run("rffilter.py -g butterworth -lowpass -f 10e6 -n 5 -r 75") }
-{ run("rffilter.py -g butterworth -highpass -f 10e6 -n 5 -r 75") }
-{ run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 8 -r 50 -qu 2000") }
-{ run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -l 100e-9") }
-{ run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100") }
-{ run("rffilter.py -g butterworth -mesh -f 10e6 -bw 400e3 -n 4 -r 100,120") }
+{ run("rffilter.py --k butterworth --nodal --f 10e6 --bw 1e6 --n 5 --re 50") }
+{ run("rffilter.py --g butterworth --nodal --f 10e6 --bw 400e3 --n 5 --l 100e-9,100e-9,100e-9,100e-9,100e-9") }
+{ run("rffilter.py --g butterworth --nodal --f 10e6 --bw 400e3 --n 5 --re 100,120") }
+{ run("rffilter.py --g butterworth --lowpass --f 10e6 --n 5 --re 75") }
+{ run("rffilter.py --g butterworth --highpass --f 10e6 --n 5 --re 75") }
+{ run("rffilter.py --g butterworth --mesh --f 10e6 --bw 400e3 --n 8 --re 50 --qu 2000") }
+{ run("rffilter.py --g butterworth --mesh --f 10e6 --bw 400e3 --n 4 --l 100e-9") }
+{ run("rffilter.py --g butterworth --mesh --f 10e6 --bw 400e3 --n 4 --re 100") }
+{ run("rffilter.py --g butterworth --mesh --f 10e6 --bw 400e3 --n 4 --re 100,120") }
 
 Build a 500 Hz bandwidth crystal filter.
 
 Expose the ports.  Note, sequential ports must be connected together - and broken to short resonators for mesh filters.  See example.
 
-{ run("rffilter.py -k chebyshev_0.1 -n 8 -crystal -l .170 -f 4e6 -bw 500 -cp 2.05e-12 -expose | tee examples/xtaltune.cir") }
+{ run("rffilter.py --k chebyshev_0.1 --n 8 --crystal --l .170 --f 4e6 --bw 500 --cp 2.05e-12 --expose | tee examples/xtaltune.cir") }
 
 # stodelay.py
 

@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import sys, argparse
 import numpy as np
 
 COUPLED = {
@@ -1457,7 +1458,7 @@ ZVEREV = {
 ######################################
 
 def zverev_qo(name, n, qo=np.inf):
-    for res in ZVEREV.get(name, []):
+    for res in ZVEREV.get(name.upper(), []):
         if len(res) - 3 != n:
             continue
         if res[0] <= qo: 
@@ -1465,7 +1466,7 @@ def zverev_qo(name, n, qo=np.inf):
 
 def zverev_k(name, n, qo=np.inf):
     found = 0
-    for res in ZVEREV.get(name, []):
+    for res in ZVEREV.get(name.upper(), []):
         if len(res) - 3 != n:
             continue
         if res[0] < found:
@@ -1477,12 +1478,12 @@ def zverev_k(name, n, qo=np.inf):
             yield q, k
 
 def lowpass_g(name, n):
-    for g in LOWPASS.get(name, []):
+    for g in LOWPASS.get(name.upper(), []):
         if len(g) - 2 == n: 
             return g
 
 def coupling_qk(name, n):
-    for res in COUPLED.get(name, []):
+    for res in COUPLED.get(name.upper(), []):
         q = res[0:2]
         k = res[2:]
         if len(k) + 1 == n: 
@@ -1522,44 +1523,44 @@ def to_group_delay(q, k, BW):
 # wide bandwidth filters
 ######################################
 
-def to_lowpass(g, fo, R):
+def to_lowpass(g, fo, RE):
     N = len(g) - 2
     g = np.array(g)
     wo = 2 * np.pi * fo
-    LS = g[1:-1] * R / wo
-    CP = -g[1:-1] / (wo * R)
+    LS = g[1:-1] * RE / wo
+    CP = -g[1:-1] / (wo * RE)
     ge = g[[0,-1]]
-    RE0 = R * (np.array([ge[0], 1/ge[1]]) if N % 2 == 0 else ge)
-    RE1 = R * (np.array([ge[0], 1/ge[1]]) if N % 2 != 0 else ge)
+    RE0 = RE * (np.array([ge[0], 1/ge[1]]) if N % 2 == 0 else ge)
+    RE1 = RE * (np.array([ge[0], 1/ge[1]]) if N % 2 != 0 else ge)
     return LS, CP, [RE0, RE1]
 
-def to_highpass(g, fo, R):
+def to_highpass(g, fo, RE):
     N = len(g) - 2
     g = np.array(g)
     wo = 2 * np.pi * fo
-    CS = -1 / (g[1:-1] * wo * R)
-    LP = R / (g[1:-1] * wo)
+    CS = -1 / (g[1:-1] * wo * RE)
+    LP = RE / (g[1:-1] * wo)
     ge = g[[0,-1]]
-    RE0 = R * (np.array([ge[0], 1/ge[1]]) if N % 2 == 0 else ge)
-    RE1 = R * (np.array([ge[0], 1/ge[1]]) if N % 2 != 0 else ge)
+    RE0 = RE * (np.array([ge[0], 1/ge[1]]) if N % 2 == 0 else ge)
+    RE1 = RE * (np.array([ge[0], 1/ge[1]]) if N % 2 != 0 else ge)
     return CS, LP, [ RE0, RE1 ]
 
-def to_bandpass(g, fo, BW, R):
+def to_bandpass(g, fo, BW, RE):
     QL = fo / BW 
-    LS, CP, RE = to_lowpass(g, fo / QL, R)
-    CS, LP, RE = to_highpass(g, fo * QL, R)
-    return [ LS, CS ], [ LP, CP ], RE
+    LS, CP, RE0 = to_lowpass(g, fo / QL, RE)
+    CS, LP, RE1 = to_highpass(g, fo * QL, RE)
+    return [ LS, CS ], [ LP, CP ], RE0
 
 def to_bandstop(g, fo, BW, R):
     QL = fo / BW 
-    LS, CP, RE = to_lowpass(g, fo * QL, R)
-    CS, LP, RE = to_highpass(g, fo / QL, R)
-    return [ LS, CS ], [ LP, CP ], RE
+    LS, CP, RE0 = to_lowpass(g, fo * QL, RE)
+    CS, LP, RE1 = to_highpass(g, fo / QL, RE)
+    return [ LS, CS ], [ LP, CP ], RE0
 
 # narrow bandwidth filters
 #######################################################
 
-def to_nodal(q, k, fo, BW, R=None, L=None):
+def to_nodal(q, k, fo, BW, RE=None, L=None):
     with np.errstate(divide='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
@@ -1569,8 +1570,8 @@ def to_nodal(q, k, fo, BW, R=None, L=None):
         if L is not None:
             L0 = np.ones(N) * L
             RE = wo * L0[::N-1] * QE
-        elif R is not None:
-            RE = np.ones(2) * R
+        elif RE is not None:
+            RE = np.ones(2) * RE
             L0 = RE / (wo * QE)
             L0 = np.insert(L0, 1, np.ones(N-2) * L0[0])
         C0 = -1 / (wo**2 * L0)
@@ -1590,7 +1591,7 @@ def to_nodal(q, k, fo, BW, R=None, L=None):
         CP[0::2] = C0
         return [CS], [LP, CP], RE
 
-def to_mesh(q, k, fo, BW, R=None, L=None, XM=None):
+def to_mesh(q, k, fo, BW, RE=None, L=None, XM=None):
     with np.errstate(divide='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
@@ -1600,8 +1601,8 @@ def to_mesh(q, k, fo, BW, R=None, L=None, XM=None):
         if L is not None:
             L0 = np.ones(N) * L
             RE = wo * L0[::N-1] / QE
-        elif R is not None:
-            RE = np.ones(2) * R
+        elif RE is not None:
+            RE = np.ones(2) * RE
             L0 = RE * QE / wo
             L0 = np.insert(L0, 1, np.ones(N-2) * L0[0])
 
@@ -1692,7 +1693,7 @@ def to_leff(fo, CM, LM, CP, QU, df=.1):
 
 #######################################################
 
-def main(*args):
+def main():
 
     def unit(x):
         if np.isnan(x): return '            -'
@@ -1709,7 +1710,7 @@ def main(*args):
 
     def netlist(XS, XP, RE, kw, n):
         fo = kw.get('fd', kw['f'])
-        QU = kw['qu']
+        QU = args.qu
         wo = 2 * np.pi * fo
 
         k, num = 1, 1
@@ -1718,12 +1719,12 @@ def main(*args):
         for i in range(len(XS[0])):
             if i % 2 == n:
 
-                if kw.get('expose') and k not in ports:
-                    if kw.get('crystal') or kw.get('mesh'):
+                if args.expose and k not in ports:
+                    if args.crystal or args.mesh:
                         ports.append(k)
                         k = k + 1
                         ports.append(k)
-                    if kw.get('nodal'):
+                    if args.nodal:
                         ports.append(k)
 
                 node = k
@@ -1734,8 +1735,8 @@ def main(*args):
                     if not np.isinf(QU) and x > 0:
                         res.append(netitem(num, k, k + 1, wo * x / QU, tag='R'))
                         k, num = k + 1, num + 1
-                    if kw.get('cp') and x > 0:
-                        res.append(netitem(num, node, k, -kw['cp']))
+                    if args.cp and x > 0:
+                        res.append(netitem(num, node, k, -args.cp))
                         num += 1
             else:
                 if res: res.append('')
@@ -1752,20 +1753,20 @@ def main(*args):
 
         print(".SUBCKT F0 {}".format(' '.join([ str(i) for i in ports ])))
         print("* COMMAND  : {}".format(' '.join(sys.argv)))
-        print("* TYPE     : {}".format(kw['type']))
+        print("* TYPE     : {}".format(kw['type'].lower()))
         print("* FILTER   : {}".format(kw['filter']))
-        print("* ORDER    : {}".format(kw['n']))
+        print("* ORDER    : {}".format(args.n))
         print("* FREQ     : {}".format(unit(fo).strip()))
         print("* RS       : {:.1f}".format(RE[0]))
         print("* RL       : {:.1f}".format(RE[1]))
  
-        if kw.get('cp'):
-            print("* CP       : {}".format(unit(kw['cp']).strip()))
+        if args.cp:
+            print("* CP       : {}".format(unit(args.cp).strip()))
 
-        if kw.get('bw'):
-            QL = fo / kw['bw']
+        if args.bw:
+            QL = fo / args.bw
             qo = QU / QL
-            print("* BW       : {}".format(unit(kw['bw']).strip()))
+            print("* BW       : {}".format(unit(args.bw).strip()))
             print("* QL       : {:.1f}".format(QL))
             print("* QU       : {:.1f}".format(QU))
             print("* qo       : {:.1f}".format(qo))
@@ -1778,10 +1779,10 @@ def main(*args):
         print()
 
         if kw.get('k') is not None:
-            list_couplings(kw['q'], kw['k'], fo, kw['bw'])
+            list_couplings(kw['q'], kw['k'], fo, args.bw)
             print()
 
-        if kw.get('MESH') is not None:
+        if args.crystal:
             N = len(kw['k']) + 1
             fs = kw['f'] * np.ones(N)
             MESH = kw['MESH']
@@ -1825,18 +1826,18 @@ def main(*args):
  
     def list_gnormalized(name):
         print("N  g0 g1 ... gn gn+1")
-        for g in LOWPASS[name]:
+        for g in LOWPASS[name.upper()]:
             print("{:<2d} {}".format(len(g) - 2, to_csv(g)))
 
     def list_knormalized(name):
         print("N  q1 qn k12 k23 k34 k45 k56 ...")
-        for qk in COUPLED[name]:
+        for qk in COUPLED[name.upper()]:
             print("{:<2d} {}".format(len(qk) - 1, to_csv(qk)))
 
     def list_znormalized(name):
         print("N  qo IL q1 qn k12 k23 k34 k45 k56 ...")
-        for z in ZVEREV[name]:
-            if z[0] <= kw.get('QO', np.inf): 
+        for z in ZVEREV[name.upper()]:
+            if z[0] <= args.qo:
                 print("{:<2d} {}".format(len(z) - 3, to_csv(z)))
 
     def list_gfilters():
@@ -1857,7 +1858,7 @@ def main(*args):
                 print(' {:2d}'.format(n), end='')
             print()
 
-    def list_zverev():
+    def list_zfilters():
         print('{:18s}  {}'.format("QK ZVEREV", "POLES"))
         for name in sorted(ZVEREV.keys()):
             print('{:18s}'.format(name.lower()), end='')
@@ -1869,147 +1870,155 @@ def main(*args):
                     prev = n
             print()
 
-    defaults = { 
-        'qu': np.inf, 
-        'cp': 0 
-    }
-    args = list(args)
-    kw = dict(defaults)
-    while args:
-        opt = args.pop(0)
-        if False:
-            pass
-        elif opt == '-g':
-            if not args: return list_gfilters() 
-            kw['g'] = args.pop(0).upper()
-        elif opt == '-k':
-            if not args: return list_kfilters() 
-            kw['k'] = args.pop(0).upper()
-        elif opt == '-z':
-            if not args: return list_zverev() 
-            kw['z'] = args.pop(0).upper()
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument("--highpass", action="store_true",
+        help="generate a highpass filter")
+    parser.add_argument("--lowpass", action="store_true",
+        help="generate a lowpass filter")
+    parser.add_argument("--bandpass", action="store_true",
+        help="generate a wideband bandpass filter")
+    parser.add_argument("--nodal", action="store_true",
+        help="generate a narrow-band nodal bandpass filter")
+    parser.add_argument("--mesh", action="store_true",
+        help="generate a narrow-band mesh bandpass filter")
+    parser.add_argument("--crystal", action="store_true",
+        help="generate a narrow-band crystal mesh bandpass filter")
+    parser.add_argument("--expose", action="store_true",
+        help="expose resonators in spice netlist for nodal and mesh filters")
+    parser.add_argument("--list-g", action="store_true",
+        help="list lowpass prototype element response types")
+    parser.add_argument("--list-k", action="store_true",
+        help="list q, k coupling response types")
+    parser.add_argument("--list-z", action="store_true",
+        help="list Zverev predistored q, k coupling response types")
+    parser.add_argument("--list-elements", action="store_true",
+        help="list response type element values")
 
-        elif opt == '-n':
-            kw['n'] = np.int(args.pop(0))
-        elif opt == '-r':
-            kw['r'] = np.array([ np.double(x) for x in args.pop(0).split(',') ])
-        elif opt == '-l':
-            kw['l'] = np.array([ np.double(x) for x in args.pop(0).split(',') ])
-        elif opt == '-f':
-            kw['f'] = np.array([ np.double(x) for x in args.pop(0).split(',') ])
-        elif opt == '-bw':
-            kw['bw'] = np.double(args.pop(0))
-        elif opt == '-qu':
-            kw['qu'] = np.double(args.pop(0))
-        elif opt == '-cp':
-            kw['cp'] = np.double(args.pop(0))
-        elif opt == '-qo':
-            kw['QO'] = np.double(args.pop(0))
+    parser.add_argument("--n", type=int, default=None,
+        help="number of filter poles or resonators")
+    parser.add_argument("--bw", type=float, default=None,
 
-        elif opt == '-lowpass':
-            kw['lowpass'] = True
-        elif opt == '-highpass':
-            kw['highpass'] = True
-        elif opt == '-bandpass':
-            kw['bandpass'] = True
-        elif opt == '-bandstop':
-            kw['bandstop'] = True
-        elif opt == '-nodal':
-            kw['nodal'] = True
-        elif opt == '-mesh':
-            kw['mesh'] = True
-        elif opt == '-crystal':
-            kw['crystal'] = True
+        help="filter bandwidth")
+    parser.add_argument("--g", type=str, default=None,
+        help="name of lowpass prototype element response")
+    parser.add_argument("--k", type=str, default=None,
+        help="name of q, k coupling response")
+    parser.add_argument("--z", type=str, default=None,
+        help="name of Zverev predistored q, k coupling response")
+    parser.add_argument("--f", type=str, default=None,
+        help="filter design frequency, can be given in common notation")
+    parser.add_argument("--re", type=str, default=None,
+        help="end resistors, can be given in common notation")
+    parser.add_argument("--l", type=str, default=None,
+        help="resonator inductor values, can be given in common notation")
 
-        elif opt == '-expose':
-            kw['expose'] = True
-        else:
-            raise ValueError('unknown option:', opt)
+    # defaults
 
-    # get filter type
+    parser.add_argument("--qu", type=float, default=np.inf,
+        help="unloaded Q of resonators")
+    parser.add_argument("--cp", type=float, default=0,
+        help="parallel capacitance Co of crystals")
+    parser.add_argument("--qo", type=float, default=np.inf,
+        help="maximum qo to show when listing Zverev element values")
 
-    if kw.get('g'):
-        if kw.get('n') is None:
-            return list_gnormalized(kw['g'])
-        kw['type'] = kw['g']
-        g = lowpass_g(kw['type'], kw['n'])
+    args = parser.parse_args()
+
+    if args.list_g:
+        return list_gfilters() 
+    if args.list_k:
+        return list_kfilters() 
+    if args.list_z:
+        return list_zfilters() 
+    if args.list_elements:
+        if args.g: list_gnormalized(args.g)
+        if args.k: list_knormalized(args.k)
+        if args.z: list_znormalized(args.z)
+        return
+
+    ##
+
+    kw = {}
+    if args.f:
+        kw['f'] = np.array([ np.double(x) for x in args.f.split(',') ])
+    if args.l: 
+        kw['l'] = np.array([ np.double(x) for x in args.l.split(',') ])
+    if args.re: 
+        kw['re'] = np.array([ np.double(x) for x in args.re.split(',') ])
+
+    if args.g:
+        kw['type'] = args.g
+        g = lowpass_g(kw['type'], args.n)
         qk = [ to_coupling_qk(g) ]
-
-    elif kw.get('k'):
-        if kw.get('n') is None:
-            return list_knormalized(kw['k'])
-        kw['type'] = kw['k']
-        qk = [ coupling_qk(kw['type'], kw['n']) ]
-
-    elif kw.get('z'):
-        if kw.get('n') is None:
-            return list_znormalized(kw['z'])
-        kw['type'] = kw['z']
-        QL = kw['f'] / kw['bw']
-        QO = kw['qu'] / QL
-        qk = list(zverev_k(kw['type'], kw['n'], QO))
-        kw['qmin'] = zverev_qo(kw['type'], kw['n'], QO)
-    else:
-        raise ValueError('No filter type given')
+    if args.k:
+        kw['type'] = args.k
+        qk = [ coupling_qk(kw['type'], args.n) ]
+    if args.z:
+        kw['type'] = args.z
+        QL = kw['f'][0] / args.bw
+        QO = args.qu / QL
+        qk = list(zverev_k(kw['type'], args.n, QO))
+        kw['qmin'] = zverev_qo(kw['type'], args.n, QO)
 
     # print wide-band filters
 
-    if kw.get('lowpass'):
-        kw['filter'] = 'LOWPASS'
+    if args.lowpass:
+        kw['filter'] = 'lowpass'
         kw['f'] = kw['f'][0]
-        XS, XP, RE = to_lowpass(g, kw['f'], R=kw['r'])
+        XS, XP, RE = to_lowpass(g, kw['f'], RE=kw['re'])
         netlist([XS], [XP], RE[0], kw, 1)
         netlist([XS], [XP], RE[1], kw, 0)
-    elif kw.get('highpass'):
-        kw['filter'] = 'HIGHPASS'
+    elif args.highpass:
+        kw['filter'] = 'highpass'
         kw['f'] = kw['f'][0]
-        XS, XP, RE = to_highpass(g, kw['f'], R=kw['r'])
+        XS, XP, RE = to_highpass(g, kw['f'], RE=kw['re'])
         netlist([XS], [XP], RE[0], kw, 1)
         netlist([XS], [XP], RE[1], kw, 0)
-    elif kw.get('bandpass'):
-        kw['filter'] = 'BANDPASS'
+    elif args.bandpass:
+        kw['filter'] = 'bandpass'
         kw['f'] = kw['f'][0]
-        QL = kw['f'] / kw['bw']
-        XS, XP, RE = to_bandpass(g, kw['f'], kw['bw'], R=kw['r'])
+        XS, XP, RE = to_bandpass(g, kw['f'], args.bw, RE=kw['re'])
         netlist(XS, XP, RE[0], kw, 1)
         netlist(XS, XP, RE[1], kw, 0)
 
     # print narrow-band filters
 
-    elif kw.get('nodal'):
-        kw['filter'] = 'NODAL'
+    elif args.nodal:
+        kw['filter'] = 'nodal'
         kw['f'] = kw['f'][0]
         for q, k in qk:
+            XS, XP, RE = to_nodal(q, k, kw['f'], args.bw, RE=kw.get('re'), L=kw.get('l'))
             kw['q'], kw['k'] = q, k
-            XS, XP, RE = to_nodal(q, k, kw['f'], kw['bw'], R=kw.get('r'), L=kw.get('l'))
             netlist(XS, XP, RE, kw, 1)
-    elif kw.get('mesh'):
-        kw['filter'] = 'MESH'
+    elif args.mesh:
+        kw['filter'] = 'mesh'
         kw['f'] = kw['f'][0]
         for q, k in qk:
+            XS, XP, RE = to_mesh(q, k, kw['f'], args.bw, RE=kw.get('re'), L=kw.get('l'))
             kw['q'], kw['k'] = q, k
-            XS, XP, RE = to_mesh(q, k, kw['f'], kw['bw'], R=kw.get('r'), L=kw.get('l'))
             netlist(XS, XP, RE, kw, 0)
-    elif kw.get('crystal'):
-        kw['filter'] = 'CRYSTAL_MESH'
+    elif args.crystal:
+        kw['filter'] = 'crystal mesh'
         for q, k in qk:
-            kw['q'], kw['k'] = q, k
             XS, XP, RE, MESH, fd, SKEW = to_crystal_mesh(
-                q, k, kw['f'], kw['bw'], LM=kw['l'], CP=kw['cp'], QU=kw['qu'])
+                q, k, kw['f'], args.bw, LM=kw['l'], CP=args.cp, QU=args.qu)
+
+            kw['q'], kw['k'] = q, k
             kw['fd'] = fd
             kw['MESH'] = MESH
             kw['SKEW'] = SKEW
             kw['CK'] = XP[0][1::2]
             kw['CS'] = XS[-1][0::2]
             netlist(XS, XP, RE, kw, 0)
-    elif kw.get('bw'):
+
+    # print coupling info
+
+    elif args.bw:
         for q, k in qk:
-            list_couplings(q, k, kw.get('f'), kw['bw'])
+            list_couplings(q, k, kw.get('f'), args.bw)
     else:
         raise ValueError('No filter configuration given')
 
 
 if __name__ == '__main__':
-    import sys
-    main(*sys.argv[1:])
-
+    main()

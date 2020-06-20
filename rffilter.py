@@ -1640,7 +1640,7 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, CE=np.inf, QU=np.inf, RO=None):
                 cp = 1 / (w * RO) * np.sqrt((RO - RE0) / RE0)
                 CE = (1 + (w * RO * cp)**2) / (w**2 * RO**2 * cp)
             else:
-                raise ValueError
+                CE = 1 / (w * np.sqrt(RO * RE0 - RO**2))
 
         # compute unadjusted mesh frequecies
         CK = np.insert(-CE * np.ones(2), 1, XP[0][1::2])
@@ -1671,7 +1671,7 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, CE=np.inf, QU=np.inf, RO=None):
     XS.insert(0, np.zeros_like(XS[0]))
     XS[0][0::2] = -CM
     XS[1][0::2] = LM
-    return XS, XP, RE0, MESH, fd, L / LM
+    return XS, XP, RE0, MESH, fd, L / LM, CE
 
 
 # helper routines
@@ -1770,6 +1770,11 @@ def main():
         print("* RS       : {:.1f}".format(RE[0]))
         print("* RL       : {:.1f}".format(RE[1]))
  
+        if kw.get('ro') is not None:
+            print("* RO1      : {:.1f}".format(kw['ro'][0]))
+            print("* RO2      : {:.1f}".format(kw['ro'][1]))
+            print("* CE1      : {}".format(unit(kw['ce'][0]).strip()))
+            print("* CE2      : {}".format(unit(kw['ce'][1]).strip()))
         if args.cp:
             print("* CP       : {}".format(unit(args.cp).strip()))
 
@@ -1961,13 +1966,14 @@ def main():
         elif args.crystal:
             kw['filter'] = 'crystal mesh'
             for q, k in qk:
-                XS, XP, RE, MESH, fo, SKEW = to_crystal_mesh(
+                XS, XP, RE, MESH, fo, SKEW, CE = to_crystal_mesh(
                     q, k, fo=kw['f'], BW=args.bw, LM=kw['l'], CP=args.cp, QU=args.qu, CE=kw.get('ce'), RO=kw.get('ro'))
                 kw['q'], kw['k'] = q, k
                 kw['MESH'] = MESH
                 kw['SKEW'] = SKEW
                 kw['CK'] = XP[0][1::2]
                 kw['CS'] = XS[-1][0::2]
+                kw['ce'] = CE
                 netlist(XS, XP, RE, fo, kw, 0)
 
         # print coupling info

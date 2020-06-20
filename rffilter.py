@@ -1551,7 +1551,7 @@ def to_bandpass(g, fo, BW, RE):
     CS, LP, RE1 = to_highpass(g, fo * QL, RE)
     return [ LS, CS ], [ LP, CP ], RE0
 
-def to_bandstop(g, fo, BW, R):
+def to_bandstop(g, fo, BW, RE):
     QL = fo / BW 
     LS, CP, RE0 = to_lowpass(g, fo * QL, RE)
     CS, LP, RE1 = to_highpass(g, fo / QL, RE)
@@ -1708,8 +1708,7 @@ def main():
             tag = 'L' if x > 0 else 'C'
         return '{}{:<2d} {:<4d} {:<4d} {}'.format(tag, num, a, b, unit(np.abs(x)))
 
-    def netlist(XS, XP, RE, kw, n):
-        fo = kw.get('fd', kw['f'])
+    def netlist(XS, XP, RE, fo, kw, n):
         QU = args.qu
         wo = 2 * np.pi * fo
 
@@ -1945,71 +1944,67 @@ def main():
         kw['l'] = np.array([ np.double(x) for x in args.l.split(',') ])
     if args.re: 
         kw['re'] = np.array([ np.double(x) for x in args.re.split(',') ])
-
     if args.g:
         kw['type'] = args.g
-        g = lowpass_g(kw['type'], args.n)
+        g = lowpass_g(args.g, args.n)
         qk = [ to_coupling_qk(g) ]
     if args.k:
         kw['type'] = args.k
-        qk = [ coupling_qk(kw['type'], args.n) ]
+        qk = [ coupling_qk(args.k, args.n) ]
     if args.z:
         kw['type'] = args.z
         QL = kw['f'][0] / args.bw
         QO = args.qu / QL
-        qk = list(zverev_k(kw['type'], args.n, QO))
-        kw['qmin'] = zverev_qo(kw['type'], args.n, QO)
+        qk = list(zverev_k(args.z, args.n, QO))
+        kw['qmin'] = zverev_qo(args.z, args.n, QO)
 
     # print wide-band filters
 
     if args.lowpass:
+        fo = kw['f'][0]
         kw['filter'] = 'lowpass'
-        kw['f'] = kw['f'][0]
-        XS, XP, RE = to_lowpass(g, kw['f'], RE=kw['re'])
-        netlist([XS], [XP], RE[0], kw, 1)
-        netlist([XS], [XP], RE[1], kw, 0)
+        XS, XP, RE = to_lowpass(g, fo=fo, RE=kw['re'])
+        netlist([XS], [XP], RE[0], fo, kw, 1)
+        netlist([XS], [XP], RE[1], fo, kw, 0)
     elif args.highpass:
+        fo = kw['f'][0]
         kw['filter'] = 'highpass'
-        kw['f'] = kw['f'][0]
-        XS, XP, RE = to_highpass(g, kw['f'], RE=kw['re'])
-        netlist([XS], [XP], RE[0], kw, 1)
-        netlist([XS], [XP], RE[1], kw, 0)
+        XS, XP, RE = to_highpass(g, fo=fo, RE=kw['re'])
+        netlist([XS], [XP], RE[0], fo, kw, 1)
+        netlist([XS], [XP], RE[1], fo, kw, 0)
     elif args.bandpass:
+        fo = kw['f'][0]
         kw['filter'] = 'bandpass'
-        kw['f'] = kw['f'][0]
-        XS, XP, RE = to_bandpass(g, kw['f'], args.bw, RE=kw['re'])
-        netlist(XS, XP, RE[0], kw, 1)
-        netlist(XS, XP, RE[1], kw, 0)
+        XS, XP, RE = to_bandpass(g, fo=fo, BW=args.bw, RE=kw['re'])
+        netlist(XS, XP, RE[0], fo, kw, 1)
+        netlist(XS, XP, RE[1], fo, kw, 0)
 
     # print narrow-band filters
 
     elif args.nodal:
+        fo = kw['f'][0]
         kw['filter'] = 'nodal'
-        kw['f'] = kw['f'][0]
         for q, k in qk:
-            XS, XP, RE = to_nodal(q, k, kw['f'], args.bw, RE=kw.get('re'), L=kw.get('l'))
+            XS, XP, RE = to_nodal(q, k, fo=fo, BW=args.bw, RE=kw.get('re'), L=kw.get('l'))
             kw['q'], kw['k'] = q, k
-            netlist(XS, XP, RE, kw, 1)
+            netlist(XS, XP, RE, fo, kw, 1)
     elif args.mesh:
+        fo = kw['f'][0]
         kw['filter'] = 'mesh'
-        kw['f'] = kw['f'][0]
         for q, k in qk:
-            XS, XP, RE = to_mesh(q, k, kw['f'], args.bw, RE=kw.get('re'), L=kw.get('l'))
+            XS, XP, RE = to_mesh(q, k, fo=fo, BW=args.bw, RE=kw.get('re'), L=kw.get('l'))
             kw['q'], kw['k'] = q, k
-            netlist(XS, XP, RE, kw, 0)
+            netlist(XS, XP, RE, fo, kw, 0)
     elif args.crystal:
         kw['filter'] = 'crystal mesh'
         for q, k in qk:
-            XS, XP, RE, MESH, fd, SKEW = to_crystal_mesh(
-                q, k, kw['f'], args.bw, LM=kw['l'], CP=args.cp, QU=args.qu)
-
+            XS, XP, RE, MESH, fo, SKEW = to_crystal_mesh(q, k, fo=kw['f'], BW=args.bw, LM=kw['l'], CP=args.cp, QU=args.qu)
             kw['q'], kw['k'] = q, k
-            kw['fd'] = fd
             kw['MESH'] = MESH
             kw['SKEW'] = SKEW
             kw['CK'] = XP[0][1::2]
             kw['CS'] = XS[-1][0::2]
-            netlist(XS, XP, RE, kw, 0)
+            netlist(XS, XP, RE, fo, kw, 0)
 
     # print coupling info
 

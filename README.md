@@ -57,8 +57,8 @@ $ rffilter.py --help
 usage: rffilter.py [-h] [--highpass] [--lowpass] [--bandpass] [--nodal]
                    [--mesh] [--crystal] [--expose] [--list-g] [--list-k]
                    [--list-z] [--list-elements] [--n N] [--bw BW] [--g G]
-                   [--k K] [--z Z] [--f F] [--re RE] [--l L] [--qu QU]
-                   [--cp CP] [--qo QO]
+                   [--k K] [--z Z] [--f F] [--ro RO] [--re RE] [--l L]
+                   [--ce CE] [--qu QU] [--cp CP] [--qo QO]
 
 optional arguments:
   -h, --help       show this help message and exit
@@ -87,10 +87,14 @@ optional arguments:
                    None)
   --f F            filter design frequency, can be given in common notation
                    (default: None)
+  --ro RO          termination resistors, can be given in common notation
+                   (default: None)
   --re RE          end resistors, can be given in common notation (default:
                    None)
   --l L            resonator inductor values, can be given in common notation
                    (default: None)
+  --ce CE          end capacitors, can be given in common notation (default:
+                   inf)
   --qu QU          unloaded Q of resonators (default: inf)
   --cp CP          parallel capacitance Co of crystals (default: 0)
   --qo QO          maximum qo to show when listing Zverev element values

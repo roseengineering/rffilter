@@ -1639,8 +1639,6 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf, RO=None):
             if RO[i] > RE0[i]:
                 cp = 1 / (w * RO[i]) * np.sqrt((RO[i] - RE0[i]) / RE0[i])
                 CE[i] = (1 + (w * RO[i] * cp)**2) / (w**2 * RO[i]**2 * cp)
-            else:
-                CE[i] = 1 / (w * np.sqrt(RO[i] * RE0[i] - RO[i]**2))
 
         # compute unadjusted mesh frequecies
         CK = np.insert(-CE * np.ones(2), 1, XP[0][1::2])
@@ -1729,22 +1727,16 @@ def main():
         num = 1
         res = []
         ports = [ 1 ]
-        skipports = []
 
         if RO is not None:
             if RO[0] > RE[0]:
                 cp = 1 / (wo * RO[0]) * np.sqrt((RO[0] - RE[0]) / RE[0])
                 res.append(netitem(num, k, 0, -cp))
-            else:
-                cs = 1 / (wo * np.sqrt(RO[0] * RE[0] - RO[0]**2))
-                res.append(netitem(num, k, k + 1, -cs))
-                k += 1
-                skipports.append(k) 
             num += 1
 
         for i in range(len(XS[0])):
             if i % 2 == n:
-                if args.expose and k not in ports and k not in skipports:
+                if args.expose and k not in ports:
                     if args.crystal or args.mesh:
                         ports.append(k)
                         k = k + 1
@@ -1778,10 +1770,6 @@ def main():
             if RO[1] > RE[1]:
                 cp = 1 / (wo * RO[1]) * np.sqrt((RO[1] - RE[1]) / RE[1])
                 res.append(netitem(num, k, 0, -cp))
-            else:
-                cs = 1 / (wo * np.sqrt(RO[1] * RE[1] - RO[1]**2))
-                res.append(netitem(num, k, k + 1, -cs))
-                k += 1
 
         ports.append(k)
 

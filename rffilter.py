@@ -1591,7 +1591,7 @@ def to_nodal(q, k, fo, BW, RE=None, L=None):
         CP[0::2] = C0
         return [CS], [LP, CP], RE
 
-def to_mesh(q, k, fo, BW, CE=np.info, RE=None, L=None, XM=None):
+def to_mesh(q, k, fo, BW, CE=None, RE=None, L=None, XM=None):
     with np.errstate(divide='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
@@ -1609,6 +1609,7 @@ def to_mesh(q, k, fo, BW, CE=np.info, RE=None, L=None, XM=None):
         # find CK using K inverter
         Z = wo * np.sqrt(L0[:-1] * L0[1:])
         CK = -1 / (wo * K * Z)
+        CE = np.inf if CE is None else CE
         CK = np.insert(np.ones(2) * -CE, 1, CK)
 
         # compute C0
@@ -1625,8 +1626,7 @@ def to_mesh(q, k, fo, BW, CE=np.info, RE=None, L=None, XM=None):
         return [LS, CS], [CP], RE
 
 
-def to_crystal_mesh(q, k, fo, BW, LM, CP=0, CE=np.inf, QU=np.inf, RO=None):
-
+def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf, RO=None):
     def func(f):
         nonlocal CE
         w = 2 * np.pi * f
@@ -1635,12 +1635,12 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, CE=np.inf, QU=np.inf, RO=None):
         XS, XP, RE0 = to_mesh(q, k, fo=f, BW=BW, L=L, XM=XM.imag, CE=CE)
         CS = XS[-1][0::2]
 
-        if RO is not None:
-            if np.all(RO >= RE0):
-                cp = 1 / (w * RO) * np.sqrt((RO - RE0) / RE0)
-                CE = (1 + (w * RO * cp)**2) / (w**2 * RO**2 * cp)
+        for i in range(len(RO)):
+            if RO[i] > RE0[i]:
+                cp = 1 / (w * RO[i]) * np.sqrt((RO[i] - RE0[i]) / RE0[i])
+                CE[i] = (1 + (w * RO[i] * cp)**2) / (w**2 * RO[i]**2 * cp)
             else:
-                CE = 1 / (w * np.sqrt(RO * RE0 - RO**2))
+                CE[i] = 1 / (w * np.sqrt(RO[i] * RE0[i] - RO[i]**2))
 
         # compute unadjusted mesh frequecies
         CK = np.insert(-CE * np.ones(2), 1, XP[0][1::2])
@@ -1655,7 +1655,8 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, CE=np.inf, QU=np.inf, RO=None):
     wo = np.ones(len(k) + 1) * 2 * np.pi * fo
     LM = np.ones(len(k) + 1) * LM
     CM = 1 / (wo**2 * LM)
-    RO = None if RO is None else np.ones(2) * RO
+    CE = np.ones(2) * np.inf
+    RO = [] if RO is None else np.ones(2) * RO
 
     fp = to_fp(fo, CM, LM, CP or 5e-12)
     fd = bisect(func, np.min(fo), np.max(fp))
@@ -1722,7 +1723,7 @@ def main():
     def netlist(XS, XP, RE, fo, kw, n):
         QU = args.qu
         wo = 2 * np.pi * fo
-        CE = np.ones(2) * kw['ce']
+        RO = np.ones(2) * kw['ro'] if 'ro' in kw else None
 
         k = 1
         num = 1
@@ -1730,11 +1731,16 @@ def main():
         ports = [ 1 ]
         skipports = []
 
-        if not np.isinf(CE[0]):
-            res.append(netitem(num, k, k + 1, -CE[0]))
+        if RO is not None:
+            CE = np.ones(2) * kw['ce']
+            if RO[0] < RE[0]:
+                res.append(netitem(num, k, k + 1, -CE[0]))
+                k += 1
+                skipports.append(k) 
+            else:
+                cp = 1 / (wo * RO[0]) * np.sqrt((RO[0] - RE[0]) / RE[0])
+                res.append(netitem(num, k, 0, -cp))
             num += 1
-            k += 1
-            skipports.append(k) 
 
         for i in range(len(XS[0])):
             if i % 2 == n:
@@ -1770,10 +1776,14 @@ def main():
                         res.append(netitem(num, k, 0, x))
                     num += 1
 
-        if not np.isinf(CE[1]):
-            res.append(netitem(num, k, k + 1, -CE[1]))
-            num += 1
-            k += 1
+        if RO is not None:
+            CE = np.ones(2) * kw['ce']
+            if RO[1] < RE[1]:
+                res.append(netitem(num, k, k + 1, -CE[1]))
+                k += 1
+            else:
+                cp = 1 / (wo * RO[1]) * np.sqrt((RO[1] - RE[1]) / RE[1])
+                res.append(netitem(num, k, 0, -cp))
 
         ports.append(k)
 
@@ -1790,11 +1800,6 @@ def main():
             kw['ro'] = np.ones(2) * kw['ro']
             print("* RO1      : {:.1f}".format(kw['ro'][0]))
             print("* RO2      : {:.1f}".format(kw['ro'][1]))
-
-        if not np.all(np.isinf(kw['ce'])):
-            kw['ce'] = np.ones(2) * kw['ce']
-            print("* CE1      : {}".format(unit(kw['ce'][0]).strip()))
-            print("* CE2      : {}".format(unit(kw['ce'][1]).strip()))
 
         if args.cp:
             print("* CP       : {}".format(unit(args.cp).strip()))
@@ -1931,8 +1936,6 @@ def main():
             kw['re'] = np.array([ np.double(x) for x in args.re.split(',') ])
         if args.ro: 
             kw['ro'] = np.array([ np.double(x) for x in args.ro.split(',') ])
-        if args.ce: 
-            kw['ce'] = np.array([ np.double(x) for x in args.ce.split(',') ])
         if args.g:
             kw['type'] = args.g
             g = lowpass_g(args.g, args.n)
@@ -1988,7 +1991,7 @@ def main():
             kw['filter'] = 'crystal mesh'
             for q, k in qk:
                 XS, XP, RE, MESH, fo, SKEW, CE = to_crystal_mesh(
-                    q, k, fo=kw['f'], BW=args.bw, LM=kw['l'], CP=args.cp, QU=args.qu, CE=kw.get('ce'), RO=kw.get('ro'))
+                    q, k, fo=kw['f'], BW=args.bw, LM=kw['l'], CP=args.cp, QU=args.qu, RO=kw.get('ro'))
                 kw['q'], kw['k'] = q, k
                 kw['MESH'] = MESH
                 kw['SKEW'] = SKEW
@@ -2055,8 +2058,6 @@ def main():
 
     # defaults
 
-    parser.add_argument("--ce", type=str, default='inf',
-        help="end capacitors, can be given in common notation")
     parser.add_argument("--qu", type=float, default=np.inf,
         help="unloaded Q of resonators")
     parser.add_argument("--cp", type=float, default=0,

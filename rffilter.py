@@ -1722,14 +1722,24 @@ def main():
     def netlist(XS, XP, RE, fo, kw, n):
         QU = args.qu
         wo = 2 * np.pi * fo
+        CE = np.ones(2) * kw['ce']
 
-        k, num = 1, 1
+        k = 1
+        num = 1
         res = []
         ports = [ 1 ]
+        skipports = []
+
+        if not np.isinf(CE[0]):
+            res.append(netitem(num, k, k + 1, -CE[0]))
+            num += 1
+            k += 1
+            skipports.append(k) 
+
         for i in range(len(XS[0])):
             if i % 2 == n:
 
-                if args.expose and k not in ports:
+                if args.expose and k not in ports and k not in skipports:
                     if args.crystal or args.mesh:
                         ports.append(k)
                         k = k + 1
@@ -1759,6 +1769,12 @@ def main():
                     else:
                         res.append(netitem(num, k, 0, x))
                     num += 1
+
+        if not np.isinf(CE[1]):
+            res.append(netitem(num, k, k + 1, -CE[1]))
+            num += 1
+            k += 1
+
         ports.append(k)
 
         print(".SUBCKT F0 {}".format(' '.join([ str(i) for i in ports ])))
@@ -1771,10 +1787,15 @@ def main():
         print("* RL       : {:.1f}".format(RE[1]))
  
         if kw.get('ro') is not None:
+            kw['ro'] = np.ones(2) * kw['ro']
             print("* RO1      : {:.1f}".format(kw['ro'][0]))
             print("* RO2      : {:.1f}".format(kw['ro'][1]))
+
+        if not np.all(np.isinf(kw['ce'])):
+            kw['ce'] = np.ones(2) * kw['ce']
             print("* CE1      : {}".format(unit(kw['ce'][0]).strip()))
             print("* CE2      : {}".format(unit(kw['ce'][1]).strip()))
+
         if args.cp:
             print("* CP       : {}".format(unit(args.cp).strip()))
 

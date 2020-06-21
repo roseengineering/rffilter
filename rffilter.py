@@ -1672,7 +1672,7 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf, RO=None):
     XS.insert(0, np.zeros_like(XS[0]))
     XS[0][0::2] = -CM
     XS[1][0::2] = LM
-    return XS, XP, RE0, MESH, fd, L / LM, CE
+    return XS, XP, RE0, MESH, fd, L / LM
 
 
 # helper routines
@@ -1732,19 +1732,18 @@ def main():
         skipports = []
 
         if RO is not None:
-            CE = np.ones(2) * kw['ce']
-            if RO[0] < RE[0]:
-                res.append(netitem(num, k, k + 1, -CE[0]))
-                k += 1
-                skipports.append(k) 
-            else:
+            if RO[0] > RE[0]:
                 cp = 1 / (wo * RO[0]) * np.sqrt((RO[0] - RE[0]) / RE[0])
                 res.append(netitem(num, k, 0, -cp))
+            else:
+                cs = 1 / (wo * np.sqrt(RO[0] * RE[0] - RO[0]**2))
+                res.append(netitem(num, k, k + 1, -cs))
+                k += 1
+                skipports.append(k) 
             num += 1
 
         for i in range(len(XS[0])):
             if i % 2 == n:
-
                 if args.expose and k not in ports and k not in skipports:
                     if args.crystal or args.mesh:
                         ports.append(k)
@@ -1752,7 +1751,6 @@ def main():
                         ports.append(k)
                     if args.nodal:
                         ports.append(k)
-
                 node = k
                 for j in range(len(XS)):
                     x = XS[j][i]
@@ -1777,13 +1775,13 @@ def main():
                     num += 1
 
         if RO is not None:
-            CE = np.ones(2) * kw['ce']
-            if RO[1] < RE[1]:
-                res.append(netitem(num, k, k + 1, -CE[1]))
-                k += 1
-            else:
+            if RO[1] > RE[1]:
                 cp = 1 / (wo * RO[1]) * np.sqrt((RO[1] - RE[1]) / RE[1])
                 res.append(netitem(num, k, 0, -cp))
+            else:
+                cs = 1 / (wo * np.sqrt(RO[1] * RE[1] - RO[1]**2))
+                res.append(netitem(num, k, k + 1, -cs))
+                k += 1
 
         ports.append(k)
 
@@ -1990,14 +1988,13 @@ def main():
         elif args.crystal:
             kw['filter'] = 'crystal mesh'
             for q, k in qk:
-                XS, XP, RE, MESH, fo, SKEW, CE = to_crystal_mesh(
+                XS, XP, RE, MESH, fo, SKEW = to_crystal_mesh(
                     q, k, fo=kw['f'], BW=args.bw, LM=kw['l'], CP=args.cp, QU=args.qu, RO=kw.get('ro'))
                 kw['q'], kw['k'] = q, k
                 kw['MESH'] = MESH
                 kw['SKEW'] = SKEW
                 kw['CK'] = XP[0][1::2]
                 kw['CS'] = XS[-1][0::2]
-                kw['ce'] = CE
                 netlist(XS, XP, RE, fo, kw, 0)
 
         # print coupling info

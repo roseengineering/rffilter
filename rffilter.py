@@ -1732,7 +1732,7 @@ def main():
             if RO[0] > RE[0]:
                 cp = 1 / (wo * RO[0]) * np.sqrt((RO[0] - RE[0]) / RE[0])
                 res.append(netitem(num, k, 0, -cp))
-            num += 1
+                num += 1
 
         for i in range(len(XS[0])):
             if i % 2 == n:

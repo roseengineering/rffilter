@@ -1506,9 +1506,10 @@ def to_coupling_bw(q, k, BW):
     CBW = np.insert(K01, 1, KIJ) * BW
     return CBW
 
-def denormalize_qk(q, k, fo, BW):
+def denormalize_qk(q, k, fo, BW, QU=None):
+    QU = np.inf if QU is None else QU
     QL = np.nan if fo is None else fo / BW
-    QE = np.array(q) * QL
+    QE = 1 / (1 / (np.array(q) * QL) - 1 / QU)
     K = np.array(k) / QL
     return QE, K
 
@@ -1560,11 +1561,14 @@ def to_bandstop(g, fo, BW, RE):
 # narrow bandwidth filters
 #######################################################
 
-def to_nodal(q, k, fo, BW, RE=None, L=None):
+def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, CE=None):
+    CE = np.inf if CE is None else CE
+    QU = np.inf if QU is None else QU
+
     with np.errstate(divide='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
-        QE, K = denormalize_qk(q, k, fo, BW)
+        QE, K = denormalize_qk(q, k, fo, BW, QU=QU)
 
         # find L0, C0 and RE
         if L is not None:
@@ -1591,11 +1595,15 @@ def to_nodal(q, k, fo, BW, RE=None, L=None):
         CP[0::2] = C0
         return [CS], [LP, CP], RE
 
-def to_mesh(q, k, fo, BW, CE=None, RE=None, L=None, XM=None):
+
+def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, CE=None):
+    CE = np.inf if CE is None else CE
+    QU = np.inf if QU is None else QU
+
     with np.errstate(divide='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
-        QE, K = denormalize_qk(q, k, fo, BW)
+        QE, K = denormalize_qk(q, k, fo, BW, QU=QU)
 
         # find L0, C0 and RE
         if L is not None:
@@ -1609,7 +1617,6 @@ def to_mesh(q, k, fo, BW, CE=None, RE=None, L=None, XM=None):
         # find CK using K inverter
         Z = wo * np.sqrt(L0[:-1] * L0[1:])
         CK = -1 / (wo * K * Z)
-        CE = np.inf if CE is None else CE
         CK = np.insert(np.ones(2) * -CE, 1, CK)
 
         # compute C0
@@ -1963,14 +1970,14 @@ def main():
             fo = kw['f'][0]
             kw['filter'] = 'nodal'
             for q, k in qk:
-                XS, XP, RE = to_nodal(q, k, fo=fo, BW=args.bw, RE=kw.get('re'), L=kw.get('l'))
+                XS, XP, RE = to_nodal(q, k, fo=fo, BW=args.bw, RE=kw.get('re'), L=kw.get('l'), QU=args.qu)
                 kw['q'], kw['k'] = q, k
                 netlist(XS, XP, RE, fo, kw, 1)
         elif args.mesh:
             fo = kw['f'][0]
             kw['filter'] = 'mesh'
             for q, k in qk:
-                XS, XP, RE = to_mesh(q, k, fo=fo, BW=args.bw, RE=kw.get('re'), L=kw.get('l'), CE=kw.get('ce'))
+                XS, XP, RE = to_mesh(q, k, fo=fo, BW=args.bw, RE=kw.get('re'), L=kw.get('l'), QU=args.qu, CE=kw.get('ce'))
                 kw['q'], kw['k'] = q, k
                 netlist(XS, XP, RE, fo, kw, 0)
         elif args.crystal:

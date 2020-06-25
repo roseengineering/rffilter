@@ -1600,7 +1600,7 @@ def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, CE=None):
     CE = np.inf if CE is None else CE
     QU = np.inf if QU is None else QU
 
-    with np.errstate(divide='ignore'):
+    with np.errstate(divide='ignore', invalid='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
         QE, K = denormalize_qk(q, k, fo, BW, QU=QU)
@@ -1619,18 +1619,26 @@ def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, CE=None):
         CK = -1 / (wo * K * Z)
         CK = np.insert(np.ones(2) * -CE, 1, CK)
 
-        # compute C0
-        XM = wo * L0 if XM is None else XM # XM includes any CM
-        C0 = -1 / (wo * XM + 1 / CK[:-1] + 1 / CK[1:])
+        # compute CM and MESH
+        if XM is None:
+            CM = -1 / (wo**2 * L0)
+            MESH = None
+        else:
+            CM = -1 / (wo * XM)
+            CMEFF = 1 / (wo**2 * L0 - wo * XM)
+            CTOT = 1 / (1 / CMEFF - 1 / CK[:-1] - 1 / CK[1:])
+            MESH = 1 / (2 * np.pi * np.sqrt(L0 * CTOT))
+
+        # compute series tuning capacitors
+        C0 = 1 / (1 / CM - 1 / CK[:-1] - 1 / CK[1:])
 
         CS = np.zeros(2 * N - 1)
         LS = np.zeros(2 * N - 1)
         CP = np.zeros(2 * N - 1)
-
         LS[0::2] = L0
         CS[0::2] = C0
         CP[1::2] = CK[1:-1]
-        return [LS, CS], [CP], RE
+        return [LS, CS], [CP], RE, MESH
 
 
 def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf, RO=None):
@@ -1639,21 +1647,13 @@ def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf, RO=None):
         w = 2 * np.pi * f
         L = to_leff(f, CM, LM, CP, QU)
         XM = to_xeff(f, CM, LM, CP, QU) # XM includes the xtal series CM
-        XS, XP, RE0 = to_mesh(q, k, fo=f, BW=BW, L=L, XM=XM.imag, CE=CE)
+        XS, XP, RE0, MESH = to_mesh(q, k, fo=f, BW=BW, L=L, XM=XM.imag, CE=CE)
         CS = XS[-1][0::2]
 
         for i in range(len(RO)):
             if RO[i] > RE0[i]:
                 cp = 1 / (w * RO[i]) * np.sqrt((RO[i] - RE0[i]) / RE0[i])
                 CE[i] = (1 + (w * RO[i] * cp)**2) / (w**2 * RO[i]**2 * cp)
-
-        # compute unadjusted mesh frequecies
-        CK = np.insert(-CE * np.ones(2), 1, XP[0][1::2])
-        CMEFF = 1 / (w * (w * L - XM.imag))
-        CTOT = 1/(1/CMEFF - 1/CK[:-1] - 1/CK[1:])
-        with np.errstate(invalid='ignore'):
-            MESH = 1 / (2 * np.pi * np.sqrt(L * CTOT))
-        # done computing unadjusted mesh frequecies
 
         return XS, XP, RE0, MESH, np.max(CS)
 
@@ -1977,7 +1977,7 @@ def main():
             fo = kw['f'][0]
             kw['filter'] = 'mesh'
             for q, k in qk:
-                XS, XP, RE = to_mesh(q, k, fo=fo, BW=args.bw, RE=kw.get('re'), L=kw.get('l'), QU=args.qu, CE=kw.get('ce'))
+                XS, XP, RE, _ = to_mesh(q, k, fo=fo, BW=args.bw, RE=kw.get('re'), L=kw.get('l'), QU=args.qu, CE=kw.get('ce'))
                 kw['q'], kw['k'] = q, k
                 netlist(XS, XP, RE, fo, kw, 0)
         elif args.crystal:

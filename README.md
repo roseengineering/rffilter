@@ -55,7 +55,7 @@ The program takes the following command line options:
 ```
 $ rffilter.py --help
 usage: rffilter.py [-h] [--highpass] [--lowpass] [--bandpass] [--nodal]
-                   [--mesh] [--crystal] [--expose] [--list-g] [--list-k]
+                   [--mesh] [--crystal-mesh] [--expose] [--list-g] [--list-k]
                    [--list-z] [--list-elements] [--n N] [--bw BW] [--g G]
                    [--k K] [--z Z] [--f F] [--ro RO] [--re RE] [--l L]
                    [--qu QU] [--cp CP] [--qo QO]
@@ -69,7 +69,7 @@ optional arguments:
                    False)
   --mesh           generate a narrow-band mesh bandpass filter (default:
                    False)
-  --crystal        generate a narrow-band crystal mesh bandpass filter
+  --crystal-mesh   generate a narrow-band crystal mesh bandpass filter
                    (default: False)
   --expose         expose resonators in spice netlist for nodal and mesh
                    filters (default: False)
@@ -352,9 +352,9 @@ Build a 2400 Hz bandwidth crystal filter.  This filter is from an example in Ste
 
 
 ```
-$ rffilter.py --g chebyshev_0.2 --n 8 --crystal --l 69.7e-3 --f 4913.57e3 --bw 2400 --cp 3.66e-12 | tee examples/xtal.cir
+$ rffilter.py --g chebyshev_0.2 --n 8 --crystal-mesh --l 69.7e-3 --f 4913.57e3 --bw 2400 --cp 3.66e-12 | tee examples/xtal.cir
 .SUBCKT F0 1 25
-* COMMAND  : rffilter.py --g chebyshev_0.2 --n 8 --crystal --l 69.7e-3 --f 4913.57e3 --bw 2400 --cp 3.66e-12
+* COMMAND  : rffilter.py --g chebyshev_0.2 --n 8 --crystal-mesh --l 69.7e-3 --f 4913.57e3 --bw 2400 --cp 3.66e-12
 * TYPE     : chebyshev_0.2
 * FILTER   : crystal mesh
 * ORDER    : 8
@@ -455,9 +455,9 @@ Same filter with an unloaded Q of 150000.  See the above Steder article for a fi
 
 
 ```
-$ rffilter.py --g chebyshev_0.2 --n 8 --crystal --l 69.7e-3 --f 4913.57e3 --bw 2400 --cp 3.66e-12 --qu 150000 | tee examples/xtalloss.cir
+$ rffilter.py --g chebyshev_0.2 --n 8 --crystal-mesh --l 69.7e-3 --f 4913.57e3 --bw 2400 --cp 3.66e-12 --qu 150000 | tee examples/xtalloss.cir
 .SUBCKT F0 1 33
-* COMMAND  : rffilter.py --g chebyshev_0.2 --n 8 --crystal --l 69.7e-3 --f 4913.57e3 --bw 2400 --cp 3.66e-12 --qu 150000
+* COMMAND  : rffilter.py --g chebyshev_0.2 --n 8 --crystal-mesh --l 69.7e-3 --f 4913.57e3 --bw 2400 --cp 3.66e-12 --qu 150000
 * TYPE     : chebyshev_0.2
 * FILTER   : crystal mesh
 * ORDER    : 8
@@ -569,9 +569,9 @@ The filter, less the holder capacitance, is an example from the Dishal program's
 
 
 ```
-$ rffilter.py --k chebyshev_0.5 --bw 2500 --n 8 --l 70e-3 --crystal --f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3 | tee examples/multiple.cir
+$ rffilter.py --k chebyshev_0.5 --bw 2500 --n 8 --l 70e-3 --crystal-mesh --f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3 | tee examples/multiple.cir
 .SUBCKT F0 1 25
-* COMMAND  : rffilter.py --k chebyshev_0.5 --bw 2500 --n 8 --l 70e-3 --crystal --f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3
+* COMMAND  : rffilter.py --k chebyshev_0.5 --bw 2500 --n 8 --l 70e-3 --crystal-mesh --f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3
 * TYPE     : chebyshev_0.5
 * FILTER   : crystal mesh
 * ORDER    : 8
@@ -664,9 +664,9 @@ The filter is an example from the Dishal program's owners manual.
 
 
 ```
-$ rffilter.py --k chebyshev_0.5 --bw 2500 --n 8 --l 70e-3 --crystal --cp 3.7e-12 --f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3 | tee examples/broken.cir
+$ rffilter.py --k chebyshev_0.5 --bw 2500 --n 8 --l 70e-3 --crystal-mesh --cp 3.7e-12 --f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3 | tee examples/broken.cir
 .SUBCKT F0 1 25
-* COMMAND  : rffilter.py --k chebyshev_0.5 --bw 2500 --n 8 --l 70e-3 --crystal --cp 3.7e-12 --f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3
+* COMMAND  : rffilter.py --k chebyshev_0.5 --bw 2500 --n 8 --l 70e-3 --crystal-mesh --cp 3.7e-12 --f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3
 * TYPE     : chebyshev_0.5
 * FILTER   : crystal mesh
 * ORDER    : 8
@@ -771,9 +771,9 @@ The following example uses the lowest crystal for the reference mesh:
 
 
 ```
-$ rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal --cp 5e-12 --f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0 | tee examples/qexlow.cir
+$ rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal-mesh --cp 5e-12 --f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0 | tee examples/qexlow.cir
 .SUBCKT F0 1 37
-* COMMAND  : rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal --cp 5e-12 --f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0
+* COMMAND  : rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal-mesh --cp 5e-12 --f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0
 * TYPE     : chebyshev_0.1
 * FILTER   : crystal mesh
 * ORDER    : 12
@@ -910,7 +910,7 @@ The above crystal filter with 120,000 Q crystals:
 
 
 ```
-$ rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal --cp 5e-12 --qu 120000 --f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0 > examples/qexloss.cir
+$ rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal-mesh --cp 5e-12 --qu 120000 --f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0 > examples/qexloss.cir
 ```
 
 ![qexloss](examples/qexloss.png)
@@ -919,9 +919,9 @@ The following example uses a middle crystal for the reference mesh:
 
 
 ```
-$ rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal --cp 5e-12 --f 8000017.0,7999966.0,7999940.0,7999945.0,7999985.0,8000000.0,7999996.0,7999991.0,7999939.0,7999933.0,7999945.0,8000026.0 | tee examples/qexmiddle.cir
+$ rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal-mesh --cp 5e-12 --f 8000017.0,7999966.0,7999940.0,7999945.0,7999985.0,8000000.0,7999996.0,7999991.0,7999939.0,7999933.0,7999945.0,8000026.0 | tee examples/qexmiddle.cir
 .SUBCKT F0 1 37
-* COMMAND  : rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal --cp 5e-12 --f 8000017.0,7999966.0,7999940.0,7999945.0,7999985.0,8000000.0,7999996.0,7999991.0,7999939.0,7999933.0,7999945.0,8000026.0
+* COMMAND  : rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal-mesh --cp 5e-12 --f 8000017.0,7999966.0,7999940.0,7999945.0,7999985.0,8000000.0,7999996.0,7999991.0,7999939.0,7999933.0,7999945.0,8000026.0
 * TYPE     : chebyshev_0.1
 * FILTER   : crystal mesh
 * ORDER    : 12
@@ -2168,9 +2168,9 @@ Expose the ports.  Note, sequential ports must be connected together - and broke
 
 
 ```
-$ rffilter.py --k chebyshev_0.1 --n 8 --crystal --l .170 --f 4e6 --bw 500 --cp 2.05e-12 --expose | tee examples/xtaltune.cir
+$ rffilter.py --k chebyshev_0.1 --n 8 --crystal-mesh --l .170 --f 4e6 --bw 500 --cp 2.05e-12 --expose | tee examples/xtaltune.cir
 .SUBCKT F0 1 4 5 8 9 12 13 16 17 20 21 24 25 28 29 32
-* COMMAND  : rffilter.py --k chebyshev_0.1 --n 8 --crystal --l .170 --f 4e6 --bw 500 --cp 2.05e-12 --expose
+* COMMAND  : rffilter.py --k chebyshev_0.1 --n 8 --crystal-mesh --l .170 --f 4e6 --bw 500 --cp 2.05e-12 --expose
 * TYPE     : chebyshev_0.1
 * FILTER   : crystal mesh
 * ORDER    : 8

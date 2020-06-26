@@ -1,5 +1,5 @@
 .SUBCKT F0 1 25
-* COMMAND  : rffilter.py --g chebyshev_0.2 --n 8 --crystal --l 69.7e-3 --f 4913.57e3 --bw 2400 --cp 3.66e-12
+* COMMAND  : rffilter.py --g chebyshev_0.2 --n 8 --crystal-mesh --l 69.7e-3 --f 4913.57e3 --bw 2400 --cp 3.66e-12
 * TYPE     : chebyshev_0.2
 * FILTER   : crystal mesh
 * ORDER    : 8

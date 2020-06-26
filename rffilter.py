@@ -1561,13 +1561,11 @@ def to_bandstop(g, fo, BW, RE):
 # narrow bandwidth filters
 #######################################################
 
-def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, CE=None):
-    CE = np.inf if CE is None else CE
-    QU = np.inf if QU is None else QU
-
+def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, RO=None):
     with np.errstate(divide='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
+        QU = np.inf if QU is None else QU
         QE, K = denormalize_qk(q, k, fo, BW, QU=QU)
 
         # find L0, C0 and RE
@@ -1578,9 +1576,16 @@ def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, CE=None):
             RE = np.ones(2) * RE
             L0 = RE / (wo * QE)
             L0 = np.insert(L0, 1, np.ones(N-2) * L0[0])
-        C0 = -1 / (wo**2 * L0)
+
+        # find CSE and CPE
+        if RO is None:
+            CPE = np.zeros(2)
+            CSE = None
+        else:
+            raise ValueError
 
         # find CK and C0 using K inverter
+        C0 = -1 / (wo**2 * L0)
         Z = 1 / (wo * np.sqrt(C0[:-1] * C0[1:]))
         CK = -K / (wo * Z)
         CK = np.insert(np.zeros(2), 1, CK)
@@ -1593,7 +1598,7 @@ def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, CE=None):
         CS[1::2] = CK[1:-1]
         LP[0::2] = L0
         CP[0::2] = C0
-        return [CS], [LP, CP], RE
+        return [CS], [LP, CP], RE, CSE
 
 
 def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, RO=None):
@@ -1612,7 +1617,7 @@ def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, RO=None):
             L0 = RE * QE / wo
             L0 = np.insert(L0, 1, np.ones(N-2) * L0[0])
 
-        # find CE
+        # find CSE and CPE
         if RO is None:
             CSE = np.ones(2) * np.inf
             CPE = None
@@ -1730,15 +1735,22 @@ def main():
         num = 1
         res = []
         ports = [ 1 ]
+        skipport = []
 
         if kw.get('CPE') is not None:
             res.append(netitem(num, k, 0, kw['CPE'][0]))
             num += 1
 
+        if kw.get('CSE') is not None:
+            res.append(netitem(num, k, k+1, kw['CSE'][0]))
+            num += 1
+            k += 1
+            skipport.append(k)
+
         for i in range(len(XS[0])):
             if i % 2 == n:
                 if args.expose and k not in ports:
-                    if args.crystal or args.mesh:
+                    if args.crystal_mesh or args.mesh:
                         ports.append(k)
                         k = k + 1
                         ports.append(k)
@@ -1769,7 +1781,10 @@ def main():
 
         if kw.get('CPE') is not None:
             res.append(netitem(num, k, 0, kw['CPE'][1]))
-            num += 1
+
+        if kw.get('CSE') is not None:
+            res.append(netitem(num, k, k + 1, kw['CSE'][1]))
+            k += 1
 
         ports.append(k)
 
@@ -1814,7 +1829,7 @@ def main():
             list_couplings(kw['q'], kw['k'], fo, args.bw)
             print()
 
-        if args.crystal:
+        if args.crystal_mesh:
             N = len(kw['k']) + 1
             fs = kw['f'] * np.ones(N)
             MESH = kw['MESH']
@@ -1968,10 +1983,11 @@ def main():
             fo = kw['f'][0]
             kw['filter'] = 'nodal'
             for q, k in qk:
-                XS, XP, RE = to_nodal(
+                XS, XP, RE, CSE = to_nodal(
                     q, k, fo=fo, BW=args.bw, L=kw.get('l'), 
-                    RE=kw.get('re'), QU=args.qu)
+                    RE=kw.get('re'), QU=args.qu, RO=kw.get('ro'))
                 kw['q'], kw['k'] = q, k
+                kw['CSE'] = CSE
                 netlist(XS, XP, RE, fo, kw, 1)
         elif args.mesh:
             fo = kw['f'][0]
@@ -1983,7 +1999,7 @@ def main():
                 kw['q'], kw['k'] = q, k
                 kw['CPE'] = CPE
                 netlist(XS, XP, RE, fo, kw, 0)
-        elif args.crystal:
+        elif args.crystal_mesh:
             kw['filter'] = 'crystal mesh'
             for q, k in qk:
                 XS, XP, RE, CPE, MESH, fo, SKEW = to_crystal_mesh(
@@ -2019,7 +2035,7 @@ def main():
         help="generate a narrow-band nodal bandpass filter")
     parser.add_argument("--mesh", action="store_true",
         help="generate a narrow-band mesh bandpass filter")
-    parser.add_argument("--crystal", action="store_true",
+    parser.add_argument("--crystal-mesh", action="store_true",
         help="generate a narrow-band crystal mesh bandpass filter")
     parser.add_argument("--expose", action="store_true",
         help="expose resonators in spice netlist for nodal and mesh filters")

@@ -1911,10 +1911,14 @@ def main():
         for qk in COUPLED[name.upper()]:
             print("{:<2d} {}".format(len(qk) - 1, to_csv(qk)))
 
-    def list_znormalized(name):
+    def list_znormalized(name, QO=None):
+        QO = np.inf if QO is None else QO
+        found = 0
         print("N  qo IL q1 qn k12 k23 k34 k45 k56 ...")
         for z in ZVEREV[name.upper()]:
-            if z[0] <= args.qo:
+            if z[0] > found: found = 0
+            if z[0] >= found and z[0] <= QO:
+                found = z[0]
                 print("{:<2d} {}".format(len(z) - 3, to_csv(z)))
 
     def list_gfilters():
@@ -1957,7 +1961,7 @@ def main():
         if args.list_elements:
             if args.g: list_gnormalized(args.g)
             if args.k: list_knormalized(args.k)
-            if args.z: list_znormalized(args.z)
+            if args.z: list_znormalized(args.z, QO=args.qo)
             return
 
         # build filter
@@ -2115,10 +2119,7 @@ def main():
         help="parallel capacitance Co of crystals")
     parser.add_argument("--qu", type=float, default=None,
         help="unloaded Q of resonators")
-
-    # defaults
-
-    parser.add_argument("--qo", type=float, default=np.inf,
+    parser.add_argument("--qo", type=float, default=None,
         help="maximum qo to show when listing Zverev element values")
 
     args = parser.parse_args()

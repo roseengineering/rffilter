@@ -1596,13 +1596,11 @@ def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, CE=None):
         return [CS], [LP, CP], RE
 
 
-def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, CE=None):
-    CE = np.inf if CE is None else CE
-    QU = np.inf if QU is None else QU
-
+def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, RO=None):
     with np.errstate(divide='ignore', invalid='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
+        QU = np.inf if QU is None else QU
         QE, K = denormalize_qk(q, k, fo, BW, QU=QU)
 
         # find L0, C0 and RE
@@ -1614,23 +1612,34 @@ def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, CE=None):
             L0 = RE * QE / wo
             L0 = np.insert(L0, 1, np.ones(N-2) * L0[0])
 
+        # find CE
+        if RO is None:
+            CSE = np.ones(2) * np.inf
+            CPE = None
+        else:
+            CPE = np.ones(2) * np.nan
+            CSE = np.ones(2) * np.nan
+            RO = np.ones(2) * RO
+            for i in range(len(RO)):
+                if RO[i] >= RE[i]:
+                    CPE[i] = 1 / (wo * RO[i]) * np.sqrt((RO[i] - RE[i]) / RE[i])
+                    CSE[i] = (1 + (wo * RO[i] * CPE[i])**2) / (wo**2 * RO[i]**2 * CPE[i])
+
         # find CK using K inverter
         Z = wo * np.sqrt(L0[:-1] * L0[1:])
         CK = -1 / (wo * K * Z)
-        CK = np.insert(np.ones(2) * -CE, 1, CK)
+        CK = np.insert(np.ones(2) * -CSE, 1, CK)
 
-        # compute CM and MESH
-        if XM is None:
-            CM = -1 / (wo**2 * L0)
-            MESH = None
-        else:
-            CM = -1 / (wo * XM)
-            CMEFF = 1 / (wo**2 * L0 - wo * XM)
+        # compute CM and C0
+        CM = -1 / (wo**2 * L0) if XM is None else -1 / (wo * XM)
+        C0 = 1 / (1 / CM - 1 / CK[:-1] - 1 / CK[1:])
+
+        # compute MESH
+        MESH = None
+        if XM is not None:
+            CMEFF = 1 / (wo * (wo * L0 - XM))
             CTOT = 1 / (1 / CMEFF - 1 / CK[:-1] - 1 / CK[1:])
             MESH = 1 / (2 * np.pi * np.sqrt(L0 * CTOT))
-
-        # compute series tuning capacitors
-        C0 = 1 / (1 / CM - 1 / CK[:-1] - 1 / CK[1:])
 
         CS = np.zeros(2 * N - 1)
         LS = np.zeros(2 * N - 1)
@@ -1638,46 +1647,34 @@ def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, CE=None):
         LS[0::2] = L0
         CS[0::2] = C0
         CP[1::2] = CK[1:-1]
-        return [LS, CS], [CP], RE, MESH
+        return [LS, CS], [CP], RE, CPE, MESH
 
 
 def to_crystal_mesh(q, k, fo, BW, LM, CP=0, QU=np.inf, RO=None):
     def func(f):
-        nonlocal CE
         w = 2 * np.pi * f
         L = to_leff(f, CM, LM, CP, QU)
         XM = to_xeff(f, CM, LM, CP, QU) # XM includes the xtal series CM
-        XS, XP, RE0, MESH = to_mesh(q, k, fo=f, BW=BW, L=L, XM=XM.imag, CE=CE)
+        XS, XP, RE0, CPE, MESH = to_mesh(q, k, fo=f, BW=BW, L=L, XM=XM.imag, RO=RO)
         CS = XS[-1][0::2]
-
-        for i in range(len(RO)):
-            if RO[i] > RE0[i]:
-                cp = 1 / (w * RO[i]) * np.sqrt((RO[i] - RE0[i]) / RE0[i])
-                CE[i] = (1 + (w * RO[i] * cp)**2) / (w**2 * RO[i]**2 * cp)
-
-        return XS, XP, RE0, MESH, np.max(CS)
+        return XS, XP, RE0, CPE, MESH, np.max(CS)
 
     wo = np.ones(len(k) + 1) * 2 * np.pi * fo
     LM = np.ones(len(k) + 1) * LM
     CM = 1 / (wo**2 * LM)
     CE = np.ones(2) * np.inf
-    RO = [] if RO is None else np.ones(2) * RO
 
     fp = to_fp(fo, CM, LM, CP or 5e-12)
     fd = bisect(func, np.min(fo), np.max(fp))
-    XS, XP, RE0, MESH, _ = func(fd)
+    XS, XP, RE0, CPE, MESH, _ = func(fd)
 
     L = to_leff(fd, CM, LM, CP, QU)
-    if np.any(L < 0): 
-        L *= np.nan 
-        if __name__ == "__main__": 
-            print("Unable to design filter", file=sys.stderr)
-            sys.exit(1)
+    if np.any(L < 0): L *= np.nan 
 
     XS.insert(0, np.zeros_like(XS[0]))
     XS[0][0::2] = -CM
     XS[1][0::2] = LM
-    return XS, XP, RE0, MESH, fd, L / LM
+    return XS, XP, RE0, CPE, MESH, fd, L / LM
 
 
 # helper routines
@@ -1728,18 +1725,15 @@ def main():
     def netlist(XS, XP, RE, fo, kw, n):
         QU = args.qu
         wo = 2 * np.pi * fo
-        RO = np.ones(2) * kw['ro'] if 'ro' in kw else None
 
         k = 1
         num = 1
         res = []
         ports = [ 1 ]
 
-        if RO is not None:
-            if RO[0] > RE[0]:
-                cp = 1 / (wo * RO[0]) * np.sqrt((RO[0] - RE[0]) / RE[0])
-                res.append(netitem(num, k, 0, -cp))
-                num += 1
+        if kw.get('CPE') is not None:
+            res.append(netitem(num, k, 0, kw['CPE'][0]))
+            num += 1
 
         for i in range(len(XS[0])):
             if i % 2 == n:
@@ -1773,10 +1767,9 @@ def main():
                         res.append(netitem(num, k, 0, x))
                     num += 1
 
-        if RO is not None:
-            if RO[1] > RE[1]:
-                cp = 1 / (wo * RO[1]) * np.sqrt((RO[1] - RE[1]) / RE[1])
-                res.append(netitem(num, k, 0, -cp))
+        if kw.get('CPE') is not None:
+            res.append(netitem(num, k, 0, kw['CPE'][1]))
+            num += 1
 
         ports.append(k)
 
@@ -1793,6 +1786,11 @@ def main():
             kw['ro'] = np.ones(2) * kw['ro']
             print("* RO1      : {:.1f}".format(kw['ro'][0]))
             print("* RO2      : {:.1f}".format(kw['ro'][1]))
+
+        if kw.get('CPE') is not None:
+            kw['CPE'] = np.ones(2) * kw['CPE']
+            print("* CPE1     : {}".format(unit(kw['CPE'][0]).strip()))
+            print("* CPE2     : {}".format(unit(kw['CPE'][1]).strip()))
 
         if args.cp:
             print("* CP       : {}".format(unit(args.cp).strip()))
@@ -1970,26 +1968,33 @@ def main():
             fo = kw['f'][0]
             kw['filter'] = 'nodal'
             for q, k in qk:
-                XS, XP, RE = to_nodal(q, k, fo=fo, BW=args.bw, RE=kw.get('re'), L=kw.get('l'), QU=args.qu)
+                XS, XP, RE = to_nodal(
+                    q, k, fo=fo, BW=args.bw, L=kw.get('l'), 
+                    RE=kw.get('re'), QU=args.qu)
                 kw['q'], kw['k'] = q, k
                 netlist(XS, XP, RE, fo, kw, 1)
         elif args.mesh:
             fo = kw['f'][0]
             kw['filter'] = 'mesh'
             for q, k in qk:
-                XS, XP, RE, _ = to_mesh(q, k, fo=fo, BW=args.bw, RE=kw.get('re'), L=kw.get('l'), QU=args.qu, CE=kw.get('ce'))
+                XS, XP, RE, CPE, _ = to_mesh(
+                    q, k, fo=fo, BW=args.bw, L=kw.get('l'), 
+                    RE=kw.get('re'), QU=args.qu, RO=kw.get('ro'))
                 kw['q'], kw['k'] = q, k
+                kw['CPE'] = CPE
                 netlist(XS, XP, RE, fo, kw, 0)
         elif args.crystal:
             kw['filter'] = 'crystal mesh'
             for q, k in qk:
-                XS, XP, RE, MESH, fo, SKEW = to_crystal_mesh(
-                    q, k, fo=kw['f'], BW=args.bw, LM=kw['l'], CP=args.cp, QU=args.qu, RO=kw.get('ro'))
+                XS, XP, RE, CPE, MESH, fo, SKEW = to_crystal_mesh(
+                    q, k, fo=kw['f'], BW=args.bw, LM=kw['l'], 
+                    CP=args.cp, QU=args.qu, RO=kw.get('ro'))
                 kw['q'], kw['k'] = q, k
                 kw['MESH'] = MESH
                 kw['SKEW'] = SKEW
                 kw['CK'] = XP[0][1::2]
                 kw['CS'] = XS[-1][0::2]
+                kw['CPE'] = CPE
                 netlist(XS, XP, RE, fo, kw, 0)
 
         # print coupling info

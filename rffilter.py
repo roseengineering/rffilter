@@ -1582,13 +1582,20 @@ def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, RO=None):
             CPE = np.zeros(2)
             CSE = None
         else:
-            raise ValueError
+            CPE = np.ones(2) * np.nan
+            CSE = np.ones(2) * np.nan
+            RO = np.ones(2) * RO
+            for i in range(len(RO)):
+                if RO[i] <= RE[i]:
+                    CSE[i] = 1 / (wo * np.sqrt(RO[i] * RE[i] - RO[i]**2))
+                    CPE[i] = CSE[i] / ((wo * RO[i] * CSE[i])**2 + 1)
+                    CSE[i] = -CSE[i]
 
         # find CK and C0 using K inverter
         C0 = -1 / (wo**2 * L0)
         Z = 1 / (wo * np.sqrt(C0[:-1] * C0[1:]))
         CK = -K / (wo * Z)
-        CK = np.insert(np.zeros(2), 1, CK)
+        CK = np.insert(-CPE, 1, CK)
         C0 = C0 - CK[:-1] - CK[1:]
 
         # result
@@ -1629,11 +1636,12 @@ def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, RO=None):
                 if RO[i] >= RE[i]:
                     CPE[i] = 1 / (wo * RO[i]) * np.sqrt((RO[i] - RE[i]) / RE[i])
                     CSE[i] = (1 + (wo * RO[i] * CPE[i])**2) / (wo**2 * RO[i]**2 * CPE[i])
+                    CPE[i] = -CPE[i]
 
         # find CK using K inverter
         Z = wo * np.sqrt(L0[:-1] * L0[1:])
         CK = -1 / (wo * K * Z)
-        CK = np.insert(np.ones(2) * -CSE, 1, CK)
+        CK = np.insert(-CSE, 1, CK)
 
         # compute CM and C0
         CM = -1 / (wo**2 * L0) if XM is None else -1 / (wo * XM)

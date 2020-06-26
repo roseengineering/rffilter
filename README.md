@@ -55,10 +55,10 @@ The program takes the following command line options:
 ```
 $ rffilter.py --help
 usage: rffilter.py [-h] [--highpass] [--lowpass] [--bandpass] [--nodal]
-                   [--mesh] [--crystal-mesh] [--expose] [--list-g] [--list-k]
-                   [--list-z] [--list-elements] [--n N] [--bw BW] [--g G]
-                   [--k K] [--z Z] [--f F] [--ro RO] [--re RE] [--l L]
-                   [--qu QU] [--cp CP] [--qo QO]
+                   [--mesh] [--crystal-mesh] [--crystal-nodal] [--expose]
+                   [--list-g] [--list-k] [--list-z] [--list-elements] [--n N]
+                   [--bw BW] [--g G] [--k K] [--z Z] [--f F] [--ro RO]
+                   [--re RE] [--l L] [--cp CP] [--qu QU] [--qo QO]
 
 optional arguments:
   -h, --help       show this help message and exit
@@ -69,7 +69,9 @@ optional arguments:
                    False)
   --mesh           generate a narrow-band mesh bandpass filter (default:
                    False)
-  --crystal-mesh   generate a narrow-band crystal mesh bandpass filter
+  --crystal-mesh   generate a narrow-band crystal mesh (LSB) bandpass filter
+                   (default: False)
+  --crystal-nodal  generate a narrow-band crystal nodal (USB) bandpass filter
                    (default: False)
   --expose         expose resonators in spice netlist for nodal and mesh
                    filters (default: False)
@@ -93,10 +95,10 @@ optional arguments:
                    None)
   --l L            resonator inductor values, can be given in common notation
                    (default: None)
-  --qu QU          unloaded Q of resonators (default: inf)
-  --cp CP          parallel capacitance Co of crystals (default: 0)
+  --cp CP          parallel capacitance Co of crystals (default: None)
+  --qu QU          unloaded Q of resonators (default: None)
   --qo QO          maximum qo to show when listing Zverev element values
-                   (default: inf)
+                   (default: None)
 ```
 
 

@@ -83,6 +83,8 @@ The program takes the following command line options:
 
 It also works for "--z".  Pass "--qo <qo>" to set the maximum qo.
 
+{ run("rffilter.py --list-elements --z butterworth --qo 9") }
+
 ## Coupling bandwidth and group delay
 
 Print out coupling design information.  CBW is the coupling bandwidth between resonators and the bandwidth of the two resonators at the end.

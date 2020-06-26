@@ -1677,8 +1677,8 @@ def to_crystal_nodal(q, k, fo, BW, LM, CP=None, QU=None, RO=None):
     CP = 0 if CP is None else CP
     fp = to_fp(fo, CM, LM, CP or 5e-12)
 
-    fd = bisect(func, np.min(fo) + 1, np.max(fp))
-    # for fd in np.linspace(np.min(fo) + 1, np.max(fp), 100): func(fd)
+    # fd = bisect(func, np.min(fo) + 1, np.max(fp))
+    for fd in np.linspace(np.min(fo) + 1, np.max(fp), 100): func(fd)
     XS, XP, RE, CSE, MESH, _ = func(fd)
     L = to_leff(fd, CM, LM, CP, QU)
     if np.any(L < 0): raise ValueError

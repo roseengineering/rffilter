@@ -1561,12 +1561,13 @@ def to_bandstop(g, fo, BW, RE):
 # narrow bandwidth filters
 #######################################################
 
-def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, RO=None):
+def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, RO=None, CP=None):
     with np.errstate(divide='ignore', invalid='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
         QU = np.inf if QU is None else QU
         QE, K = denormalize_qk(q, k, fo, BW, QU=QU)
+        CP = 0 if CP is None else CP
 
         # find L0, C0 and RE
         if L is not None:
@@ -1595,7 +1596,7 @@ def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, RO=None):
         Z = 1 / (wo * np.sqrt(CM[:-1] * CM[1:]))
         CK = -K / (wo * Z)
         CK = np.insert(CPE, 1, CK)
-        C0 = CM - CK[:-1] - CK[1:]
+        C0 = CM - CK[:-1] - CK[1:] + CP
 
         # result
         CS = np.zeros(2 * N - 1)
@@ -1661,56 +1662,44 @@ def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, RO=None):
         return [LS, CS], [CP], RE, CPE, MESH
 
 
-def to_crystal_nodal(q, k, fo, BW, LM, CP=None, QU=None, RO=None):
-    def func(f):
-        w = 2 * np.pi * f
-        L = to_leff(f, CM, LM, CP, QU)
-        XM = to_xeff(f, CM, LM, CP, QU) # XM includes the xtal series CM
-        XS, XP, RE, CSE = to_nodal(q, k, fo=f, BW=BW, L=XM.imag / w, RO=RO)
-        return XS, XP, RE, CSE, np.max(XP[-1][0::2] + CP)
-
-    wo = np.ones(len(k) + 1) * 2 * np.pi * fo
-    LM = np.ones(len(k) + 1) * LM
+def to_crystal_nodal(q, k, fo, BW, LM, CP=None, QU=None, RO=None, offset=0):
+    N = len(k) + 1
+    wo = np.ones(N) * 2 * np.pi * fo
+    LM = np.ones(N) * LM
     CM = 1 / (wo**2 * LM)
-    CP = 0 if CP is None else CP
-    fp = to_fp(fo, CM, LM, CP or 5e-12)
 
-    # fd = bisect(func, np.min(fo), (np.min(fo) + np.max(fp)) / 2)
-    for fd in np.linspace(np.min(fo), np.max(fp), 100): 
-        XS, XP, RE, CSE, _ = func(fd)
-        print(fd, XS[0][1::2], XP[0][0::2], XP[1][0::2])
-    fd = np.min(fo) + 100
-    L = to_leff(fd, CM, LM, CP, QU)
-    if np.any(L < 0): raise ValueError
-    XS, XP, RE, CSE, _ = func(fd)
-    print(fd, XS[0][1::2], XP[0][0::2], XP[1][0::2])
-    
-    return XS, XP, RE, CSE, fd, L / LM
+    fd = np.min(fo) + offset
+    XM = to_xeff(fd, CM, LM, CP, QU)
+    LEFF = to_leff(fd, CM, LM, CP, QU)
+    if np.any(LEFF < 0): raise ValueError
+
+    L0 = XM.imag / (2 * np.pi * fd)
+    XS, XP, RE, CSE = to_nodal(q, k, fo=fd, BW=BW, L=L0, RO=RO, CP=CP)
+    return XS, XP, RE, CSE, fd, LEFF
 
 
 def to_crystal_mesh(q, k, fo, BW, LM, CP=None, QU=None, RO=None):
     def func(f):
         w = 2 * np.pi * f
-        L = to_leff(f, CM, LM, CP, QU)
-        XM = to_xeff(f, CM, LM, CP, QU) # XM includes the xtal series CM
-        XS, XP, RE, CPE, MESH = to_mesh(q, k, fo=f, BW=BW, L=L, XM=XM.imag, RO=RO)
+        LEFF = to_leff(f, CM, LM, CP, QU)
+        XM = to_xeff(f, CM, LM, CP, QU)
+        XS, XP, RE, CPE, MESH = to_mesh(q, k, fo=f, BW=BW, L=LEFF, XM=XM.imag, RO=RO)
         return XS, XP, RE, CPE, MESH, np.max(XS[-1][0::2])
 
     wo = np.ones(len(k) + 1) * 2 * np.pi * fo
     LM = np.ones(len(k) + 1) * LM
     CM = 1 / (wo**2 * LM)
-    CP = 0 if CP is None else CP
     fp = to_fp(fo, CM, LM, CP or 5e-12)
 
     fd = bisect(func, np.min(fo), np.max(fp))
-    XS, XP, RE, CPE, MESH, _ = func(fd)
-    L = to_leff(fd, CM, LM, CP, QU)
-    if np.any(L < 0): raise ValueError
+    LEFF = to_leff(fd, CM, LM, CP, QU)
+    if np.any(LEFF < 0): raise ValueError
 
+    XS, XP, RE, CPE, MESH, _ = func(fd)
     XS.insert(0, np.zeros_like(XS[0]))
     XS[0][0::2] = -CM
     XS[1][0::2] = LM
-    return XS, XP, RE, CPE, MESH, fd, L / LM
+    return XS, XP, RE, CPE, MESH, fd, LEFF
 
 
 # helper routines
@@ -1727,8 +1716,10 @@ def bisect(f, a, b, N=100):
 def to_fp(fo, CM, LM, CP):
     return 1 / (2 * np.pi * np.sqrt(LM * CM * CP / (CM + CP)))
 
-def to_xeff(fo, CM, LM, CP, QU=None):
+def to_xeff(fo, CM, LM, CP=None, QU=None): 
+    # includes the xtal series CM
     QU = np.inf if QU is None else QU
+    CP = 0 if CP is None else CP
     wo = 2 * np.pi * fo
     RM = wo * LM / QU
     a = RM + 1j * (wo * LM - 1 / (wo * CM))
@@ -1736,7 +1727,9 @@ def to_xeff(fo, CM, LM, CP, QU=None):
     b = -1j / (wo * CP)
     return a * b / (a + b)
 
-def to_leff(fo, CM, LM, CP, QU, df=.1):
+def to_leff(fo, CM, LM, CP=None, QU=None, df=.1):
+    QU = np.inf if QU is None else QU
+    CP = 0 if CP is None else CP
     x1 = to_xeff(fo + df / 2, CM, LM, CP, QU).imag
     x0 = to_xeff(fo - df / 2, CM, LM, CP, QU).imag
     return (x1 - x0) / df / (4 * np.pi)
@@ -1835,9 +1828,14 @@ def main():
             print("* RO2      : {:.1f}".format(kw['ro'][1]))
 
         if kw.get('CPE') is not None:
-            kw['CPE'] = np.ones(2) * kw['CPE']
+            kw['CPE'] = -np.ones(2) * kw['CPE']
             print("* CPE1     : {}".format(unit(kw['CPE'][0]).strip()))
             print("* CPE2     : {}".format(unit(kw['CPE'][1]).strip()))
+
+        if kw.get('CSE') is not None:
+            kw['CSE'] = -np.ones(2) * kw['CSE']
+            print("* CSE1     : {}".format(unit(kw['CSE'][0]).strip()))
+            print("* CSE2     : {}".format(unit(kw['CSE'][1]).strip()))
 
         if args.cp is not None:
             print("* CP       : {}".format(unit(args.cp).strip()))
@@ -1863,13 +1861,23 @@ def main():
 
         if kw.get('MESH') is not None:
             N = len(kw['k']) + 1
-            fs = kw['f'] * np.ones(N)
-            MESH = kw['MESH']
-            SKEW = kw['SKEW']
-            print('* Xtal    Xtal freq     Mesh freq   Mesh offset      LM Shift')
+            fs = np.ones(N) * kw['f']
+            MESH = np.ones(N) * kw['MESH']
+            print('* Xtal    Xtal freq     Mesh freq   Mesh offset')
             for i in range(N):
-                print('* {:<2d}  {:13.1f} {:13.1f} {:13.1f} {:11.3f} %'.format(i+1,
-                      fs[i], MESH[i], MESH[i] - fo, (SKEW[i] - 1) * 100))
+                print('* {:<2d}  {:13.1f} {:13.1f} {:13.1f}'.format(i+1, 
+                      fs[i], MESH[i], MESH[i] - fo))
+            print()
+
+        if kw.get('LEFF') is not None:
+            N = len(kw['k']) + 1
+            fs = np.ones(N) * kw['f']
+            LEFF = np.ones(N) * kw['LEFF']
+            LM = np.ones(N) * kw['l']
+            print('* Xtal           LM          LEFF     %LM Shift')
+            for i in range(N):
+                print('* {:<2d}  {:13.3g} {:13.3g} {:13.3f}'.format(i+1,
+                      LM[i], LEFF[i], (LEFF[i] / LM[i] - 1) * 100))
             print()
 
         if kw.get('CK') is not None:
@@ -1955,21 +1963,14 @@ def main():
             print()
 
     def handle_args():
+        kw = {}
+
         if args.list_g:
             return list_gfilters() 
         if args.list_k:
             return list_kfilters() 
         if args.list_z:
             return list_zfilters() 
-        if args.list_elements:
-            if args.g: list_gnormalized(args.g)
-            if args.k: list_knormalized(args.k)
-            if args.z: list_znormalized(args.z, QO=args.qo)
-            return
-
-        # build filter
-
-        kw = {}
 
         if args.f:
             kw['f'] = np.array([ np.double(x) for x in args.f.split(',') ])
@@ -1979,36 +1980,43 @@ def main():
             kw['re'] = np.array([ np.double(x) for x in args.re.split(',') ])
         if args.ro: 
             kw['ro'] = np.array([ np.double(x) for x in args.ro.split(',') ])
-        if args.g:
+
+        kw['qu']= np.inf if args.qu is None else args.qu
+        if args.bw and args.f:
+            QL = kw['f'][0] / args.bw
+            kw['qo'] = kw['qu'] / QL
+        elif args.qo:
+            kw['qo'] = args.qo
+        else:
+            kw['qo'] = np.inf
+
+        if args.g and args.n:
             kw['type'] = args.g
             g = lowpass_g(args.g, args.n)
             qk = [ to_coupling_qk(g) ]
-        if args.k:
+        if args.k and args.n:
             kw['type'] = args.k
             qk = [ coupling_qk(args.k, args.n) ]
-        if args.z:
+        if args.z and args.n:
             kw['type'] = args.z
-            QL = kw['f'][0] / args.bw
-            QU = np.inf if args.qu is None else args.qu
-            QO = QU / QL
-            qk = list(zverev_k(args.z, args.n, QO))
-            kw['qmin'] = zverev_qo(args.z, args.n, QO)
+            qk = list(zverev_k(args.z, args.n, kw['qo']))
+            kw['qmin'] = zverev_qo(args.z, args.n, kw['qo'])
 
         # print wide-band filters
 
-        if args.lowpass:
+        if args.lowpass and args.n:
             fo = kw['f'][0]
             kw['filter'] = 'lowpass'
             XS, XP, RE = to_lowpass(g, fo=fo, RE=kw['re'])
             netlist([XS], [XP], RE[0], fo, kw, 1)
             netlist([XS], [XP], RE[1], fo, kw, 0)
-        elif args.highpass:
+        elif args.highpass and args.n:
             fo = kw['f'][0]
             kw['filter'] = 'highpass'
             XS, XP, RE = to_highpass(g, fo=fo, RE=kw['re'])
             netlist([XS], [XP], RE[0], fo, kw, 1)
             netlist([XS], [XP], RE[1], fo, kw, 0)
-        elif args.bandpass:
+        elif args.bandpass and args.n:
             fo = kw['f'][0]
             kw['filter'] = 'bandpass'
             XS, XP, RE = to_bandpass(g, fo=fo, BW=args.bw, RE=kw['re'])
@@ -2017,50 +2025,51 @@ def main():
 
         # print narrow-band filters
 
-        elif args.nodal:
+        elif args.nodal and args.n:
             fo = kw['f'][0]
             kw['filter'] = 'nodal'
             for q, k in qk:
                 XS, XP, RE, CSE = to_nodal(
                     q, k, fo=fo, BW=args.bw, L=kw.get('l'), 
-                    RE=kw.get('re'), QU=args.qu, RO=kw.get('ro'))
+                    RE=kw.get('re'), QU=kw['qu'], RO=kw.get('ro'))
                 kw['q'], kw['k'] = q, k
                 kw['CSE'] = CSE
                 netlist(XS, XP, RE, fo, kw, 1)
-        elif args.mesh:
+        elif args.mesh and args.n:
             fo = kw['f'][0]
             kw['filter'] = 'mesh'
             for q, k in qk:
                 XS, XP, RE, CPE, _ = to_mesh(
                     q, k, fo=fo, BW=args.bw, L=kw.get('l'), 
-                    RE=kw.get('re'), QU=args.qu, RO=kw.get('ro'))
+                    RE=kw.get('re'), QU=kw['qu'], RO=kw.get('ro'))
                 kw['q'], kw['k'] = q, k
                 kw['CPE'] = CPE
                 netlist(XS, XP, RE, fo, kw, 0)
 
-        elif args.crystal_mesh:
+        elif args.crystal_mesh and args.n:
             kw['filter'] = 'crystal mesh'
             for q, k in qk:
-                XS, XP, RE, CPE, MESH, fo, SKEW = to_crystal_mesh(
+                N = len(k) + 1
+                XS, XP, RE, CPE, MESH, fo, LEFF = to_crystal_mesh(
                     q, k, fo=kw['f'], BW=args.bw, LM=kw['l'], 
-                    CP=args.cp, QU=args.qu, RO=kw.get('ro'))
+                    CP=args.cp, QU=kw['qu'], RO=kw.get('ro'))
                 kw['q'], kw['k'] = q, k
                 kw['MESH'] = MESH
-                kw['SKEW'] = SKEW
+                kw['LEFF'] = LEFF
                 kw['CK'] = XP[0][1::2]
                 kw['CT'] = XS[-1][0::2]
                 kw['CPE'] = CPE
                 netlist(XS, XP, RE, fo, kw, 0)
 
-        elif args.crystal_nodal:
+        elif args.crystal_nodal and args.n:
             kw['filter'] = 'crystal nodal'
             for q, k in qk:
-                XS, XP, RE, CSE, fo, SKEW = to_crystal_nodal(
+                N = len(k) + 1
+                XS, XP, RE, CSE, fo, LEFF = to_crystal_nodal(
                     q, k, fo=kw['f'], BW=args.bw, LM=kw['l'], 
-                    CP=args.cp, QU=args.qu, RO=kw.get('ro'))
+                    CP=args.cp, QU=kw['qu'], RO=kw.get('ro'), offset=args.offset)
                 kw['q'], kw['k'] = q, k
-                kw['SKEW'] = SKEW
-                kw['MESH'] = np.ones(len(k) + 1) * np.nan
+                kw['LEFF'] = LEFF
                 kw['CSE'] = CSE
                 kw['CK'] = XS[-1][1::2]
                 kw['CT'] = XP[-1][0::2]
@@ -2068,9 +2077,19 @@ def main():
 
         # print coupling info
 
-        elif args.bw:
+        elif args.bw and args.n:
             for q, k in qk:
                 list_couplings(q, k, kw.get('f'), args.bw)
+
+        elif args.g: 
+            list_gnormalized(args.g)
+
+        elif args.k:
+            list_knormalized(args.k)
+
+        elif args.z:
+            list_znormalized(args.z, QO=kw['qo'])
+
         else:
             raise ValueError('No filter configuration given')
 
@@ -2100,8 +2119,6 @@ def main():
         help="list q, k coupling response types")
     parser.add_argument("--list-z", action="store_true",
         help="list Zverev predistored q, k coupling response types")
-    parser.add_argument("--list-elements", action="store_true",
-        help="list response type element values")
     parser.add_argument("--n", type=int, default=None,
         help="number of filter poles or resonators")
     parser.add_argument("--bw", type=float, default=None,
@@ -2125,7 +2142,9 @@ def main():
     parser.add_argument("--qu", type=float, default=None,
         help="unloaded Q of resonators")
     parser.add_argument("--qo", type=float, default=None,
-        help="maximum qo to show when listing Zverev element values")
+        help="normalized Qo of resonators, used if Qu, frequency, and BW not set")
+    parser.add_argument("--offset", type=float, default=0,
+        help="design frequency offset from crystal USB frequency")
 
     args = parser.parse_args()
     handle_args()

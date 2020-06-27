@@ -78,12 +78,12 @@ The program takes the following command line options:
 
 ## List filter element values
 
-{ run("rffilter.py --list-elements --g bessel") }
-{ run("rffilter.py --list-elements --k butterworth") }
+{ run("rffilter.py --g bessel") }
+{ run("rffilter.py --k butterworth") }
 
 It also works for "--z".  Pass "--qo <qo>" to set the maximum qo.
 
-{ run("rffilter.py --list-elements --z butterworth --qo 9") }
+{ run("rffilter.py --z butterworth --qo 9") }
 
 ## Coupling bandwidth and group delay
 

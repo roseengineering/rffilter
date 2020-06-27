@@ -1668,6 +1668,12 @@ def to_crystal_nodal(q, k, fo, BW, LM, CH=None, QU=None, RO=None, shape_factor=N
     LM = np.ones(N) * LM
     CM = 1 / (wo**2 * LM)
 
+    # for fd in np.linspace(np.max(fo), np.max(fo) + 10000, 100):
+    #     XM = to_xeff(fd, CM, LM, CH, QU)
+    #     L = XM.imag / (2 * np.pi * fd)
+    #     XS, XP, RE, CSE = to_nodal(q, k, fo=fd, BW=BW, L=L, RO=RO, CH=CH)
+    #     print(fd, np.array(XP)[1][0::2])
+
     shape_factor = 5 if shape_factor is None else shape_factor
     fd = np.max(fo) + BW / 2 * shape_factor
     XM = to_xeff(fd, CM, LM, CH, QU)
@@ -1679,7 +1685,7 @@ def to_crystal_nodal(q, k, fo, BW, LM, CH=None, QU=None, RO=None, shape_factor=N
     if CH is not None:
         XP.insert(0, np.zeros_like(XP[0]))
         XP[0][0::2] = -CH
-    return XS, XP, RE, CSE, fd, L # LEFF
+    return XS, XP, RE, CSE, fd, LEFF
 
 
 def to_crystal_mesh(q, k, fo, BW, LM, CH=None, QU=None, RO=None):

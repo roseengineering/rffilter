@@ -1561,13 +1561,13 @@ def to_bandstop(g, fo, BW, RE):
 # narrow bandwidth filters
 #######################################################
 
-def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, RO=None, CP=None):
+def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, RO=None, CH=None):
     with np.errstate(divide='ignore', invalid='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
         QU = np.inf if QU is None else QU
         QE, K = denormalize_qk(q, k, fo, BW, QU=QU)
-        CP = 0 if CP is None else CP
+        CH = 0 if CH is None else CH
 
         # find L0, C0 and RE
         if L is not None:
@@ -1596,7 +1596,7 @@ def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, RO=None, CP=None):
         Z = 1 / (wo * np.sqrt(CM[:-1] * CM[1:]))
         CK = -K / (wo * Z)
         CK = np.insert(CPE, 1, CK)
-        C0 = CM - CK[:-1] - CK[1:] + CP
+        C0 = CM - CK[:-1] - CK[1:] + CH
 
         # result
         CS = np.zeros(2 * N - 1)
@@ -1662,37 +1662,41 @@ def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, RO=None):
         return [LS, CS], [CP], RE, CPE, MESH
 
 
-def to_crystal_nodal(q, k, fo, BW, LM, CP=None, QU=None, RO=None, offset=0):
+def to_crystal_nodal(q, k, fo, BW, LM, CH=None, QU=None, RO=None, shape_factor=None):
     N = len(k) + 1
     wo = np.ones(N) * 2 * np.pi * fo
     LM = np.ones(N) * LM
     CM = 1 / (wo**2 * LM)
 
-    fd = np.min(fo) + offset
-    XM = to_xeff(fd, CM, LM, CP, QU)
-    LEFF = to_leff(fd, CM, LM, CP, QU)
+    shape_factor = 5 if shape_factor is None else shape_factor
+    fd = np.max(fo) + BW / 2 * shape_factor
+    XM = to_xeff(fd, CM, LM, CH, QU)
+    LEFF = to_leff(fd, CM, LM, CH, QU)
     if np.any(LEFF < 0): raise ValueError
 
     L0 = XM.imag / (2 * np.pi * fd)
-    XS, XP, RE, CSE = to_nodal(q, k, fo=fd, BW=BW, L=L0, RO=RO, CP=CP)
+    XS, XP, RE, CSE = to_nodal(q, k, fo=fd, BW=BW, L=L0, RO=RO, CH=CH)
+    if CH is not None:
+        XP.insert(0, np.zeros_like(XP[0]))
+        XP[0][0::2] = -CH
     return XS, XP, RE, CSE, fd, LEFF
 
 
-def to_crystal_mesh(q, k, fo, BW, LM, CP=None, QU=None, RO=None):
+def to_crystal_mesh(q, k, fo, BW, LM, CH=None, QU=None, RO=None):
     def func(f):
         w = 2 * np.pi * f
-        LEFF = to_leff(f, CM, LM, CP, QU)
-        XM = to_xeff(f, CM, LM, CP, QU)
+        LEFF = to_leff(f, CM, LM, CH, QU)
+        XM = to_xeff(f, CM, LM, CH, QU)
         XS, XP, RE, CPE, MESH = to_mesh(q, k, fo=f, BW=BW, L=LEFF, XM=XM.imag, RO=RO)
         return XS, XP, RE, CPE, MESH, np.max(XS[-1][0::2])
 
     wo = np.ones(len(k) + 1) * 2 * np.pi * fo
     LM = np.ones(len(k) + 1) * LM
     CM = 1 / (wo**2 * LM)
-    fp = to_fp(fo, CM, LM, CP or 5e-12)
+    fp = to_fp(fo, CM, LM, CH or 5e-12)
 
     fd = bisect(func, np.min(fo), np.max(fp))
-    LEFF = to_leff(fd, CM, LM, CP, QU)
+    LEFF = to_leff(fd, CM, LM, CH, QU)
     if np.any(LEFF < 0): raise ValueError
 
     XS, XP, RE, CPE, MESH, _ = func(fd)
@@ -1863,9 +1867,9 @@ def main():
             N = len(kw['k']) + 1
             fs = np.ones(N) * kw['f']
             MESH = np.ones(N) * kw['MESH']
-            print('* Xtal    Xtal freq     Mesh freq   Mesh offset')
+            print('* Xtal       Xtal freq     Mesh freq   Mesh offset')
             for i in range(N):
-                print('* {:<2d}  {:13.1f} {:13.1f} {:13.1f}'.format(i+1, 
+                print('* {:<2d}     {:13.1f} {:13.1f} {:13.1f}'.format(i+1, 
                       fs[i], MESH[i], MESH[i] - fo))
             print()
 
@@ -1874,19 +1878,19 @@ def main():
             fs = np.ones(N) * kw['f']
             LEFF = np.ones(N) * kw['LEFF']
             LM = np.ones(N) * kw['l']
-            print('* Xtal           LM          LEFF     %LM Shift')
+            print('* Xtal              LM          LEFF     %LM Shift')
             for i in range(N):
-                print('* {:<2d}  {:13.3g} {:13.3g} {:13.3f}'.format(i+1,
-                      LM[i], LEFF[i], (LEFF[i] / LM[i] - 1) * 100))
+                print('* {:<2d}     {} {} {:13.3f}'.format(i+1,
+                      unit(LM[i]), unit(LEFF[i]), (LEFF[i] / LM[i] - 1) * 100))
             print()
 
         if kw.get('CK') is not None:
             CK = np.ones(N) * np.nan
             CK[:-1] = kw['CK']
             CT = kw['CT']
-            print('* ij              CKij            CTi')
+            print('* ij              CKij           CTi')
             for i in range(N):
-                print('* {:<4s}   {}  {}'.format("%d%d" % (i+1, i+2), unit(-CK[i]), unit(-CT[i])))
+                print('* {:<4s}   {} {}'.format("%d%d" % (i+1, i+2), unit(-CK[i]), unit(-CT[i])))
             print()
             
  
@@ -2052,7 +2056,7 @@ def main():
                 N = len(k) + 1
                 XS, XP, RE, CPE, MESH, fo, LEFF = to_crystal_mesh(
                     q, k, fo=kw['f'], BW=args.bw, LM=kw['l'], 
-                    CP=args.cp, QU=kw['qu'], RO=kw.get('ro'))
+                    CH=args.cp, QU=kw['qu'], RO=kw.get('ro'))
                 kw['q'], kw['k'] = q, k
                 kw['MESH'] = MESH
                 kw['LEFF'] = LEFF
@@ -2067,7 +2071,8 @@ def main():
                 N = len(k) + 1
                 XS, XP, RE, CSE, fo, LEFF = to_crystal_nodal(
                     q, k, fo=kw['f'], BW=args.bw, LM=kw['l'], 
-                    CP=args.cp, QU=kw['qu'], RO=kw.get('ro'), offset=args.offset)
+                    CH=args.cp, QU=kw['qu'], RO=kw.get('ro'), 
+                    shape_factor=args.shape_factor)
                 kw['q'], kw['k'] = q, k
                 kw['LEFF'] = LEFF
                 kw['CSE'] = CSE
@@ -2143,8 +2148,8 @@ def main():
         help="unloaded Q of resonators")
     parser.add_argument("--qo", type=float, default=None,
         help="normalized Qo of resonators, used if Qu, frequency, and BW not set")
-    parser.add_argument("--offset", type=float, default=0,
-        help="design frequency offset from crystal USB frequency")
+    parser.add_argument("--shape-factor", type=float, default=None,
+        help="offset in BW/2 units from the series resonant frequency of crystal USB filter")
 
     args = parser.parse_args()
     handle_args()

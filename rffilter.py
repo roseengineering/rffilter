@@ -1674,12 +1674,12 @@ def to_crystal_nodal(q, k, fo, BW, LM, CH=None, QU=None, RO=None, shape_factor=N
     LEFF = to_leff(fd, CM, LM, CH, QU)
     if np.any(LEFF < 0): raise ValueError
 
-    L0 = XM.imag / (2 * np.pi * fd)
-    XS, XP, RE, CSE = to_nodal(q, k, fo=fd, BW=BW, L=L0, RO=RO, CH=CH)
+    L = XM.imag / (2 * np.pi * fd)
+    XS, XP, RE, CSE = to_nodal(q, k, fo=fd, BW=BW, L=L, RO=RO, CH=CH)
     if CH is not None:
         XP.insert(0, np.zeros_like(XP[0]))
         XP[0][0::2] = -CH
-    return XS, XP, RE, CSE, fd, LEFF
+    return XS, XP, RE, CSE, fd, L # LEFF
 
 
 def to_crystal_mesh(q, k, fo, BW, LM, CH=None, QU=None, RO=None):

@@ -1561,7 +1561,7 @@ def to_bandstop(g, fo, BW, RE):
 # narrow bandwidth filters
 #######################################################
 
-def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, RO=None):
+def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, RO=None):
     with np.errstate(divide='ignore', invalid='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
@@ -1591,7 +1591,7 @@ def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, RO=None):
                     CPE[i] = CSE[i] / ((wo * RO[i] * CSE[i])**2 + 1)
 
         # find CK and C0 using K inverter
-        CM = -1 / (wo**2 * L0) if XM is None else -1 / (wo * XM)
+        CM = -1 / (wo**2 * L0)
         Z = 1 / (wo * np.sqrt(CM[:-1] * CM[1:]))
         CK = -K / (wo * Z)
         CK = np.insert(CPE, 1, CK)
@@ -1666,10 +1666,8 @@ def to_crystal_nodal(q, k, fo, BW, LM, CP=None, QU=None, RO=None):
         w = 2 * np.pi * f
         L = to_leff(f, CM, LM, CP, QU)
         XM = to_xeff(f, CM, LM, CP, QU) # XM includes the xtal series CM
-        XS, XP, RE, CSE = to_nodal(q, k, fo=f, BW=BW, L=L, XM=XM.imag, RO=RO)
-        MESH = None
-        print(f, XP[-1][0::2] + CP)
-        return XS, XP, RE, CSE, MESH, np.max(XP[-1][0::2] + CP)
+        XS, XP, RE, CSE = to_nodal(q, k, fo=f, BW=BW, L=XM.imag / w, RO=RO)
+        return XS, XP, RE, CSE, np.max(XP[-1][0::2] + CP)
 
     wo = np.ones(len(k) + 1) * 2 * np.pi * fo
     LM = np.ones(len(k) + 1) * LM
@@ -1677,13 +1675,17 @@ def to_crystal_nodal(q, k, fo, BW, LM, CP=None, QU=None, RO=None):
     CP = 0 if CP is None else CP
     fp = to_fp(fo, CM, LM, CP or 5e-12)
 
-    # fd = bisect(func, np.min(fo) + 1, np.max(fp))
-    for fd in np.linspace(np.min(fo) + 1, np.max(fp), 100): func(fd)
-    XS, XP, RE, CSE, MESH, _ = func(fd)
+    # fd = bisect(func, np.min(fo), (np.min(fo) + np.max(fp)) / 2)
+    for fd in np.linspace(np.min(fo), np.max(fp), 100): 
+        XS, XP, RE, CSE, _ = func(fd)
+        print(fd, XS[0][1::2], XP[0][0::2], XP[1][0::2])
+    fd = np.min(fo) + 100
     L = to_leff(fd, CM, LM, CP, QU)
     if np.any(L < 0): raise ValueError
+    XS, XP, RE, CSE, _ = func(fd)
+    print(fd, XS[0][1::2], XP[0][0::2], XP[1][0::2])
     
-    return XS, XP, RE, CSE, MESH, fd, L / LM
+    return XS, XP, RE, CSE, fd, L / LM
 
 
 def to_crystal_mesh(q, k, fo, BW, LM, CP=None, QU=None, RO=None):
@@ -1784,7 +1786,7 @@ def main():
                         ports.append(k)
                         k = k + 1
                         ports.append(k)
-                    if args.nodal:
+                    if args.crystal_nodal or args.nodal:
                         ports.append(k)
                 node = k
                 for j in range(len(XS)):
@@ -1859,7 +1861,7 @@ def main():
             list_couplings(kw['q'], kw['k'], fo, args.bw)
             print()
 
-        if args.crystal_mesh:
+        if kw.get('MESH') is not None:
             N = len(kw['k']) + 1
             fs = kw['f'] * np.ones(N)
             MESH = kw['MESH']
@@ -1870,12 +1872,13 @@ def main():
                       fs[i], MESH[i], MESH[i] - fo, (SKEW[i] - 1) * 100))
             print()
 
+        if kw.get('CK') is not None:
             CK = np.ones(N) * np.nan
             CK[:-1] = kw['CK']
-            CS = kw['CS']
-            print('* ij              CKij            CSi')
+            CT = kw['CT']
+            print('* ij              CKij            CTi')
             for i in range(N):
-                print('* {:<4s}   {}  {}'.format("%d%d" % (i+1, i+2), unit(-CK[i]), unit(-CS[i])))
+                print('* {:<4s}   {}  {}'.format("%d%d" % (i+1, i+2), unit(-CK[i]), unit(-CT[i])))
             print()
             
  
@@ -2045,21 +2048,23 @@ def main():
                 kw['MESH'] = MESH
                 kw['SKEW'] = SKEW
                 kw['CK'] = XP[0][1::2]
-                kw['CS'] = XS[-1][0::2]
+                kw['CT'] = XS[-1][0::2]
                 kw['CPE'] = CPE
                 netlist(XS, XP, RE, fo, kw, 0)
 
         elif args.crystal_nodal:
             kw['filter'] = 'crystal nodal'
             for q, k in qk:
-                XS, XP, RE, CSE, MESH, fo, SKEW = to_crystal_nodal(
+                XS, XP, RE, CSE, fo, SKEW = to_crystal_nodal(
                     q, k, fo=kw['f'], BW=args.bw, LM=kw['l'], 
                     CP=args.cp, QU=args.qu, RO=kw.get('ro'))
                 kw['q'], kw['k'] = q, k
-                kw['MESH'] = MESH
                 kw['SKEW'] = SKEW
+                kw['MESH'] = np.ones(len(k) + 1) * np.nan
                 kw['CSE'] = CSE
-                netlist(XS, XP, RE, fo, kw, 0)
+                kw['CK'] = XS[-1][1::2]
+                kw['CT'] = XP[-1][0::2]
+                netlist(XS, XP, RE, fo, kw, 1)
 
         # print coupling info
 

@@ -1561,13 +1561,12 @@ def to_bandstop(g, fo, BW, RE):
 # narrow bandwidth filters
 #######################################################
 
-def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, RO=None, CH=None):
+def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, RO=None):
     with np.errstate(divide='ignore', invalid='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
         QU = np.inf if QU is None else QU
         QE, K = denormalize_qk(q, k, fo, BW, QU=QU)
-        CH = 0 if CH is None else CH
 
         # find L0, C0 and RE
         if L is not None:
@@ -1596,7 +1595,7 @@ def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, RO=None, CH=None):
         Z = 1 / (wo * np.sqrt(CM[:-1] * CM[1:]))
         CK = -K / (wo * Z)
         CK = np.insert(CPE, 1, CK)
-        C0 = CM - CK[:-1] - CK[1:] + CH
+        C0 = CM - CK[:-1] - CK[1:]
 
         # result
         CS = np.zeros(2 * N - 1)
@@ -1662,62 +1661,49 @@ def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, RO=None):
         return [LS, CS], [CP], RE, CPE, MESH
 
 
-def to_crystal_nodal(q, k, fo, BW, LM, CH=None, QU=None, RO=None, shape_factor=None):
+def to_crystal_nodal(q, k, fo, BW, LM, CH, QU=None, RO=None, shape_factor=None):
     N = len(k) + 1
     wo = np.ones(N) * 2 * np.pi * fo
     LM = np.ones(N) * LM
-    CM = np.ones(N) * 1 / (wo**2 * LM)
-    fp = to_fp(fo, CM, LM, CH or 5e-12)
+    CM = -1 / (wo**2 * LM)
 
-    for fc in np.linspace(np.min(fo), np.max(fp), 100):
-        wc = np.ones(N) * 2 * np.pi * fc
-        QE, K = denormalize_qk(q, k, fc, BW, QU=QU)
-        P = -CM / (LM * CM * wc**2 - 1)  # C0 = CM | P
-        S = P / CM
-        RE = QE / (wc * P[::N-1] * S[::N-1])
+    shape_factor = 1 if shape_factor is None else shape_factor
+    fd = np.max(fo) + shape_factor * BW/2
+    QE, K = denormalize_qk(q, k, fd, BW, QU=QU)
+    wd = 2 * np.pi * fd
+    P = -CM / (LM * CM * wd**2 + 1)  # C0 = CM | P
+    S = -(P + CM) / CM
+    RE = QE / (wd * P[::N-1] * S[::N-1])
 
-        # find CSE and CPE
-        if RO is None:
-            CPE = np.zeros(2)
-            CSE = None
-        else:
-            CPE = np.ones(2) * np.nan
-            CSE = np.ones(2) * np.nan
-            RO = np.ones(2) * RO
-            for i in range(len(RO)):
-                if RO[i] <= RE[i]:
-                    CSE[i] = -1 / (wo * np.sqrt(RO[i] * RE[i] - RO[i]**2))
-                    CPE[i] = CSE[i] / ((wo * RO[i] * CSE[i])**2 + 1)
+    # find CSE and CPE
+    if RO is None:
+        CPE = np.zeros(2)
+        CSE = None
+    else:
+        CPE = np.ones(2) * np.nan
+        CSE = np.ones(2) * np.nan
+        RO = np.ones(2) * RO
+        for i in range(len(RO)):
+            if RO[i] <= RE[i]:
+                CSE[i] = -1 / (wd * np.sqrt(RO[i] * RE[i] - RO[i]**2))
+                CPE[i] = CSE[i] / ((wd * RO[i] * CSE[i])**2 + 1)
 
-        # find CK and C0 using K inverter
-        Z = 1 / (wo * np.sqrt(P[:-1] * P[1:] * S[:-1] * S[1:]))
-        CK = -K / (wo * Z)
-        CK = np.insert(CPE, 1, CK)
-        # C0 = P - CK[:-1] - CK[1:] + CH
-        C0 = - CK[:-1] - CK[1:]
+    # find CK and C0 using K inverter
+    Z = 1 / (wd * np.sqrt(P[:-1] * S[:-1] * P[1:] * S[1:]))
+    CK = -K / (wd * Z)
+    CK = np.insert(CPE, 1, CK)
+    C0 = P - CK[:-1] - CK[1:] + CH
 
-        print(fc, P, CK, C0)
-
-    sys.exit(0)
-
-    # for fd in np.linspace(np.max(fo), np.max(fo) + 10000, 100):
-    #     XM = to_xeff(fd, CM, LM, CH, QU)
-    #     L = XM.imag / (2 * np.pi * fd)
-    #     XS, XP, RE, CSE = to_nodal(q, k, fo=fd, BW=BW, L=L, RO=RO, CH=CH)
-    #     print(fd, np.array(XP)[1][0::2])
-
-    shape_factor = 5 if shape_factor is None else shape_factor
-    fd = np.max(fo) + BW / 2 * shape_factor
-    XM = to_xeff(fd, CM, LM, CH, QU)
-    LEFF = to_leff(fd, CM, LM, CH, QU)
-    if np.any(LEFF < 0): raise ValueError
-
-    L = XM.imag / (2 * np.pi * fd)
-    XS, XP, RE, CSE = to_nodal(q, k, fo=fd, BW=BW, L=L, RO=RO, CH=CH)
-    if CH is not None:
-        XP.insert(0, np.zeros_like(XP[0]))
-        XP[0][0::2] = -CH
-    return XS, XP, RE, CSE, fd, LEFF
+    # result
+    CS = np.zeros(2 * N - 1)
+    LP = np.zeros(2 * N - 1)
+    CP1 = np.zeros(2 * N - 1)
+    CP2 = np.zeros(2 * N - 1)
+    CS[1::2] = CK[1:-1]
+    LP[0::2] = LM
+    CP1[0::2] = -CH
+    CP2[0::2] = C0
+    return [CS], [LP, CP1, CP2], RE, CSE, fd, CM
 
 
 def to_crystal_mesh(q, k, fo, BW, LM, CH=None, QU=None, RO=None):
@@ -1755,8 +1741,8 @@ def bisect(f, a, b, N=100):
         if np.sign(f(c)[-1]) == np.sign(f(a)[-1]): a = c
         else: b = c
 
-def to_fp(fo, CM, LM, CP):
-    return 1 / (2 * np.pi * np.sqrt(LM * CM * CP / (CM + CP)))
+def to_fp(fo, CM, LM, CH):
+    return 1 / (2 * np.pi * np.sqrt(LM * CM * CH / (CM + CH)))
 
 def to_xeff(fo, CM, LM, CP=None, QU=None): 
     # includes the xtal series CM
@@ -1831,25 +1817,32 @@ def main():
                     if not np.isinf(QU) and x > 0:
                         res.append(netitem(num, k, k + 1, wo * x / QU, tag='R'))
                         k, num = k + 1, num + 1
-                    if args.cp and x > 0:
-                        res.append(netitem(num, node, k, -args.cp))
+                    if args.ch and x > 0:
+                        res.append(netitem(num, node, k, -args.ch))
                         num += 1
             else:
                 if res: res.append('')
                 for j in range(len(XP)):
                     x = XP[j][i]
+                    k0 = k
                     if not np.isinf(QU) and x > 0:
-                        res.append(netitem(num, k, num + 1000, x))
-                        num + 1
-                        res.append(netitem(num, num + 1000, 0, wo * x / QU, tag='R'))
-                    else:
-                        res.append(netitem(num, k, 0, x))
+                        k1 = k0 + 1000
+                        res.append(netitem(num, k0, k1, wo * x / QU, tag='R'))
+                        k0 = k1
+                    if args.crystal_nodal and x > 0:
+                        k1 = k0 + 1000
+                        res.append(netitem(num, k0, k1, kw['CM'][i // 2]))
+                        k0 = k1
+                    res.append(netitem(num, k0, 0, x))
                     num += 1
 
+
         if kw.get('CPE') is not None:
+            res.append('')
             res.append(netitem(num, k, 0, kw['CPE'][1]))
 
         if kw.get('CSE') is not None:
+            res.append('')
             res.append(netitem(num, k, k + 1, kw['CSE'][1]))
             k += 1
 
@@ -1860,7 +1853,7 @@ def main():
         print("* TYPE     : {}".format(kw['type'].lower()))
         print("* FILTER   : {}".format(kw['filter']))
         print("* ORDER    : {}".format(args.n))
-        print("* FREQ     : {}".format(unit(fo).strip()))
+        print("* FREQ     : {:.6f} MHz".format(fo / 1e6))
         print("* RS       : {:.1f}".format(RE[0]))
         print("* RL       : {:.1f}".format(RE[1]))
  
@@ -1879,8 +1872,8 @@ def main():
             print("* CSE1     : {}".format(unit(kw['CSE'][0]).strip()))
             print("* CSE2     : {}".format(unit(kw['CSE'][1]).strip()))
 
-        if args.cp is not None:
-            print("* CP       : {}".format(unit(args.cp).strip()))
+        if args.ch is not None:
+            print("* CH       : {}".format(unit(args.ch).strip()))
 
         if args.bw:
             QL = fo / args.bw
@@ -1923,6 +1916,7 @@ def main():
             print()
 
         if kw.get('CK') is not None:
+            N = len(kw['k']) + 1
             CK = np.ones(N) * np.nan
             CK[:-1] = kw['CK']
             CT = kw['CT']
@@ -2024,6 +2018,7 @@ def main():
             kw['ro'] = np.array([ np.double(x) for x in args.ro.split(',') ])
 
         kw['qu']= np.inf if args.qu is None else args.qu
+
         if args.bw and args.f:
             QL = kw['f'][0] / args.bw
             kw['qo'] = kw['qu'] / QL
@@ -2091,10 +2086,9 @@ def main():
         elif args.crystal_mesh and args.n:
             kw['filter'] = 'crystal mesh'
             for q, k in qk:
-                N = len(k) + 1
                 XS, XP, RE, CPE, MESH, fo, LEFF = to_crystal_mesh(
                     q, k, fo=kw['f'], BW=args.bw, LM=kw['l'], 
-                    CH=args.cp, QU=kw['qu'], RO=kw.get('ro'))
+                    CH=args.ch, QU=kw['qu'], RO=kw.get('ro'))
                 kw['q'], kw['k'] = q, k
                 kw['MESH'] = MESH
                 kw['LEFF'] = LEFF
@@ -2106,14 +2100,13 @@ def main():
         elif args.crystal_nodal and args.n:
             kw['filter'] = 'crystal nodal'
             for q, k in qk:
-                N = len(k) + 1
-                XS, XP, RE, CSE, fo, LEFF = to_crystal_nodal(
+                XS, XP, RE, CSE, fo, CM = to_crystal_nodal(
                     q, k, fo=kw['f'], BW=args.bw, LM=kw['l'], 
-                    CH=args.cp, QU=kw['qu'], RO=kw.get('ro'), 
+                    CH=args.ch, QU=kw['qu'], RO=kw.get('ro'), 
                     shape_factor=args.shape_factor)
                 kw['q'], kw['k'] = q, k
-                kw['LEFF'] = LEFF
                 kw['CSE'] = CSE
+                kw['CM'] = CM
                 kw['CK'] = XS[-1][1::2]
                 kw['CT'] = XP[-1][0::2]
                 netlist(XS, XP, RE, fo, kw, 1)
@@ -2180,8 +2173,8 @@ def main():
         help="end resistors, can be given in common notation")
     parser.add_argument("--l", type=str, default=None,
         help="resonator inductor values, can be given in common notation")
-    parser.add_argument("--cp", type=float, default=None,
-        help="parallel capacitance Co of crystals")
+    parser.add_argument("--ch", type=float, default=None,
+        help="holder capacitance Co of crystals")
     parser.add_argument("--qu", type=float, default=None,
         help="unloaded Q of resonators")
     parser.add_argument("--qo", type=float, default=None,

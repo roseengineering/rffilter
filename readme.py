@@ -118,12 +118,12 @@ is the output port.  The exposed resonators ports are numbered in increasing ord
 Build a 2400 Hz bandwidth crystal filter.  This filter is from an example in Steder's 
 "Crystal Ladder Filters for All" paper in QEX.  
 
-{ run("rffilter.py --g chebyshev_0.2 --n 8 --crystal-mesh --l 69.7e-3 --f 4913.57e3 --bw 2400 --cp 3.66e-12 | tee examples/xtal.cir") }
+{ run("rffilter.py --g chebyshev_0.2 --n 8 --crystal-mesh --l 69.7e-3 --f 4913.57e3 --bw 2400 --ch 3.66e-12 | tee examples/xtal.cir") }
 ![crystal](examples/xtal.png)
 
 Same filter with an unloaded Q of 150000.  See the above Steder article for a figure of the loaded filter's response.
 
-{ run("rffilter.py --g chebyshev_0.2 --n 8 --crystal-mesh --l 69.7e-3 --f 4913.57e3 --bw 2400 --cp 3.66e-12 --qu 150000 | tee examples/xtalloss.cir") }
+{ run("rffilter.py --g chebyshev_0.2 --n 8 --crystal-mesh --l 69.7e-3 --f 4913.57e3 --bw 2400 --ch 3.66e-12 --qu 150000 | tee examples/xtalloss.cir") }
 ![crystal lossy](examples/xtalloss.png)
 
 ### 2. The Dishal program's owners manual filter.
@@ -137,7 +137,7 @@ The filter, less the holder capacitance, is an example from the Dishal program's
 The same crystal filter as above but with holder parallel capacitance across the crystals.
 The filter is an example from the Dishal program's owners manual.
 
-{ run("rffilter.py --k chebyshev_0.5 --bw 2500 --n 8 --l 70e-3 --crystal-mesh --cp 3.7e-12 --f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3 | tee examples/broken.cir") }
+{ run("rffilter.py --k chebyshev_0.5 --bw 2500 --n 8 --l 70e-3 --crystal-mesh --ch 3.7e-12 --f 5000.680e3,5000.123e3,4999.670e3,5000.235e3,5000.320e3,4999.895e3,5000.010e3,5000.485e3 | tee examples/broken.cir") }
 ![broken](examples/broken.png)
 
 ### 3. The Design Filter in N6NWP's QEX 1995 article.
@@ -146,17 +146,17 @@ N6NWP recommends using the lowest frequency crystal for the reference mesh, whil
 
 The following example uses the lowest crystal for the reference mesh:
 
-{ run("rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal-mesh --cp 5e-12 --f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0 | tee examples/qexlow.cir") }
+{ run("rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal-mesh --ch 5e-12 --f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0 | tee examples/qexlow.cir") }
 ![qexlow](examples/qexlow.png)
 
 The above crystal filter with 120,000 Q crystals:
 
-{ run("rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal-mesh --cp 5e-12 --qu 120000 --f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0 > examples/qexloss.cir") }
+{ run("rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal-mesh --ch 5e-12 --qu 120000 --f 8000017.0,7999933.0,7999940.0,7999945.0,7999985.0,7999996.0,8000000.0,7999991.0,7999966.0,7999945.0,7999939.0,8000026.0 > examples/qexloss.cir") }
 ![qexloss](examples/qexloss.png)
 
 The following example uses a middle crystal for the reference mesh:
 
-{ run("rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal-mesh --cp 5e-12 --f 8000017.0,7999966.0,7999940.0,7999945.0,7999985.0,8000000.0,7999996.0,7999991.0,7999939.0,7999933.0,7999945.0,8000026.0 | tee examples/qexmiddle.cir") }
+{ run("rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal-mesh --ch 5e-12 --f 8000017.0,7999966.0,7999940.0,7999945.0,7999985.0,8000000.0,7999996.0,7999991.0,7999939.0,7999933.0,7999945.0,8000026.0 | tee examples/qexmiddle.cir") }
 
 ## Lowpass and highpass filters.
 
@@ -188,7 +188,7 @@ Build a 500 Hz bandwidth crystal filter.
 
 Expose the ports.  Note, sequential ports must be connected together - and broken to short resonators for mesh filters.  See example.
 
-{ run("rffilter.py --k chebyshev_0.1 --n 8 --crystal-mesh --l .170 --f 4e6 --bw 500 --cp 2.05e-12 --expose | tee examples/xtaltune.cir") }
+{ run("rffilter.py --k chebyshev_0.1 --n 8 --crystal-mesh --l .170 --f 4e6 --bw 500 --ch 2.05e-12 --expose | tee examples/xtaltune.cir") }
 
 # stodelay.py
 

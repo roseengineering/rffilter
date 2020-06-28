@@ -1813,10 +1813,13 @@ def main():
                 for j in range(len(XS)):
                     x = XS[j][i]
                     res.append(netitem(num, k, k + 1, x))
-                    k, num = k + 1, num + 1
+                    k += 1
+                    num += 1
                     if not np.isinf(QU) and x > 0:
                         res.append(netitem(num, k, k + 1, wo * x / QU, tag='R'))
-                        k, num = k + 1, num + 1
+                        k += 1
+                        num += 1
+                    # so CM then LM 
                     if args.ch and x > 0:
                         res.append(netitem(num, node, k, -args.ch))
                         num += 1

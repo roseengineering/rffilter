@@ -1665,14 +1665,14 @@ def to_crystal_nodal(q, k, fo, BW, LM, CH, QU=None, RO=None, shape_factor=None):
     N = len(k) + 1
     wo = np.ones(N) * 2 * np.pi * fo
     LM = np.ones(N) * LM
-    CM = -1 / (wo**2 * LM)
+    CM = 1 / (wo**2 * LM)
 
     shape_factor = 1 if shape_factor is None else shape_factor
     fd = np.max(fo) + shape_factor * BW/2
     QE, K = denormalize_qk(q, k, fd, BW, QU=QU)
     wd = 2 * np.pi * fd
-    P = -CM / (LM * CM * wd**2 + 1)  # C0 = CM | P
-    S = -(P + CM) / CM
+    P = -CM / (LM * CM * wd**2 - 1)  # C0 = CM | P
+    S = (P - CM) / CM
     RE = QE / (wd * P[::N-1] * S[::N-1])
 
     # find CSE and CPE
@@ -1703,7 +1703,7 @@ def to_crystal_nodal(q, k, fo, BW, LM, CH, QU=None, RO=None, shape_factor=None):
     LP[0::2] = LM
     CP1[0::2] = -CH
     CP2[0::2] = C0
-    return [CS], [LP, CP1, CP2], RE, CSE, fd, CM
+    return [CS], [LP, CP1, CP2], RE, CSE, fd, -CM
 
 
 def to_crystal_mesh(q, k, fo, BW, LM, CH=None, QU=None, RO=None):

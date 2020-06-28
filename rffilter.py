@@ -1666,7 +1666,39 @@ def to_crystal_nodal(q, k, fo, BW, LM, CH=None, QU=None, RO=None, shape_factor=N
     N = len(k) + 1
     wo = np.ones(N) * 2 * np.pi * fo
     LM = np.ones(N) * LM
-    CM = 1 / (wo**2 * LM)
+    CM = np.ones(N) * 1 / (wo**2 * LM)
+    fp = to_fp(fo, CM, LM, CH or 5e-12)
+
+    for fc in np.linspace(np.min(fo), np.max(fp), 100):
+        wc = np.ones(N) * 2 * np.pi * fc
+        QE, K = denormalize_qk(q, k, fc, BW, QU=QU)
+        P = -CM / (LM * CM * wc**2 - 1)  # C0 = CM | P
+        S = P / CM
+        RE = QE / (wc * P[::N-1] * S[::N-1])
+
+        # find CSE and CPE
+        if RO is None:
+            CPE = np.zeros(2)
+            CSE = None
+        else:
+            CPE = np.ones(2) * np.nan
+            CSE = np.ones(2) * np.nan
+            RO = np.ones(2) * RO
+            for i in range(len(RO)):
+                if RO[i] <= RE[i]:
+                    CSE[i] = -1 / (wo * np.sqrt(RO[i] * RE[i] - RO[i]**2))
+                    CPE[i] = CSE[i] / ((wo * RO[i] * CSE[i])**2 + 1)
+
+        # find CK and C0 using K inverter
+        Z = 1 / (wo * np.sqrt(P[:-1] * P[1:] * S[:-1] * S[1:]))
+        CK = -K / (wo * Z)
+        CK = np.insert(CPE, 1, CK)
+        # C0 = P - CK[:-1] - CK[1:] + CH
+        C0 = - CK[:-1] - CK[1:]
+
+        print(fc, P, CK, C0)
+
+    sys.exit(0)
 
     # for fd in np.linspace(np.max(fo), np.max(fo) + 10000, 100):
     #     XM = to_xeff(fd, CM, LM, CH, QU)

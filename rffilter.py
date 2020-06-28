@@ -1859,8 +1859,8 @@ def main():
         print("* FILTER   : {}".format(kw['filter']))
         print("* ORDER    : {}".format(args.n))
         print("* FREQ     : {:.6f} MHz".format(fo / 1e6))
-        print("* RS       : {:.1f}".format(RE[0]))
-        print("* RL       : {:.1f}".format(RE[1]))
+        print("* RE1      : {:.1f}".format(RE[0]))
+        print("* RE2      : {:.1f}".format(RE[1]))
  
         if kw.get('ro') is not None:
             kw['ro'] = np.ones(2) * kw['ro']

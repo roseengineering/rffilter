@@ -1793,12 +1793,14 @@ def main():
         if kw.get('CPE') is not None:
             res.append(netitem(num, k, 0, kw['CPE'][0]))
             num += 1
+            res.append('')
 
         if kw.get('CSE') is not None:
             res.append(netitem(num, k, k+1, kw['CSE'][0]))
             num += 1
             k += 1
             skipport.append(k)
+            res.append('')
 
         for i in range(len(XS[0])):
             if i % 2 == n:

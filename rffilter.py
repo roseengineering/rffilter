@@ -1506,19 +1506,18 @@ def to_coupling_bw(q, k, BW):
     CBW = np.insert(K01, 1, KIJ) * BW
     return CBW
 
-def denormalize_qk(q, k, fo, BW, QU=None):
-    QU = np.inf if QU is None else QU
+def denormalize_qk(q, k, fo, BW):
     QL = np.nan if fo is None else fo / BW
-    QE = 1 / (1 / (np.array(q) * QL) - 1 / QU)
+    Q = np.array(q) * QL
     K = np.array(k) / QL
-    return QE, K
+    return Q, K
 
 def to_group_delay(q, k, BW):
-    QE = np.array(q) / BW
+    Q = np.array(q) / BW
     K = np.array(k) * BW
     TD = np.zeros(len(K) + 3)
     for i in range(2, len(TD)):
-        TD[i] = TD[i-2] + 2 / np.pi * (QE[0] * np.prod(K[0:i-2:2]**2) / np.prod(K[1:i-2:2]**2))**((-1)**i)
+        TD[i] = TD[i-2] + 2 / np.pi * (Q[0] * np.prod(K[0:i-2:2]**2) / np.prod(K[1:i-2:2]**2))**((-1)**i)
     return TD[2:]
 
 # wide bandwidth filters
@@ -1563,10 +1562,12 @@ def to_bandstop(g, fo, BW, RE):
 
 def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, RO=None):
     with np.errstate(divide='ignore', invalid='ignore'):
+        QU = np.inf if QU is None else QU
         N = len(k) + 1
         wo = 2 * np.pi * fo
-        QU = np.inf if QU is None else QU
-        QE, K = denormalize_qk(q, k, fo, BW, QU=QU)
+        QE, K = denormalize_qk(q, k, fo, BW)
+
+        # QE = 1 / (1 / QE - 1 / QU)
 
         # find L0, C0 and RE
         if L is not None:
@@ -1609,10 +1610,12 @@ def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, RO=None):
 
 def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, RO=None):
     with np.errstate(divide='ignore', invalid='ignore'):
+        QU = np.inf if QU is None else QU
         N = len(k) + 1
         wo = 2 * np.pi * fo
-        QU = np.inf if QU is None else QU
-        QE, K = denormalize_qk(q, k, fo, BW, QU=QU)
+        QE, K = denormalize_qk(q, k, fo, BW)
+
+        # QE = 1 / (1 / QE - 1 / QU)
 
         # find L0, C0 and RE
         if L is not None:
@@ -1662,6 +1665,7 @@ def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, RO=None):
 
 
 def to_crystal_nodal(q, k, fo, BW, LM, CH, QU=None, RO=None, shape_factor=None):
+    QU = np.inf if QU is None else QU
     N = len(k) + 1
     wo = np.ones(N) * 2 * np.pi * fo
     LM = np.ones(N) * LM
@@ -1669,7 +1673,10 @@ def to_crystal_nodal(q, k, fo, BW, LM, CH, QU=None, RO=None, shape_factor=None):
 
     shape_factor = 1 if shape_factor is None else shape_factor
     fd = np.max(fo) + shape_factor * BW/2
-    QE, K = denormalize_qk(q, k, fd, BW, QU=QU)
+    QE, K = denormalize_qk(q, k, fd, BW)
+
+    # QE = 1 / (1 / QE - 1 / QU)
+
     wd = 2 * np.pi * fd
     P = -CM / (LM * CM * wd**2 - 1)  # C0 = CM | P
     S = (P - CM) / CM
@@ -1781,7 +1788,7 @@ def main():
         return '{}{:<2d} {:<4d} {:<4d} {}'.format(tag, num, a, b, unit(np.abs(x)))
 
     def netlist(XS, XP, RE, fo, kw, n):
-        QU = np.inf if args.qu is None else args.qu
+        QU = kw.get('qu', np.inf)
         wo = 2 * np.pi * fo
 
         k = 1
@@ -2023,7 +2030,7 @@ def main():
         if args.ro: 
             kw['ro'] = np.array([ np.double(x) for x in args.ro.split(',') ])
 
-        kw['qu']= np.inf if args.qu is None else args.qu
+        kw['qu'] = np.inf if args.qu is None else args.qu
 
         if args.bw and args.f:
             QL = kw['f'][0] / args.bw

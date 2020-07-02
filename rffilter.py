@@ -1847,6 +1847,7 @@ def main():
             res.append(netitem(num, k, 0, kw['CPE'][1]))
 
         if kw.get('CSE') is not None:
+            ports.append(k)
             res.append('')
             res.append(netitem(num, k, k + 1, kw['CSE'][1]))
             k += 1

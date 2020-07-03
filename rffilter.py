@@ -1562,11 +1562,11 @@ def to_bandstop(g, fo, BW, RE):
 
 def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, RO=None):
     with np.errstate(divide='ignore', invalid='ignore'):
-        QU = np.inf if QU is None else QU
         N = len(k) + 1
         wo = 2 * np.pi * fo
         QE, K = denormalize_qk(q, k, fo, BW)
 
+        # QU = np.inf if QU is None else QU
         # QE = 1 / (1 / QE - 1 / QU)
 
         # find L0, C0 and RE
@@ -1610,11 +1610,11 @@ def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, RO=None):
 
 def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, RO=None):
     with np.errstate(divide='ignore', invalid='ignore'):
-        QU = np.inf if QU is None else QU
         N = len(k) + 1
         wo = 2 * np.pi * fo
         QE, K = denormalize_qk(q, k, fo, BW)
 
+        # QU = np.inf if QU is None else QU
         # QE = 1 / (1 / QE - 1 / QU)
 
         # find L0, C0 and RE
@@ -1664,8 +1664,7 @@ def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, RO=None):
         return [LS, CS], [CP], RE, CPE, MESH
 
 
-def to_crystal_nodal(q, k, fo, BW, LM, CH, QU=None, RO=None, shape_factor=None):
-    QU = np.inf if QU is None else QU
+def to_crystal_nodal(q, k, fo, BW, LM, CH=None, QU=None, RO=None, shape_factor=None):
     N = len(k) + 1
     wo = np.ones(N) * 2 * np.pi * fo
     LM = np.ones(N) * LM
@@ -1675,6 +1674,7 @@ def to_crystal_nodal(q, k, fo, BW, LM, CH, QU=None, RO=None, shape_factor=None):
     fd = np.max(fo) + shape_factor * BW/2
     QE, K = denormalize_qk(q, k, fd, BW)
 
+    # QU = np.inf if QU is None else QU
     # QE = 1 / (1 / QE - 1 / QU)
 
     wd = 2 * np.pi * fd
@@ -1699,6 +1699,7 @@ def to_crystal_nodal(q, k, fo, BW, LM, CH, QU=None, RO=None, shape_factor=None):
     Z = 1 / (wd * np.sqrt(P[:-1] * S[:-1] * P[1:] * S[1:]))
     CK = -K / (wd * Z)
     CK = np.insert(CPE, 1, CK)
+    CH = 0 if CH is None else CH
     C0 = P - CK[:-1] - CK[1:] + CH
 
     # result
@@ -1788,14 +1789,13 @@ def main():
         return '{}{:<2d} {:<4d} {:<4d} {}'.format(tag, num, a, b, unit(np.abs(x)))
 
     def netlist(XS, XP, RE, fo, kw, n):
-        QU = kw.get('qu', np.inf)
+        QU = np.inf if args.qu is None else args.qu
         wo = 2 * np.pi * fo
 
         k = 1
         num = 1
         res = []
         ports = [ 1 ]
-        skipport = []
 
         if kw.get('CPE') is not None:
             res.append(netitem(num, k, 0, kw['CPE'][0]))
@@ -1806,12 +1806,10 @@ def main():
             res.append(netitem(num, k, k+1, kw['CSE'][0]))
             num += 1
             k += 1
-            skipport.append(k)
-            res.append('')
 
         for i in range(len(XS[0])):
             if i % 2 == n:
-                if args.expose and k not in ports and k not in skipport:
+                if args.expose and k not in ports:
                     if args.crystal_mesh or args.mesh:
                         ports.append(k)
                         k = k + 1
@@ -1854,7 +1852,8 @@ def main():
             res.append(netitem(num, k, 0, kw['CPE'][1]))
 
         if kw.get('CSE') is not None:
-            ports.append(k)
+            if args.expose:
+                ports.append(k)
             res.append('')
             res.append(netitem(num, k, k + 1, kw['CSE'][1]))
             k += 1
@@ -2030,11 +2029,10 @@ def main():
         if args.ro: 
             kw['ro'] = np.array([ np.double(x) for x in args.ro.split(',') ])
 
-        kw['qu'] = np.inf if args.qu is None else args.qu
-
         if args.bw and args.f:
             QL = kw['f'][0] / args.bw
-            kw['qo'] = kw['qu'] / QL
+            QU = np.inf if args.qu is None else args.qu
+            kw['qo'] = QU / QL
         elif args.qo:
             kw['qo'] = args.qo
         else:
@@ -2081,17 +2079,18 @@ def main():
             for q, k in qk:
                 XS, XP, RE, CSE = to_nodal(
                     q, k, fo=fo, BW=args.bw, L=kw.get('l'), 
-                    RE=kw.get('re'), QU=kw['qu'], RO=kw.get('ro'))
+                    RE=kw.get('re'), QU=args.qu, RO=kw.get('ro'))
                 kw['q'], kw['k'] = q, k
                 kw['CSE'] = CSE
                 netlist(XS, XP, RE, fo, kw, 1)
+
         elif args.mesh and args.n:
             fo = kw['f'][0]
             kw['filter'] = 'mesh'
             for q, k in qk:
                 XS, XP, RE, CPE, _ = to_mesh(
                     q, k, fo=fo, BW=args.bw, L=kw.get('l'), 
-                    RE=kw.get('re'), QU=kw['qu'], RO=kw.get('ro'))
+                    RE=kw.get('re'), QU=args.qu, RO=kw.get('ro'))
                 kw['q'], kw['k'] = q, k
                 kw['CPE'] = CPE
                 netlist(XS, XP, RE, fo, kw, 0)
@@ -2101,7 +2100,7 @@ def main():
             for q, k in qk:
                 XS, XP, RE, CPE, MESH, fo, LEFF = to_crystal_mesh(
                     q, k, fo=kw['f'], BW=args.bw, LM=kw['l'], 
-                    CH=args.ch, QU=kw['qu'], RO=kw.get('ro'))
+                    CH=args.ch, QU=args.qu, RO=kw.get('ro'))
                 kw['q'], kw['k'] = q, k
                 kw['MESH'] = MESH
                 kw['LEFF'] = LEFF
@@ -2115,7 +2114,7 @@ def main():
             for q, k in qk:
                 XS, XP, RE, CSE, fo, CM = to_crystal_nodal(
                     q, k, fo=kw['f'], BW=args.bw, LM=kw['l'], 
-                    CH=args.ch, QU=kw['qu'], RO=kw.get('ro'), 
+                    CH=args.ch, QU=args.qu, RO=kw.get('ro'), 
                     shape_factor=args.shape_factor)
                 kw['q'], kw['k'] = q, k
                 kw['CSE'] = CSE

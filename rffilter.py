@@ -1566,8 +1566,8 @@ def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, RO=None):
         wo = 2 * np.pi * fo
         QE, K = denormalize_qk(q, k, fo, BW)
 
-        # QU = np.inf if QU is None else QU
-        # QE = 1 / (1 / QE - 1 / QU)
+        # adjust QE for unloaded QU
+        QE = 1 / (1 / QE - 1 / (np.inf if QU is None else QU))
 
         # find L0, C0 and RE
         if L is not None:
@@ -1614,8 +1614,8 @@ def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, RO=None):
         wo = 2 * np.pi * fo
         QE, K = denormalize_qk(q, k, fo, BW)
 
-        # QU = np.inf if QU is None else QU
-        # QE = 1 / (1 / QE - 1 / QU)
+        # adjust QE for unloaded QU
+        QE = 1 / (1 / QE - 1 / (np.inf if QU is None else QU))
 
         # find L0, C0 and RE
         if L is not None:
@@ -1674,8 +1674,8 @@ def to_crystal_nodal(q, k, fo, BW, LM, CH=None, QU=None, RO=None, shape_factor=N
     fd = np.max(fo) + shape_factor * BW/2
     QE, K = denormalize_qk(q, k, fd, BW)
 
-    # QU = np.inf if QU is None else QU
-    # QE = 1 / (1 / QE - 1 / QU)
+    # adjust QE for unloaded QU
+    QE = 1 / (1 / QE - 1 / (np.inf if QU is None else QU))
 
     wd = 2 * np.pi * fd
     P = -CM / (LM * CM * wd**2 - 1)  # C0 = CM | P
@@ -1753,7 +1753,6 @@ def to_fp(fo, CM, LM, CH):
     return 1 / (2 * np.pi * np.sqrt(LM * CM * CH / (CM + CH)))
 
 def to_xeff(fo, CM, LM, CP=None, QU=None): 
-    # includes the xtal series CM
     QU = np.inf if QU is None else QU
     CP = 0 if CP is None else CP
     wo = 2 * np.pi * fo

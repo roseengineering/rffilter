@@ -1957,8 +1957,9 @@ def main():
         QK = np.insert(Q, 1, K)
         print("* ij        q,k           TD0           TDn           CBW           Q,K")
         for i in range(N + 1):
-            print('* {:<4s} {:8.4f} {} {} {} {}'.format("%d%d" % (i, i+1), qk[i], 
-                  unit(TD1[i]), unit(TD2[i]), unit(CBW[i]), unit(QK[i])))
+            print('* {:<4s} {:8.4f} {} {} {} {}'.format(
+                  "%d" % (i if i else i + 1) if i == 0 or i == N else "%d%d" % (i, i+1),
+                  qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i]), unit(QK[i])))
  
     def list_gnormalized(name):
         print("N  g0 g1 ... gn gn+1")

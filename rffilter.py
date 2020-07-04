@@ -1954,12 +1954,11 @@ def main():
         CBW = to_coupling_bw(q, k, BW)
         Q, K = denormalize_qk(q, k, fo, BW)
         qk = np.insert(q, 1, k)
-        K = np.insert(BW / np.array(q), 1, K)
-        Q = np.insert(Q, 1, np.ones(len(k)) * np.nan)
-        print("* ij        q,k           TD0           TDn           CBW             K             Q")
+        QK = np.insert(Q, 1, K)
+        print("* ij        q,k           TD0           TDn           CBW           Q,K")
         for i in range(N + 1):
-            print('* {:<4s} {:8.4f} {} {} {} {} {}'.format("%d%d" % (i, i+1), qk[i], 
-                  unit(TD1[i]), unit(TD2[i]), unit(CBW[i]), unit(K[i]), unit(Q[i])))
+            print('* {:<4s} {:8.4f} {} {} {} {}'.format("%d%d" % (i, i+1), qk[i], 
+                  unit(TD1[i]), unit(TD2[i]), unit(CBW[i]), unit(QK[i])))
  
     def list_gnormalized(name):
         print("N  g0 g1 ... gn gn+1")

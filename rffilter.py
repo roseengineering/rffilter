@@ -1955,7 +1955,7 @@ def main():
         Q, K = denormalize_qk(q, k, fo, BW)
         qk = np.insert(q, 1, k)
         QK = np.insert(Q, 1, K)
-        print("* ij        q,k           TD0           TDn           CBW           Q,K")
+        print("* ij        q,k           TD1           TDN           CBW           Q,K")
         for i in range(N + 1):
             print('* {:<4s} {:8.4f} {} {} {} {}'.format(
                   "%d" % (i if i else i + 1) if i == 0 or i == N else "%d%d" % (i, i+1),

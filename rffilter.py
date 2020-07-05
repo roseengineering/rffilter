@@ -1564,11 +1564,9 @@ def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, RO=None):
     with np.errstate(divide='ignore', invalid='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
-        QE, K = denormalize_qk(q, k, fo, BW)
 
-        # adjust QE for unloaded QU
-        QU = np.inf if QU is None else QU
-        QE = 1 / (1 / QE - 1 / QU)
+        # adjust QE for unloaded QU?
+        QE, K = denormalize_qk(q, k, fo, BW)
 
         # find L0, C0 and RE
         if L is not None:
@@ -1613,11 +1611,9 @@ def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, RO=None):
     with np.errstate(divide='ignore', invalid='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
-        QE, K = denormalize_qk(q, k, fo, BW)
 
-        # adjust QE for unloaded QU
-        QU = np.inf if QU is None else QU
-        QE = 1 / (1 / QE - 1 / QU)
+        # adjust QE for unloaded QU?
+        QE, K = denormalize_qk(q, k, fo, BW)
 
         # find L0, C0 and RE
         if L is not None:
@@ -1671,14 +1667,11 @@ def to_crystal_nodal(q, k, fo, BW, LM, CH=None, QU=None, RO=None, shape_factor=N
     wo = np.ones(N) * 2 * np.pi * fo
     LM = np.ones(N) * LM
     CM = 1 / (wo**2 * LM)
-
     shape_factor = 1 if shape_factor is None else shape_factor
     fd = np.max(fo) + shape_factor * BW/2
-    QE, K = denormalize_qk(q, k, fd, BW)
 
-    # adjust QE for unloaded QU
-    QU = np.inf if QU is None else QU
-    QE = 1 / (1 / QE - 1 / QU)
+    # adjust QE for unloaded QU?
+    QE, K = denormalize_qk(q, k, fd, BW)
 
     wd = 2 * np.pi * fd
     P = -CM / (LM * CM * wd**2 - 1)  # C0 = CM | P
@@ -1958,12 +1951,12 @@ def main():
         Q, K = denormalize_qk(q, k, fo, BW)
         qk = np.insert(q, 1, k)
         QK = np.insert(Q, 1, K)
-        KN = np.insert(1 / Q, 1, K)
-        print("* ij        q,k           TD1           TDN           CBW           Q,K       QU*K>10")
+        QN = np.insert(Q, 1, 1/K)
+        print("* ij        q,k           TD1           TDN           CBW           Q,K      QE/QU<.1")
         for i in range(N + 1):
             print('* {:<4s} {:8.4f} {} {} {} {} {}'.format(
                   "%d" % (i if i else i + 1) if i == 0 or i == N else "%d%d" % (i, i+1),
-                  qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i]), unit(QK[i]), unit(QU*KN[i])))
+                  qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i]), unit(QK[i]), unit(QN[i]/QU)))
  
     def list_gnormalized(name):
         print("N  g0 g1 ... gn gn+1")

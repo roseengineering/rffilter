@@ -1722,7 +1722,7 @@ def to_crystal_mesh(q, k, fo, BW, LM, CH=None, QU=None, RO=None):
         w = 2 * np.pi * f
         LEFF = to_leff(f, CM, LM, CH, QU)
         XM = to_xeff(f, CM, LM, CH, QU)
-        XS, XP, RE, CPE, MESH = to_mesh(q, k, fo=f, BW=BW, L=LEFF, XM=XM.imag, RO=RO)
+        XS, XP, RE, CPE, MESH = to_mesh(q, k, fo=f, BW=BW, L=LEFF, XM=XM.imag, RO=RO, QU=QU)
         return XS, XP, RE, CPE, MESH, np.max(XS[-1][0::2])
 
     wo = np.ones(len(k) + 1) * 2 * np.pi * fo

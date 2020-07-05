@@ -1905,7 +1905,7 @@ def main():
         print()
 
         if kw.get('k') is not None:
-            list_couplings(kw['q'], kw['k'], fo, args.bw)
+            list_couplings(kw['q'], kw['k'], fo, args.bw, QU=args.qu)
             print()
 
         if kw.get('MESH') is not None:
@@ -1947,7 +1947,8 @@ def main():
         print('.end')
         print()
            
-    def list_couplings(q, k, fo, BW):
+    def list_couplings(q, k, fo, BW, QU=None):
+        QU = np.nan if QU is None else QU
         N = len(k) + 1
         TD1 = np.ones(N + 1) * np.nan
         TD2 = np.ones(N + 1) * np.nan
@@ -1957,11 +1958,12 @@ def main():
         Q, K = denormalize_qk(q, k, fo, BW)
         qk = np.insert(q, 1, k)
         QK = np.insert(Q, 1, K)
-        print("* ij        q,k           TD1           TDN           CBW           Q,K")
+        KN = np.insert(1 / Q, 1, K)
+        print("* ij        q,k           TD1           TDN           CBW           Q,K       QU*K>10")
         for i in range(N + 1):
-            print('* {:<4s} {:8.4f} {} {} {} {}'.format(
+            print('* {:<4s} {:8.4f} {} {} {} {} {}'.format(
                   "%d" % (i if i else i + 1) if i == 0 or i == N else "%d%d" % (i, i+1),
-                  qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i]), unit(QK[i])))
+                  qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i]), unit(QK[i]), unit(QU*KN[i])))
  
     def list_gnormalized(name):
         print("N  g0 g1 ... gn gn+1")
@@ -2130,7 +2132,7 @@ def main():
 
         elif args.bw and args.n:
             for q, k in qk:
-                list_couplings(q, k, kw.get('f'), args.bw)
+                list_couplings(q, k, kw.get('f'), args.bw, QU=args.qu)
 
         elif args.g: 
             list_gnormalized(args.g)

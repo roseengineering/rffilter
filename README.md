@@ -100,8 +100,8 @@ optional arguments:
   --qo QO               normalized Qo of resonators, used if Qu, frequency,
                         and BW not set (default: None)
   --shape-factor SHAPE_FACTOR
-                        offset in BW/2 units from the series resonant
-                        frequency of crystal USB filter (default: None)
+                        multiples of half bandwidth (BW/2) from series
+                        resonance for a USB crystal filter (default: None)
 ```
 
 

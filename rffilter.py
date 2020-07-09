@@ -1667,7 +1667,9 @@ def to_crystal_nodal(q, k, fo, BW, LM, CH=None, QU=None, RO=None, shape_factor=N
     wo = np.ones(N) * 2 * np.pi * fo
     LM = np.ones(N) * LM
     CM = 1 / (wo**2 * LM)
-    shape_factor = 1 if shape_factor is None else shape_factor
+
+    # shape factor recommended to be between 5 and 10, larger the better (N2DCH)
+    shape_factor = 10 if shape_factor is None else shape_factor
     fd = np.max(fo) + shape_factor * BW/2
 
     # adjust QE for unloaded QU?
@@ -1791,6 +1793,7 @@ def main():
         num = 1
         res = []
         ports = [ 1 ]
+        skipports = []
 
         if kw.get('CPE') is not None:
             res.append(netitem(num, k, 0, kw['CPE'][0]))
@@ -1804,7 +1807,7 @@ def main():
 
         for i in range(len(XS[0])):
             if i % 2 == n:
-                if args.expose and k not in ports:
+                if args.expose and k not in ports and k not in skipports:
                     if args.crystal_mesh or args.mesh:
                         ports.append(k)
                         k = k + 1
@@ -1847,8 +1850,6 @@ def main():
             res.append(netitem(num, k, 0, kw['CPE'][1]))
 
         if kw.get('CSE') is not None:
-            if args.expose:
-                ports.append(k)
             res.append('')
             res.append(netitem(num, k, k + 1, kw['CSE'][1]))
             k += 1
@@ -2190,7 +2191,7 @@ def main():
     parser.add_argument("--qo", type=float, default=None,
         help="normalized Qo of resonators, used if Qu, frequency, and BW not set")
     parser.add_argument("--shape-factor", type=float, default=None,
-        help="offset in BW/2 units from the series resonant frequency of crystal USB filter")
+        help="multiples of half bandwidth (BW/2) from series resonance for a USB crystal filter")
 
     args = parser.parse_args()
     handle_args()

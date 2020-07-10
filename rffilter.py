@@ -1974,10 +1974,11 @@ def main():
         found = 0
         print("N  qo IL q1 qn k12 k23 k34 k45 k56 ...")
         for z in ZVEREV[name.upper()]:
-            if z[0] > found: found = 0
-            if z[0] >= found and z[0] <= QO:
-                found = z[0]
+            # if z[0] > found: found = 0
+            # if z[0] >= found and z[0] <= QO:
+            if z[0] <= QO:
                 print("{:<2d} {}".format(len(z) - 3, to_csv(z)))
+            #   found = z[0]
 
     def list_gfilters():
         print('{:18s}  {}'.format("G LOWPASS", "POLES"))

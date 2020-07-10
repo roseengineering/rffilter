@@ -5,3 +5,5 @@ examples/*.dat
 examples/*.lst
 examples/*.txt
 examples/*.cfg
+.ipynb_checkpoints/ (stored 0%)
+

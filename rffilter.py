@@ -1907,7 +1907,7 @@ def main():
         print()
 
         if kw.get('k') is not None:
-            list_couplings(kw['q'], kw['k'], fo, args.bw, QU=args.qu)
+            list_couplings(kw['q'], kw['k'], fo, args.bw, QU=args.qu, g=kw.get('G'))
             print()
 
         if kw.get('MESH') is not None:
@@ -1940,7 +1940,6 @@ def main():
             for i in range(N):
                 print('* {:<4s}   {} {}'.format("%d%d" % (i+1, i+2), unit(-CK[i]), unit(-CT[i])))
             print()
-            
  
         for line in res: 
             print(line)
@@ -1949,8 +1948,8 @@ def main():
         print('.end')
         print()
            
-    def list_couplings(q, k, fo, BW, QU=None):
-        QU = np.nan if QU is None else QU
+    def list_couplings(q, k, fo, BW, QU=None, g=None):
+        qu = np.nan if QU is None or np.isinf(QU) else QU
         N = len(k) + 1
         TD1 = np.ones(N + 1) * np.nan
         TD2 = np.ones(N + 1) * np.nan
@@ -1965,18 +1964,24 @@ def main():
         for i in range(N + 1):
             print('* {:<4s} {:8.4f} {} {} {} {} {}'.format(
                   "%d" % (i if i else i + 1) if i == 0 or i == N else "%d%d" % (i, i+1),
-                  qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i]), unit(QK[i]), unit(QN[i]/QU)))
+                  qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i]), unit(QK[i]), unit(QN[i]/qu)))
+        if QU is not None and g is not None and fo is not None:
+            print()
+            list_finiteq(q, k, fo, BW, QU=QU, g=g, n=np.arange(1, N))
+            print('* -- reversed --')
+            list_finiteq(q[::-1], k[::-1], fo, BW, QU=QU, g=g[::-1], n=np.arange(N, 1, -1))
+
  
-    def list_finiteq(q, k, f, bw, QU=None, g=None, n=None):
+    def list_finiteq(q, k, fo, bw, QU=None, g=None, n=None):
         from sympy.parsing.sympy_parser import parse_expr
         N = len(k) - 1
         data = { "g%d" % i: d for i, d in enumerate(g) }
         data['Delta_w'] = args.bw * 2 * np.pi
-        data['Q_u'] = np.inf if args.qu is None else args.qu
+        data['Q_u'] = np.inf if QU is None else QU
         print("* i         q,k           TDn")
         for j in range(N):
             if j < len(FINITEQ):
-                data['w0'] = 2 * np.pi * f
+                data['w0'] = 2 * np.pi * fo
                 TD = parse_expr(FINITEQ[j]).subs(data)
                 TD = np.double(TD)
                 print('* {:<4d} {:8.4f} {}'.format(n[j], k[j-1] if j else q[j], unit(TD)))
@@ -2060,6 +2065,7 @@ def main():
         if args.g and args.n:
             kw['type'] = args.g
             g = lowpass_g(args.g, args.n)
+            kw['G'] = g
             qk = [ to_coupling_qk(g) ]
         if args.k and args.n:
             kw['type'] = args.k
@@ -2144,23 +2150,11 @@ def main():
 
         # print coupling info
 
-        elif args.finite_q:
-            N = len(g) - 2
-            for i in range(len(qk)):
-                if i > 0: print()
-                q, k = qk[i]
-                list_couplings(q, k, kw.get('f'), args.bw, QU=args.qu)
-                print()
-                list_finiteq(q, k, kw.get('f'), args.bw, QU=args.qu, g=g, n=np.arange(1, N))
-                print('-- reversed --')
-                list_finiteq(q[::-1], k[::-1], kw.get('f'), args.bw, QU=args.qu, g=g[::-1], n=np.arange(N, 1, -1))
-
-
         elif args.bw and args.n:
             for i in range(len(qk)):
                 if i > 0: print()
                 q, k = qk[i]
-                list_couplings(q, k, kw.get('f'), args.bw, QU=args.qu)
+                list_couplings(q, k, kw.get('f'), args.bw, QU=args.qu, g=kw.get('G'))
 
         elif args.g: 
             list_gnormalized(args.g)
@@ -2226,8 +2220,6 @@ def main():
         help="normalized Qo of resonators, used if Qu, frequency, and BW not set")
     parser.add_argument("--shape-factor", type=float, default=None,
         help="multiples of half bandwidth (BW/2) from series resonance for a USB crystal filter")
-    parser.add_argument("--finite-q", action="store_true",
-        help="calculate group delays assuming finite q")
 
     args = parser.parse_args()
     handle_args()

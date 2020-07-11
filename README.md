@@ -59,7 +59,6 @@ usage: rffilter.py [-h] [--highpass] [--lowpass] [--bandpass] [--nodal]
                    [--list-g] [--list-k] [--list-z] [--n N] [--bw BW] [--g G]
                    [--k K] [--z Z] [--f F] [--ro RO] [--re RE] [--l L]
                    [--ch CH] [--qu QU] [--qo QO] [--shape-factor SHAPE_FACTOR]
-                   [--finite-q]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -103,8 +102,6 @@ optional arguments:
   --shape-factor SHAPE_FACTOR
                         multiples of half bandwidth (BW/2) from series
                         resonance for a USB crystal filter (default: None)
-  --finite-q            calculate group delays assuming finite q (default:
-                        False)
 ```
 
 
@@ -543,6 +540,20 @@ $ rffilter.py --g chebyshev_0.2 --n 8 --crystal-mesh --l 69.7e-3 --f 4913.57e3 -
 * 67     0.5602    2.1627e-03  975.2995e-06    1.3445e+03  273.5273e-06   24.3729e-03
 * 78     0.7225    1.4056e-03  368.0618e-06    1.7341e+03  352.7876e-06   18.8971e-03
 * 8      1.3804             -  366.1709e-06    1.7386e+03    2.8273e+03   18.8485e-03
+
+* i         q,k           TDn
+* 1      1.3804  366.2926e-06
+* 2      0.7225  367.8102e-06
+* 3      0.5602  976.6501e-06
+* 4      0.5349  770.4380e-06
+* 5      0.5298    1.6015e-03
+* -- reversed --
+* i         q,k           TDn
+* 8      1.3804  366.3011e-06
+* 7      0.7225  367.7996e-06
+* 6      0.5602  976.6748e-06
+* 5      0.5349  770.4202e-06
+* 4      0.5298    1.6015e-03
 
 * Xtal       Xtal freq     Mesh freq   Mesh offset
 * 1          4913570.0     4914792.1        -672.3
@@ -2112,6 +2123,20 @@ $ rffilter.py --g butterworth --mesh --f 10e6 --bw 400e3 --n 8 --re 50 --qu 2000
 * 67     0.7357    8.1580e-06    3.2676e-06  294.2730e+03   29.4273e-03   16.9910e-03
 * 78     1.5187    8.1580e-06    1.7684e-06  607.4909e+03   60.7491e-03    8.2306e-03
 * 8      0.3902             -  621.0226e-09    1.0251e+06    9.7550e+00    4.8775e-03
+
+* i         q,k           TDn
+* 1      0.3902  621.0374e-09
+* 2      1.5187    1.7684e-06
+* 3      0.7357    3.2675e-06
+* 4      0.5537    4.8900e-06
+* 5      0.5098    6.3892e-06
+* -- reversed --
+* i         q,k           TDn
+* 8      0.3902  621.0374e-09
+* 7      1.5187    1.7684e-06
+* 6      0.7357    3.2675e-06
+* 5      0.5537    4.8900e-06
+* 4      0.5098    6.3892e-06
 
 L1  1    2       7.7628e-06
 R2  2    3     243.8750e-03

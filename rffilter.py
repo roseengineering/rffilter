@@ -1967,6 +1967,7 @@ def main():
                   qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i]), unit(QK[i]), unit(qu/QN[i])))
         if QU is not None and g is not None and fo is not None:
             print()
+            print("* Group Delay for Lossy Q Resonators")
             list_finiteq(q, k, fo, BW, QU=QU, g=g, n=np.arange(1, N))
             print('* -- reversed --')
             list_finiteq(q[::-1], k[::-1], fo, BW, QU=QU, g=g[::-1], n=np.arange(N, 1, -1))
@@ -1974,12 +1975,11 @@ def main():
  
     def list_finiteq(q, k, fo, bw, QU=None, g=None, n=None):
         from sympy.parsing.sympy_parser import parse_expr
-        N = len(k) - 1
         data = { "g%d" % i: d for i, d in enumerate(g) }
         data['Delta_w'] = args.bw * 2 * np.pi
         data['Q_u'] = np.inf if QU is None else QU
         print("* i         q,k           TDn            QU")
-        for j in range(N):
+        for j in range(len(k)):
             if j < len(FINITEQ):
                 data['w0'] = 2 * np.pi * fo
                 TD = parse_expr(FINITEQ[j]).subs(data)

@@ -1455,6 +1455,14 @@ ZVEREV = {
     ],
 }
 
+FINITEQ = [
+    "4*g0*g1/(Delta_w*(1 - 1.0*g0**2*g1**2*w0**2/(Delta_w**2*Q_u**2)))",
+    "4*g0*g2*(1 - 1.0*g1*g2*w0**2/(Delta_w**2*Q_u**2))/(Delta_w*(g0**2*(-1 - 1.0*g1*g2*w0**2/(Delta_w**2*Q_u**2))**2 - 1.0*g2**2*w0**2/(Delta_w**2*Q_u**2)))",
+    "4*g0*(g1*(-1 - 1.0*g2*g3*w0**2/(Delta_w**2*Q_u**2))**2 + g3*(1 - 1.0*g2*g3*w0**2/(Delta_w**2*Q_u**2)))/(Delta_w*((-1 - 1.0*g2*g3*w0**2/(Delta_w**2*Q_u**2))**2 - 1.0*g0**2*w0**2*(g1*(-1 - 1.0*g2*g3*w0**2/(Delta_w**2*Q_u**2)) - g3)**2/(Delta_w**2*Q_u**2)))",
+    "4*g0*(g2*(-1 - 1.0*g3*g4*w0**2/(Delta_w**2*Q_u**2))**2 + g4*(1 - 1.0*g3*g4*w0**2/(Delta_w**2*Q_u**2)) - 1.0*g1*w0**2*(g2*(-1 - 1.0*g3*g4*w0**2/(Delta_w**2*Q_u**2)) - g4)**2/(Delta_w**2*Q_u**2))/(Delta_w*(g0**2*(1 - 1.0*g1*w0**2*(g2*(-1 - 1.0*g3*g4*w0**2/(Delta_w**2*Q_u**2)) - g4)/(Delta_w**2*Q_u**2) + 1.0*g3*g4*w0**2/(Delta_w**2*Q_u**2))**2 - 1.0*w0**2*(g2*(-1 - 1.0*g3*g4*w0**2/(Delta_w**2*Q_u**2)) - g4)**2/(Delta_w**2*Q_u**2)))",
+    "4*g0*(g1*(1 - 1.0*g2*w0**2*(g3*(-1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) - g5)/(Delta_w**2*Q_u**2) + 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2))**2 + g3*(-1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2))**2 + g5*(1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) - 1.0*g2*w0**2*(g3*(-1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) - g5)**2/(Delta_w**2*Q_u**2))/(Delta_w*((1 - 1.0*g2*w0**2*(g3*(-1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) - g5)/(Delta_w**2*Q_u**2) + 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2))**2 - 1.0*g0**2*w0**2*(g1*(1 - 1.0*g2*w0**2*(g3*(-1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) - g5)/(Delta_w**2*Q_u**2) + 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) - g3*(-1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) + g5)**2/(Delta_w**2*Q_u**2)))"
+]
+
 ######################################
 
 def zverev_qo(name, n, qo=np.inf):
@@ -1959,6 +1967,20 @@ def main():
                   "%d" % (i if i else i + 1) if i == 0 or i == N else "%d%d" % (i, i+1),
                   qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i]), unit(QK[i]), unit(QN[i]/QU)))
  
+    def list_finiteq(q, k, f, bw, QU=None, g=None, n=None):
+        from sympy.parsing.sympy_parser import parse_expr
+        N = len(k) - 1
+        data = { "g%d" % i: d for i, d in enumerate(g) }
+        data['Delta_w'] = args.bw * 2 * np.pi
+        data['Q_u'] = np.inf if args.qu is None else args.qu
+        print("* i         q,k           TDn")
+        for j in range(N):
+            if j < len(FINITEQ):
+                data['w0'] = 2 * np.pi * f
+                TD = parse_expr(FINITEQ[j]).subs(data)
+                TD = np.double(TD)
+                print('* {:<4d} {:8.4f} {}'.format(n[j], k[j-1] if j else q[j], unit(TD)))
+
     def list_gnormalized(name):
         print("N  g0 g1 ... gn gn+1")
         for g in LOWPASS[name.upper()]:
@@ -1974,11 +1996,8 @@ def main():
         found = 0
         print("N  qo IL q1 qn k12 k23 k34 k45 k56 ...")
         for z in ZVEREV[name.upper()]:
-            # if z[0] > found: found = 0
-            # if z[0] >= found and z[0] <= QO:
             if z[0] <= QO:
                 print("{:<2d} {}".format(len(z) - 3, to_csv(z)))
-            #   found = z[0]
 
     def list_gfilters():
         print('{:18s}  {}'.format("G LOWPASS", "POLES"))
@@ -2125,8 +2144,22 @@ def main():
 
         # print coupling info
 
+        elif args.finiteq:
+            N = len(g) - 2
+            for i in range(len(qk)):
+                if i > 0: print()
+                q, k = qk[i]
+                list_couplings(q, k, kw.get('f'), args.bw, QU=args.qu)
+                print()
+                list_finiteq(q, k, kw.get('f'), args.bw, QU=args.qu, g=g, n=np.arange(1, N))
+                print('-- reversed --')
+                list_finiteq(q[::-1], k[::-1], kw.get('f'), args.bw, QU=args.qu, g=g[::-1], n=np.arange(N, 1, -1))
+
+
         elif args.bw and args.n:
-            for q, k in qk:
+            for i in range(len(qk)):
+                if i > 0: print()
+                q, k = qk[i]
                 list_couplings(q, k, kw.get('f'), args.bw, QU=args.qu)
 
         elif args.g: 
@@ -2193,6 +2226,8 @@ def main():
         help="normalized Qo of resonators, used if Qu, frequency, and BW not set")
     parser.add_argument("--shape-factor", type=float, default=None,
         help="multiples of half bandwidth (BW/2) from series resonance for a USB crystal filter")
+    parser.add_argument("--finiteq", action="store_true",
+        help="calculate group delays assuming finite q")
 
     args = parser.parse_args()
     handle_args()

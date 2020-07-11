@@ -1460,7 +1460,9 @@ LOSSYG = [
     "4*g0*g2*(1 - 1.0*g1*g2*w0**2/(Delta_w**2*Q_u**2))/(Delta_w*(g0**2*(-1 - 1.0*g1*g2*w0**2/(Delta_w**2*Q_u**2))**2 - 1.0*g2**2*w0**2/(Delta_w**2*Q_u**2)))",
     "4*g0*(g1*(-1 - 1.0*g2*g3*w0**2/(Delta_w**2*Q_u**2))**2 + g3*(1 - 1.0*g2*g3*w0**2/(Delta_w**2*Q_u**2)))/(Delta_w*((-1 - 1.0*g2*g3*w0**2/(Delta_w**2*Q_u**2))**2 - 1.0*g0**2*w0**2*(g1*(-1 - 1.0*g2*g3*w0**2/(Delta_w**2*Q_u**2)) - g3)**2/(Delta_w**2*Q_u**2)))",
     "4*g0*(g2*(-1 - 1.0*g3*g4*w0**2/(Delta_w**2*Q_u**2))**2 + g4*(1 - 1.0*g3*g4*w0**2/(Delta_w**2*Q_u**2)) - 1.0*g1*w0**2*(g2*(-1 - 1.0*g3*g4*w0**2/(Delta_w**2*Q_u**2)) - g4)**2/(Delta_w**2*Q_u**2))/(Delta_w*(g0**2*(1 - 1.0*g1*w0**2*(g2*(-1 - 1.0*g3*g4*w0**2/(Delta_w**2*Q_u**2)) - g4)/(Delta_w**2*Q_u**2) + 1.0*g3*g4*w0**2/(Delta_w**2*Q_u**2))**2 - 1.0*w0**2*(g2*(-1 - 1.0*g3*g4*w0**2/(Delta_w**2*Q_u**2)) - g4)**2/(Delta_w**2*Q_u**2)))",
-    "4*g0*(g1*(1 - 1.0*g2*w0**2*(g3*(-1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) - g5)/(Delta_w**2*Q_u**2) + 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2))**2 + g3*(-1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2))**2 + g5*(1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) - 1.0*g2*w0**2*(g3*(-1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) - g5)**2/(Delta_w**2*Q_u**2))/(Delta_w*((1 - 1.0*g2*w0**2*(g3*(-1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) - g5)/(Delta_w**2*Q_u**2) + 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2))**2 - 1.0*g0**2*w0**2*(g1*(1 - 1.0*g2*w0**2*(g3*(-1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) - g5)/(Delta_w**2*Q_u**2) + 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) - g3*(-1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) + g5)**2/(Delta_w**2*Q_u**2)))"
+    "4*g0*(g1*(1 - 1.0*g2*w0**2*(g3*(-1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) - g5)/(Delta_w**2*Q_u**2) + 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2))**2 + g3*(-1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2))**2 + g5*(1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) - 1.0*g2*w0**2*(g3*(-1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) - g5)**2/(Delta_w**2*Q_u**2))/(Delta_w*((1 - 1.0*g2*w0**2*(g3*(-1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) - g5)/(Delta_w**2*Q_u**2) + 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2))**2 - 1.0*g0**2*w0**2*(g1*(1 - 1.0*g2*w0**2*(g3*(-1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) - g5)/(Delta_w**2*Q_u**2) + 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) - g3*(-1 - 1.0*g4*g5*w0**2/(Delta_w**2*Q_u**2)) + g5)**2/(Delta_w**2*Q_u**2)))",
+    "4*(g1 + (g2 + (g3 + (g4 + (-1.0*Delta_w**2*Q_u**2/(g6*w0**2) + g5)/(1.0*I*Delta_w*Q_u/(g6*w0) + 1.0*I*g5*w0/(Delta_w*Q_u))**2)/(-1/(-1.0*I*Delta_w*Q_u/(g6*w0) - 1.0*I*g5*w0/(Delta_w*Q_u)) - 1.0*I*g4*w0/(Delta_w*Q_u))**2)/(-1/(1/(1.0*I*Delta_w*Q_u/(g6*w0) + 1.0*I*g5*w0/(Delta_w*Q_u)) - 1.0*I*g4*w0/(Delta_w*Q_u)) - 1.0*I*g3*w0/(Delta_w*Q_u))**2)/(-1/(-1/(-1/(-1.0*I*Delta_w*Q_u/(g6*w0) - 1.0*I*g5*w0/(Delta_w*Q_u)) - 1.0*I*g4*w0/(Delta_w*Q_u)) - 1.0*I*g3*w0/(Delta_w*Q_u)) - 1.0*I*g2*w0/(Delta_w*Q_u))**2)/(Delta_w*g0*(1 + 1/(g0**2*(-1/(-1/(-1/(1/(1.0*I*Delta_w*Q_u/(g6*w0) + 1.0*I*g5*w0/(Delta_w*Q_u)) - 1.0*I*g4*w0/(Delta_w*Q_u)) - 1.0*I*g3*w0/(Delta_w*Q_u)) - 1.0*I*g2*w0/(Delta_w*Q_u)) - 1.0*I*g1*w0/(Delta_w*Q_u))**2))*(-1/(-1/(-1/(1/(1.0*I*Delta_w*Q_u/(g6*w0) + 1.0*I*g5*w0/(Delta_w*Q_u)) - 1.0*I*g4*w0/(Delta_w*Q_u)) - 1.0*I*g3*w0/(Delta_w*Q_u)) - 1.0*I*g2*w0/(Delta_w*Q_u)) - 1.0*I*g1*w0/(Delta_w*Q_u))**2)",
+    "4*(g1 + (g2 + (g3 + (g4 + (g5 - (1.0*Delta_w**2*Q_u**2/(g7*w0**2) - g6)/(-1.0*I*Delta_w*Q_u/(g7*w0) - 1.0*I*g6*w0/(Delta_w*Q_u))**2)/(1/(-1.0*I*Delta_w*Q_u/(g7*w0) - 1.0*I*g6*w0/(Delta_w*Q_u)) + 1.0*I*g5*w0/(Delta_w*Q_u))**2)/(-1/(-1/(-1.0*I*Delta_w*Q_u/(g7*w0) - 1.0*I*g6*w0/(Delta_w*Q_u)) - 1.0*I*g5*w0/(Delta_w*Q_u)) - 1.0*I*g4*w0/(Delta_w*Q_u))**2)/(-1/(1/(1/(-1.0*I*Delta_w*Q_u/(g7*w0) - 1.0*I*g6*w0/(Delta_w*Q_u)) + 1.0*I*g5*w0/(Delta_w*Q_u)) - 1.0*I*g4*w0/(Delta_w*Q_u)) - 1.0*I*g3*w0/(Delta_w*Q_u))**2)/(-1/(-1/(-1/(-1/(-1.0*I*Delta_w*Q_u/(g7*w0) - 1.0*I*g6*w0/(Delta_w*Q_u)) - 1.0*I*g5*w0/(Delta_w*Q_u)) - 1.0*I*g4*w0/(Delta_w*Q_u)) - 1.0*I*g3*w0/(Delta_w*Q_u)) - 1.0*I*g2*w0/(Delta_w*Q_u))**2)/(Delta_w*g0*(1 + 1/(g0**2*(-1/(-1/(-1/(1/(1/(-1.0*I*Delta_w*Q_u/(g7*w0) - 1.0*I*g6*w0/(Delta_w*Q_u)) + 1.0*I*g5*w0/(Delta_w*Q_u)) - 1.0*I*g4*w0/(Delta_w*Q_u)) - 1.0*I*g3*w0/(Delta_w*Q_u)) - 1.0*I*g2*w0/(Delta_w*Q_u)) - 1.0*I*g1*w0/(Delta_w*Q_u))**2))*(-1/(-1/(-1/(1/(1/(-1.0*I*Delta_w*Q_u/(g7*w0) - 1.0*I*g6*w0/(Delta_w*Q_u)) + 1.0*I*g5*w0/(Delta_w*Q_u)) - 1.0*I*g4*w0/(Delta_w*Q_u)) - 1.0*I*g3*w0/(Delta_w*Q_u)) - 1.0*I*g2*w0/(Delta_w*Q_u)) - 1.0*I*g1*w0/(Delta_w*Q_u))**2)",
 ]
 
 ######################################
@@ -1968,9 +1970,9 @@ def main():
         if QU is not None and g is not None and fo is not None:
             print()
             print("* Group Delay for Lossy Q Resonators")
-            list_finiteq(q, k, fo, BW, QU=QU, g=g, n=np.arange(1, N))
+            list_finiteq(q, k, fo, BW, QU=QU, g=g, n=np.arange(1, N + 1))
             print('* -- reversed --')
-            list_finiteq(q[::-1], k[::-1], fo, BW, QU=QU, g=g[::-1], n=np.arange(N, 1, -1))
+            list_finiteq(q[::-1], k[::-1], fo, BW, QU=QU, g=g[::-1], n=np.arange(N, 0, -1))
 
  
     def list_finiteq(q, k, fo, bw, QU=None, g=None, n=None):
@@ -1979,12 +1981,13 @@ def main():
         data['Delta_w'] = args.bw * 2 * np.pi
         data['Q_u'] = np.inf if QU is None else QU
         print("* i         q,k           TDn            QU")
-        for i in range(len(k)):
+        for i in range(len(k) + 1):
             if i < len(LOSSYG):
                 data['w0'] = 2 * np.pi * fo
                 TD = parse_expr(LOSSYG[i]).subs(data)
                 TD = np.double(TD)
-                print('* {:<4d} {:8.4f} {} {}'.format(n[i], k[i-1] if i else q[i], unit(TD), unit(QU)))
+                qk = np.insert(q, 1, k)
+                print('* {:<4d} {:8.4f} {} {}'.format(n[i], qk[i], unit(TD), unit(QU)))
 
     def list_gnormalized(name):
         print("N  g0 g1 ... gn gn+1")

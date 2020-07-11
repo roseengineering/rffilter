@@ -1455,7 +1455,7 @@ ZVEREV = {
     ],
 }
 
-FINITEQ = [
+LOSSYG = [
     "4*g0*g1/(Delta_w*(1 - 1.0*g0**2*g1**2*w0**2/(Delta_w**2*Q_u**2)))",
     "4*g0*g2*(1 - 1.0*g1*g2*w0**2/(Delta_w**2*Q_u**2))/(Delta_w*(g0**2*(-1 - 1.0*g1*g2*w0**2/(Delta_w**2*Q_u**2))**2 - 1.0*g2**2*w0**2/(Delta_w**2*Q_u**2)))",
     "4*g0*(g1*(-1 - 1.0*g2*g3*w0**2/(Delta_w**2*Q_u**2))**2 + g3*(1 - 1.0*g2*g3*w0**2/(Delta_w**2*Q_u**2)))/(Delta_w*((-1 - 1.0*g2*g3*w0**2/(Delta_w**2*Q_u**2))**2 - 1.0*g0**2*w0**2*(g1*(-1 - 1.0*g2*g3*w0**2/(Delta_w**2*Q_u**2)) - g3)**2/(Delta_w**2*Q_u**2)))",
@@ -1979,12 +1979,12 @@ def main():
         data['Delta_w'] = args.bw * 2 * np.pi
         data['Q_u'] = np.inf if QU is None else QU
         print("* i         q,k           TDn            QU")
-        for j in range(len(k)):
-            if j < len(FINITEQ):
+        for i in range(len(k)):
+            if i < len(LOSSYG):
                 data['w0'] = 2 * np.pi * fo
-                TD = parse_expr(FINITEQ[j]).subs(data)
+                TD = parse_expr(LOSSYG[i]).subs(data)
                 TD = np.double(TD)
-                print('* {:<4d} {:8.4f} {} {}'.format(n[j], k[j-1] if j else q[j], unit(TD), unit(QU)))
+                print('* {:<4d} {:8.4f} {} {}'.format(n[i], k[i-1] if i else q[i], unit(TD), unit(QU)))
 
     def list_gnormalized(name):
         print("N  g0 g1 ... gn gn+1")

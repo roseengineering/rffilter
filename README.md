@@ -59,7 +59,7 @@ usage: rffilter.py [-h] [--highpass] [--lowpass] [--bandpass] [--nodal]
                    [--list-g] [--list-k] [--list-z] [--n N] [--bw BW] [--g G]
                    [--k K] [--z Z] [--f F] [--ro RO] [--re RE] [--l L]
                    [--ch CH] [--qu QU] [--qo QO] [--shape-factor SHAPE_FACTOR]
-                   [--finiteq]
+                   [--finite-q]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -103,7 +103,7 @@ optional arguments:
   --shape-factor SHAPE_FACTOR
                         multiples of half bandwidth (BW/2) from series
                         resonance for a USB crystal filter (default: None)
-  --finiteq             calculate group delays assuming finite q (default:
+  --finite-q            calculate group delays assuming finite q (default:
                         False)
 ```
 

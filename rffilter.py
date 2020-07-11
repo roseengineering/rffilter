@@ -2144,7 +2144,7 @@ def main():
 
         # print coupling info
 
-        elif args.finiteq:
+        elif args.finite_q:
             N = len(g) - 2
             for i in range(len(qk)):
                 if i > 0: print()
@@ -2226,7 +2226,7 @@ def main():
         help="normalized Qo of resonators, used if Qu, frequency, and BW not set")
     parser.add_argument("--shape-factor", type=float, default=None,
         help="multiples of half bandwidth (BW/2) from series resonance for a USB crystal filter")
-    parser.add_argument("--finiteq", action="store_true",
+    parser.add_argument("--finite-q", action="store_true",
         help="calculate group delays assuming finite q")
 
     args = parser.parse_args()

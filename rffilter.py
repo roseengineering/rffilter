@@ -1960,11 +1960,11 @@ def main():
         qk = np.insert(q, 1, k)
         QK = np.insert(Q, 1, K)
         QN = np.insert(Q, 1, 1/K)
-        print("* ij        q,k           TD1           TDN           CBW           Q,K      QE/QU<.1")
+        print("* ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10")
         for i in range(N + 1):
             print('* {:<4s} {:8.4f} {} {} {} {} {}'.format(
                   "%d" % (i if i else i + 1) if i == 0 or i == N else "%d%d" % (i, i+1),
-                  qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i]), unit(QK[i]), unit(QN[i]/qu)))
+                  qk[i], unit(TD1[i]), unit(TD2[i]), unit(CBW[i]), unit(QK[i]), unit(qu/QN[i])))
         if QU is not None and g is not None and fo is not None:
             print()
             list_finiteq(q, k, fo, BW, QU=QU, g=g, n=np.arange(1, N))
@@ -1978,13 +1978,13 @@ def main():
         data = { "g%d" % i: d for i, d in enumerate(g) }
         data['Delta_w'] = args.bw * 2 * np.pi
         data['Q_u'] = np.inf if QU is None else QU
-        print("* i         q,k           TDn")
+        print("* i         q,k           TDn            QU")
         for j in range(N):
             if j < len(FINITEQ):
                 data['w0'] = 2 * np.pi * fo
                 TD = parse_expr(FINITEQ[j]).subs(data)
                 TD = np.double(TD)
-                print('* {:<4d} {:8.4f} {}'.format(n[j], k[j-1] if j else q[j], unit(TD)))
+                print('* {:<4d} {:8.4f} {} {}'.format(n[j], k[j-1] if j else q[j], unit(TD), unit(QU)))
 
     def list_gnormalized(name):
         print("N  g0 g1 ... gn gn+1")

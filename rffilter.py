@@ -1574,8 +1574,6 @@ def to_nodal(q, k, fo, BW, RE=None, L=None, QU=None, RO=None):
     with np.errstate(divide='ignore', invalid='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
-
-        # adjust QE for unloaded QU?
         QE, K = denormalize_qk(q, k, fo, BW)
 
         # find L0, C0 and RE
@@ -1621,8 +1619,6 @@ def to_mesh(q, k, fo, BW, RE=None, L=None, QU=None, XM=None, RO=None):
     with np.errstate(divide='ignore', invalid='ignore'):
         N = len(k) + 1
         wo = 2 * np.pi * fo
-
-        # adjust QE for unloaded QU?
         QE, K = denormalize_qk(q, k, fo, BW)
 
         # find L0, C0 and RE
@@ -1681,8 +1677,6 @@ def to_crystal_nodal(q, k, fo, BW, LM, CH=None, QU=None, RO=None, shape_factor=N
     # shape factor recommended to be between 5 and 10, larger the better (N2DCH)
     shape_factor = 10 if shape_factor is None else shape_factor
     fd = np.max(fo) + shape_factor * BW/2
-
-    # adjust QE for unloaded QU?
     QE, K = denormalize_qk(q, k, fd, BW)
 
     wd = 2 * np.pi * fd

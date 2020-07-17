@@ -1994,7 +1994,7 @@ def main():
         print("* i         q,k           TDn            QU")
         for i in range(len(k) + 1):
             if i < len(LOSSYG):
-                data['w0'] = 2 * np.pi * fo
+                data['w0'] = 2 * np.pi * (fo * np.ones(1))[0]
                 TD = parse_expr(LOSSYG[i]).subs(data)
                 TD = np.double(TD)
                 qk = np.insert(q, 1, k)

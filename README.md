@@ -127,6 +127,7 @@ gaussian_6          3  4  5  6  7  8  9 10
 legendre            3  4  5  6  7  8  9 10
 linear_phase_0.05   2  3  4  5  6  7  8  9 10
 linear_phase_0.5    2  3  4  5  6  7  8  9 10
+minloss             1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
 ```
 
 
@@ -2437,7 +2438,7 @@ C39 31   32    126.9411e-12
 Python script stodelay.py converts s-parameters to reflected time delay.
 
 ```
-$ python stodelay.py <filename>.s?p
+$ python3 stodelay.py <filename>.s?p
 ```
 ## Example
 
@@ -2469,7 +2470,7 @@ You can also run it against a one port s1p file to get the reflected time delay 
 
 Python script chebyshev.py prints out a table of normalized low pass chebyshev filter coefficients.
 
-Usage: python chebyshev.py [<ripple_in_db=.1> [<maximum_order=15>]]
+Usage: python3 chebyshev.py [<ripple_in_db=.1> [<maximum_order=15>]]
 
 
 ```
@@ -2544,7 +2545,7 @@ ripple = 0.01
 
 Python script butterworth.py prints out a table of normalized low pass butterworth, ie maximally flat, filter coefficients.
 
-Usage: python butterworth.py [<maximum_order=15>]
+Usage: python3 butterworth.py [<maximum_order=15>]
 
 
 ```
@@ -2579,7 +2580,7 @@ $ butterworth.py 10
 
 Python script buttersingly.py prints out a table of normalized low pass butterworth (maximally flat) singly terminated filter coefficients.
 
-Usage: python buttersingly.py [<maximum_order=15>]
+Usage: python3 buttersingly.py [<maximum_order=15>]
 
 
 ```
@@ -2614,7 +2615,7 @@ $ buttersingly.py 10
 
 Python script cohn.py prints out a table of normalized low pass Cohn filter coefficients.
 
-Usage: python cohn.py [<maximum_order=15>]
+Usage: python3 cohn.py [<maximum_order=15>]
 
 
 ```
@@ -2642,6 +2643,42 @@ $ cohn.py 10
     [ 1.8340,1.8340,0.5453,0.5453,0.5453,0.5453,0.5453,0.5453,0.5453 ], # n=8
     [ 1.8517,1.8517,0.5400,0.5400,0.5400,0.5400,0.5400,0.5400,0.5400,0.5400 ], # n=9
     [ 1.8661,1.8661,0.5359,0.5359,0.5359,0.5359,0.5359,0.5359,0.5359,0.5359,0.5359 ], # n=10
+```
+
+
+# minloss.py
+
+Python script minloss.py prints out a table of normalized low pass for very nearly minimum loss.  See MYJ eq 11.07-02.
+
+Usage: python3 minloss.py [<maximum_order=15>]
+
+
+```
+$ minloss.py 10
+    # see MYJ eq 11.07-2
+    # g0 g1 ... gn gn+1
+    [ 1.0000,1.0000,1.0000 ], # n=1
+    [ 1.0000,1.0000,1.0000,1.0000 ], # n=2
+    [ 1.0000,1.0000,1.0000,1.0000,1.0000 ], # n=3
+    [ 1.0000,1.0000,1.0000,1.0000,1.0000,1.0000 ], # n=4
+    [ 1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000 ], # n=5
+    [ 1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000 ], # n=6
+    [ 1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000 ], # n=7
+    [ 1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000 ], # n=8
+    [ 1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000 ], # n=9
+    [ 1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000 ], # n=10
+
+    # q1 qn k12 k23 k34 k45 k56 ...
+    [ 1.0000,1.0000 ], # n=1
+    [ 1.0000,1.0000,1.0000 ], # n=2
+    [ 1.0000,1.0000,1.0000,1.0000 ], # n=3
+    [ 1.0000,1.0000,1.0000,1.0000,1.0000 ], # n=4
+    [ 1.0000,1.0000,1.0000,1.0000,1.0000,1.0000 ], # n=5
+    [ 1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000 ], # n=6
+    [ 1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000 ], # n=7
+    [ 1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000 ], # n=8
+    [ 1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000 ], # n=9
+    [ 1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000 ], # n=10
 ```
 
 

@@ -195,7 +195,7 @@ Expose the ports.  Note, sequential ports must be connected together - and broke
 Python script stodelay.py converts s-parameters to reflected time delay.
 
 ```
-$ python stodelay.py <filename>.s?p
+$ python3 stodelay.py <filename>.s?p
 ```
 ## Example
 
@@ -209,7 +209,7 @@ You can also run it against a one port s1p file to get the reflected time delay 
 
 Python script chebyshev.py prints out a table of normalized low pass chebyshev filter coefficients.
 
-Usage: python chebyshev.py [<ripple_in_db=.1> [<maximum_order=15>]]
+Usage: python3 chebyshev.py [<ripple_in_db=.1> [<maximum_order=15>]]
 
 { run("chebyshev.py") }
 { run("chebyshev.py .01 10") }
@@ -218,7 +218,7 @@ Usage: python chebyshev.py [<ripple_in_db=.1> [<maximum_order=15>]]
 
 Python script butterworth.py prints out a table of normalized low pass butterworth, ie maximally flat, filter coefficients.
 
-Usage: python butterworth.py [<maximum_order=15>]
+Usage: python3 butterworth.py [<maximum_order=15>]
 
 { run("butterworth.py 10") }
 
@@ -226,7 +226,7 @@ Usage: python butterworth.py [<maximum_order=15>]
 
 Python script buttersingly.py prints out a table of normalized low pass butterworth (maximally flat) singly terminated filter coefficients.
 
-Usage: python buttersingly.py [<maximum_order=15>]
+Usage: python3 buttersingly.py [<maximum_order=15>]
 
 { run("buttersingly.py 10") }
 
@@ -234,9 +234,17 @@ Usage: python buttersingly.py [<maximum_order=15>]
 
 Python script cohn.py prints out a table of normalized low pass Cohn filter coefficients.
 
-Usage: python cohn.py [<maximum_order=15>]
+Usage: python3 cohn.py [<maximum_order=15>]
 
 { run("cohn.py 10") }
+
+# minloss.py
+
+Python script minloss.py prints out a table of normalized low pass for very nearly minimum loss.  See MYJ eq 11.07-02.
+
+Usage: python3 minloss.py [<maximum_order=15>]
+
+{ run("minloss.py 10") }
 
 """)
 

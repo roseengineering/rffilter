@@ -238,14 +238,6 @@ Usage: python3 cohn.py [<maximum_order=15>]
 
 { run("cohn.py 10") }
 
-# minloss.py
-
-Python script minloss.py prints out a table of normalized low pass for very nearly minimum loss.  See MYJ eq 11.07-02.
-
-Usage: python3 minloss.py [<maximum_order=15>]
-
-{ run("minloss.py 10") }
-
 """)
 
 

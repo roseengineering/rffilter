@@ -282,8 +282,8 @@ $ rffilter.py --k chebyshev_0.1 --nodal --expose --f 10e6 --bw 400e3 --n 5 --re 
 * FILTER   : nodal
 * ORDER    : 5
 * FREQ     : 10.000000 MHz
-* RE1      : 50.0
-* RE2      : 50.0
+* RE1      : 50.000
+* RE2      : 50.000
 * BW       : 400.0000e+03
 * QL       : 25.0
 * QU       : 2000.0
@@ -338,12 +338,13 @@ $ rffilter.py --g butterworth --mesh --f 10e6 --bw 400e3 --n 8 --re 50 | tee exa
 * FILTER   : mesh
 * ORDER    : 8
 * FREQ     : 10.000000 MHz
-* RE1      : 50.0
-* RE2      : 50.0
+* RE1      : 50.000
+* RE2      : 50.000
 * BW       : 400.0000e+03
 * QL       : 25.0
 * QU       : inf
 * qo       : inf
+* TD21     : 4.0790e-06
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
 * 1      0.3902  621.0226e-09             -    1.0251e+06    9.7550e+00             -
@@ -410,13 +411,14 @@ $ rffilter.py --g chebyshev_0.2 --n 8 --crystal-mesh --l 69.7e-3 --f 4913.57e3 -
 * FILTER   : crystal mesh
 * ORDER    : 8
 * FREQ     : 4.915464 MHz
-* RE1      : 1153.1
-* RE2      : 1153.0
+* RE1      : 1153.074
+* RE2      : 1153.047
 * CH       : 3.6600e-12
 * BW       : 2.4000e+03
 * QL       : 2048.1
 * QU       : inf
 * qo       : inf
+* TD21     : 892.0701e-06
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
 * 1      1.3804  366.1625e-06             -    1.7386e+03    2.8272e+03             -
@@ -523,13 +525,14 @@ $ rffilter.py --g chebyshev_0.2 --n 8 --crystal-mesh --l 69.7e-3 --f 4913.57e3 -
 * FILTER   : crystal mesh
 * ORDER    : 8
 * FREQ     : 4.915464 MHz
-* RE1      : 1153.1
-* RE2      : 1153.0
+* RE1      : 1153.066
+* RE2      : 1153.040
 * CH       : 3.6600e-12
 * BW       : 2.4000e+03
 * QL       : 2048.1
 * QU       : 150000.0
 * qo       : 73.2
+* TD21     : 892.0701e-06
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
 * 1      1.3804  366.1625e-06             -    1.7386e+03    2.8272e+03   53.0558e+00
@@ -666,8 +669,8 @@ $ rffilter.py --k chebyshev_0.5 --bw 2500 --n 8 --l 70e-3 --crystal-mesh --f 500
 * FILTER   : crystal mesh
 * ORDER    : 8
 * FREQ     : 5.001612 MHz
-* RE1      : 615.9
-* RE2      : 615.9
+* RE1      : 615.884
+* RE2      : 615.860
 * BW       : 2.5000e+03
 * QL       : 2000.6
 * QU       : inf
@@ -771,8 +774,8 @@ $ rffilter.py --k chebyshev_0.5 --bw 2500 --n 8 --l 70e-3 --crystal-mesh --ch 3.
 * FILTER   : crystal mesh
 * ORDER    : 8
 * FREQ     : 5.001933 MHz
-* RE1      : 810.2
-* RE2      : 848.6
+* RE1      : 810.237
+* RE2      : 848.589
 * CH       : 3.7000e-12
 * BW       : 2.5000e+03
 * QL       : 2000.8
@@ -888,13 +891,14 @@ $ rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal-mesh --ch 5
 * FILTER   : crystal mesh
 * ORDER    : 12
 * FREQ     : 8.001743 MHz
-* RE1      : 240.9
-* RE2      : 240.7
+* RE1      : 240.921
+* RE2      : 240.691
 * CH       : 5.0000e-12
 * BW       : 2.5000e+03
 * QL       : 3200.7
 * QU       : inf
 * qo       : inf
+* TD21     : 1.3339e-03
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
 * 1      1.2055  306.9781e-06             -    2.0738e+03    3.8584e+03             -
@@ -1050,13 +1054,14 @@ $ rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal-mesh --ch 5
 * FILTER   : crystal mesh
 * ORDER    : 12
 * FREQ     : 8.001773 MHz
-* RE1      : 241.7
-* RE2      : 241.5
+* RE1      : 241.713
+* RE2      : 241.481
 * CH       : 5.0000e-12
 * BW       : 2.5000e+03
 * QL       : 3200.7
 * QU       : inf
 * qo       : inf
+* TD21     : 1.3339e-03
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
 * 1      1.2055  306.9781e-06             -    2.0738e+03    3.8585e+03             -
@@ -1202,8 +1207,8 @@ $ rffilter.py --g butterworth --lowpass --f 10e6 --n 5 --re 50
 * FILTER   : lowpass
 * ORDER    : 5
 * FREQ     : 10.000000 MHz
-* RE1      : 50.0
-* RE2      : 50.0
+* RE1      : 50.000
+* RE2      : 50.000
 
 C1  1    0     196.7155e-12
 L2  1    2       1.2876e-06
@@ -1221,8 +1226,8 @@ C5  3    0     196.7155e-12
 * FILTER   : lowpass
 * ORDER    : 5
 * FREQ     : 10.000000 MHz
-* RE1      : 50.0
-* RE2      : 50.0
+* RE1      : 50.000
+* RE2      : 50.000
 
 L1  1    2     491.7888e-09
 
@@ -1249,12 +1254,13 @@ $ rffilter.py --g butterworth --bandpass --f 10e6 --bw 1e6 --n 4 --re 50
 * FILTER   : bandpass
 * ORDER    : 4
 * FREQ     : 10.000000 MHz
-* RE1      : 50.0
-* RE2      : 50.0
+* RE1      : 50.000
+* RE2      : 50.000
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : inf
 * qo       : inf
+* TD21     : 831.8074e-09
 
 L1  1    0     103.9685e-09
 C2  1    0       2.4363e-09
@@ -1274,12 +1280,13 @@ C8  4    5      41.5874e-12
 * FILTER   : bandpass
 * ORDER    : 4
 * FREQ     : 10.000000 MHz
-* RE1      : 50.0
-* RE2      : 50.0
+* RE1      : 50.000
+* RE2      : 50.000
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : inf
 * qo       : inf
+* TD21     : 831.8074e-09
 
 L1  1    2       6.0909e-06
 C2  2    3      41.5874e-12
@@ -1308,8 +1315,8 @@ $ rffilter.py --z butterworth --nodal --qu 2500 --bw 1e6 --f 10e6 --n 3 --re 50
 * FILTER   : nodal
 * ORDER    : 3
 * FREQ     : 10.000000 MHz
-* RE1      : 50.0
-* RE2      : 50.0
+* RE1      : 50.000
+* RE2      : 50.000
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : 2500.0
@@ -1349,8 +1356,8 @@ $ rffilter.py --z bessel --nodal --qu 2500 --bw 1e6 --f 10e6 --n 8 --re 50
 * FILTER   : nodal
 * ORDER    : 8
 * FREQ     : 10.000000 MHz
-* RE1      : 50.0
-* RE2      : 50.0
+* RE1      : 50.000
+* RE2      : 50.000
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : 2500.0
@@ -1415,8 +1422,8 @@ C23 8    0       5.9112e-09
 * FILTER   : nodal
 * ORDER    : 8
 * FREQ     : 10.000000 MHz
-* RE1      : 50.0
-* RE2      : 50.0
+* RE1      : 50.000
+* RE2      : 50.000
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : 2500.0
@@ -1481,8 +1488,8 @@ C23 8    0       1.2597e-09
 * FILTER   : nodal
 * ORDER    : 8
 * FREQ     : 10.000000 MHz
-* RE1      : 50.0
-* RE2      : 50.0
+* RE1      : 50.000
+* RE2      : 50.000
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : 2500.0
@@ -1547,8 +1554,8 @@ C23 8    0     662.5087e-12
 * FILTER   : nodal
 * ORDER    : 8
 * FREQ     : 10.000000 MHz
-* RE1      : 50.0
-* RE2      : 50.0
+* RE1      : 50.000
+* RE2      : 50.000
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : 2500.0
@@ -1613,8 +1620,8 @@ C23 8    0     350.2500e-12
 * FILTER   : nodal
 * ORDER    : 8
 * FREQ     : 10.000000 MHz
-* RE1      : 50.0
-* RE2      : 50.0
+* RE1      : 50.000
+* RE2      : 50.000
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : 2500.0
@@ -1679,8 +1686,8 @@ C23 8    0     834.2409e-12
 * FILTER   : nodal
 * ORDER    : 8
 * FREQ     : 10.000000 MHz
-* RE1      : 50.0
-* RE2      : 50.0
+* RE1      : 50.000
+* RE2      : 50.000
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : 2500.0
@@ -1745,8 +1752,8 @@ C23 8    0     443.1892e-12
 * FILTER   : nodal
 * ORDER    : 8
 * FREQ     : 10.000000 MHz
-* RE1      : 50.0
-* RE2      : 50.0
+* RE1      : 50.000
+* RE2      : 50.000
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : 2500.0
@@ -1811,8 +1818,8 @@ C23 8    0     234.7389e-12
 * FILTER   : nodal
 * ORDER    : 8
 * FREQ     : 10.000000 MHz
-* RE1      : 50.0
-* RE2      : 50.0
+* RE1      : 50.000
+* RE2      : 50.000
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : 2500.0
@@ -1885,8 +1892,8 @@ $ rffilter.py --k butterworth --nodal --f 10e6 --bw 1e6 --n 5 --re 50
 * FILTER   : nodal
 * ORDER    : 5
 * FREQ     : 10.000000 MHz
-* RE1      : 50.0
-* RE2      : 50.0
+* RE1      : 50.000
+* RE2      : 50.000
 * BW       : 1.0000e+06
 * QL       : 10.0
 * QU       : inf
@@ -1932,12 +1939,13 @@ $ rffilter.py --g butterworth --nodal --f 10e6 --bw 400e3 --n 5 --l 100e-9,100e-
 * FILTER   : nodal
 * ORDER    : 5
 * FREQ     : 10.000000 MHz
-* RE1      : 97.1
-* RE2      : 97.1
+* RE1      : 97.075
+* RE2      : 97.075
 * BW       : 400.0000e+03
 * QL       : 25.0
 * QU       : inf
 * qo       : inf
+* TD21     : 2.5751e-06
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
 * 1      0.6180  983.5775e-09             -  647.2492e+03   15.4500e+00             -
@@ -1979,12 +1987,13 @@ $ rffilter.py --g butterworth --nodal --f 10e6 --bw 400e3 --n 5 --re 100,120
 * FILTER   : nodal
 * ORDER    : 5
 * FREQ     : 10.000000 MHz
-* RE1      : 100.0
-* RE2      : 120.0
+* RE1      : 100.000
+* RE2      : 120.000
 * BW       : 400.0000e+03
 * QL       : 25.0
 * QU       : inf
 * qo       : inf
+* TD21     : 2.5751e-06
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
 * 1      0.6180  983.5775e-09             -  647.2492e+03   15.4500e+00             -
@@ -2026,8 +2035,8 @@ $ rffilter.py --g butterworth --lowpass --f 10e6 --n 5 --re 75
 * FILTER   : lowpass
 * ORDER    : 5
 * FREQ     : 10.000000 MHz
-* RE1      : 75.0
-* RE2      : 75.0
+* RE1      : 75.000
+* RE2      : 75.000
 
 C1  1    0     131.1437e-12
 L2  1    2       1.9313e-06
@@ -2045,8 +2054,8 @@ C5  3    0     131.1437e-12
 * FILTER   : lowpass
 * ORDER    : 5
 * FREQ     : 10.000000 MHz
-* RE1      : 75.0
-* RE2      : 75.0
+* RE1      : 75.000
+* RE2      : 75.000
 
 L1  1    2     737.6832e-09
 
@@ -2069,8 +2078,8 @@ $ rffilter.py --g butterworth --highpass --f 10e6 --n 5 --re 75
 * FILTER   : highpass
 * ORDER    : 5
 * FREQ     : 10.000000 MHz
-* RE1      : 75.0
-* RE2      : 75.0
+* RE1      : 75.000
+* RE2      : 75.000
 
 L1  1    0       1.9315e-06
 C2  1    2     131.1536e-12
@@ -2088,8 +2097,8 @@ L5  3    0       1.9315e-06
 * FILTER   : highpass
 * ORDER    : 5
 * FREQ     : 10.000000 MHz
-* RE1      : 75.0
-* RE2      : 75.0
+* RE1      : 75.000
+* RE2      : 75.000
 
 C1  1    2     343.3764e-12
 
@@ -2112,12 +2121,13 @@ $ rffilter.py --g butterworth --mesh --f 10e6 --bw 400e3 --n 8 --re 50 --qu 2000
 * FILTER   : mesh
 * ORDER    : 8
 * FREQ     : 10.000000 MHz
-* RE1      : 50.0
-* RE2      : 50.0
+* RE1      : 50.000
+* RE2      : 50.000
 * BW       : 400.0000e+03
 * QL       : 25.0
 * QU       : 2000.0
 * qo       : 80.0
+* TD21     : 4.0790e-06
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
 * 1      0.3902  621.0226e-09             -    1.0251e+06    9.7550e+00  205.0231e+00
@@ -2201,12 +2211,13 @@ $ rffilter.py --g butterworth --mesh --f 10e6 --bw 400e3 --n 4 --l 100e-9
 * FILTER   : mesh
 * ORDER    : 4
 * FREQ     : 10.000000 MHz
-* RE1      : 0.3
-* RE2      : 0.3
+* RE1      : 0.328
+* RE2      : 0.328
 * BW       : 400.0000e+03
 * QL       : 25.0
 * QU       : inf
 * qo       : inf
+* TD21     : 2.0795e-06
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
 * 1      0.7654    1.2182e-06             -  522.6026e+03   19.1350e+00             -
@@ -2243,12 +2254,13 @@ $ rffilter.py --g butterworth --mesh --f 10e6 --bw 400e3 --n 4 --re 100
 * FILTER   : mesh
 * ORDER    : 4
 * FREQ     : 10.000000 MHz
-* RE1      : 100.0
-* RE2      : 100.0
+* RE1      : 100.000
+* RE2      : 100.000
 * BW       : 400.0000e+03
 * QL       : 25.0
 * QU       : inf
 * qo       : inf
+* TD21     : 2.0795e-06
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
 * 1      0.7654    1.2182e-06             -  522.6026e+03   19.1350e+00             -
@@ -2285,12 +2297,13 @@ $ rffilter.py --g butterworth --mesh --f 10e6 --bw 400e3 --n 4 --re 100,120
 * FILTER   : mesh
 * ORDER    : 4
 * FREQ     : 10.000000 MHz
-* RE1      : 100.0
-* RE2      : 120.0
+* RE1      : 100.000
+* RE2      : 120.000
 * BW       : 400.0000e+03
 * QL       : 25.0
 * QU       : inf
 * qo       : inf
+* TD21     : 2.0795e-06
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
 * 1      0.7654    1.2182e-06             -  522.6026e+03   19.1350e+00             -
@@ -2332,8 +2345,8 @@ $ rffilter.py --k chebyshev_0.1 --n 8 --crystal-mesh --l .170 --f 4e6 --bw 500 -
 * FILTER   : crystal mesh
 * ORDER    : 8
 * FREQ     : 4.000330 MHz
-* RE1      : 459.7
-* RE2      : 459.7
+* RE1      : 459.693
+* RE2      : 459.693
 * CH       : 2.0500e-12
 * BW       : 500.0000e+00
 * QL       : 8000.7

@@ -4,13 +4,14 @@
 * FILTER   : crystal mesh
 * ORDER    : 8
 * FREQ     : 4.915464 MHz
-* RE1      : 1153.1
-* RE2      : 1153.0
+* RE1      : 1153.074
+* RE2      : 1153.047
 * CH       : 3.6600e-12
 * BW       : 2.4000e+03
 * QL       : 2048.1
 * QU       : inf
 * qo       : inf
+* TD21     : 892.0701e-06
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
 * 1      1.3804  366.1625e-06             -    1.7386e+03    2.8272e+03             -

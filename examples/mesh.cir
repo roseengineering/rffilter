@@ -4,12 +4,13 @@
 * FILTER   : mesh
 * ORDER    : 8
 * FREQ     : 10.000000 MHz
-* RE1      : 50.0
-* RE2      : 50.0
+* RE1      : 50.000
+* RE2      : 50.000
 * BW       : 400.0000e+03
 * QL       : 25.0
 * QU       : inf
 * qo       : inf
+* TD21     : 4.0790e-06
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
 * 1      0.3902  621.0226e-09             -    1.0251e+06    9.7550e+00             -

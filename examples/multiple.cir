@@ -4,8 +4,8 @@
 * FILTER   : crystal mesh
 * ORDER    : 8
 * FREQ     : 5.001612 MHz
-* RE1      : 615.9
-* RE2      : 615.9
+* RE1      : 615.884
+* RE2      : 615.860
 * BW       : 2.5000e+03
 * QL       : 2000.6
 * QU       : inf

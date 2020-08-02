@@ -1883,13 +1883,13 @@ def main():
         print("* FILTER   : {}".format(kw['filter']))
         print("* ORDER    : {}".format(args.n))
         print("* FREQ     : {:.6f} MHz".format(fo / 1e6))
-        print("* RE1      : {:.1f}".format(RE[0]))
-        print("* RE2      : {:.1f}".format(RE[1]))
+        print("* RE1      : {:.3f}".format(RE[0]))
+        print("* RE2      : {:.3f}".format(RE[1]))
  
         if kw.get('ro') is not None:
             kw['ro'] = np.ones(2) * kw['ro']
-            print("* RO1      : {:.1f}".format(kw['ro'][0]))
-            print("* RO2      : {:.1f}".format(kw['ro'][1]))
+            print("* RO1      : {:.3f}".format(kw['ro'][0]))
+            print("* RO2      : {:.3f}".format(kw['ro'][1]))
 
         if kw.get('CPE') is not None:
             kw['CPE'] = -np.ones(2) * kw['CPE']
@@ -1917,10 +1917,14 @@ def main():
         if kw.get('qmin'):
             print("* qmin     : {:.1f}".format(kw['qmin']))
 
+        if kw.get('g') is not None and args.bw:
+            td = bandpass_groupdelay(kw['g'], args.bw)
+            print("* TD21     : {}".format(unit(td).strip()))
+            
         print()
 
         if kw.get('k') is not None:
-            list_couplings(kw['q'], kw['k'], fo, args.bw, QU=args.qu, g=kw.get('G'))
+            list_couplings(kw['q'], kw['k'], fo, args.bw, QU=args.qu, g=kw.get('g'))
             print()
 
         if kw.get('MESH') is not None:
@@ -1960,7 +1964,14 @@ def main():
         print(".ends")
         print('.end')
         print()
-           
+          
+ 
+    def bandpass_groupdelay(g, BW):
+        N = len(g) - 2
+        td = np.sum(g[1: -1]) / (2 * np.pi * BW)
+        return td 
+
+
     def list_couplings(q, k, fo, BW, QU=None, g=None):
         qu = np.nan if QU is None or np.isinf(QU) else QU
         N = len(k) + 1
@@ -2079,7 +2090,7 @@ def main():
         if args.g and args.n:
             kw['type'] = args.g
             g = lowpass_g(args.g, args.n)
-            kw['G'] = g
+            kw['g'] = g
             qk = [ to_coupling_qk(g) ]
         if args.k and args.n:
             kw['type'] = args.k
@@ -2168,7 +2179,7 @@ def main():
             for i in range(len(qk)):
                 if i > 0: print()
                 q, k = qk[i]
-                list_couplings(q, k, kw.get('f'), args.bw, QU=args.qu, g=kw.get('G'))
+                list_couplings(q, k, kw.get('f'), args.bw, QU=args.qu, g=kw.get('g'))
 
         elif args.g: 
             list_gnormalized(args.g)

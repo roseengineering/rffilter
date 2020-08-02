@@ -1918,8 +1918,7 @@ def main():
             print("* qmin     : {:.1f}".format(kw['qmin']))
 
         if kw.get('g') is not None and args.bw:
-            td = bandpass_groupdelay(kw['g'], args.bw)
-            print("* TD21     : {}".format(unit(td).strip()))
+            list_groupdelay(kw['g'], fo, BW=args.bw, QU=args.qu)
             
         print()
 
@@ -1964,12 +1963,20 @@ def main():
         print(".ends")
         print('.end')
         print()
-          
- 
-    def bandpass_groupdelay(g, BW):
+
+
+    def list_groupdelay(g, fo, BW, QU):
         N = len(g) - 2
-        td = np.sum(g[1: -1]) / (2 * np.pi * BW)
-        return td 
+        gn = np.sum(g[1: -1])
+        td = gn / (2 * np.pi * BW)
+        print("* SUM(gn)  : {}".format(unit(gn).strip()))
+        print("* TD21     : {}".format(unit(td).strip()))
+        if QU is not None and fo is not None:
+            fo = (fo * np.ones(1))[0]
+            IL = 8.686 * np.pi * 2 * fo * td / QU / 2    # 20 * np.log10(td * wo / QU / 2 + 1)
+            print("* IL ~     : {:.3f} dB".format(IL))
+            K = 8.686 * np.pi * fo
+            print("* Qu ~     : {} * TD21 / IL(dB)".format(unit(K).strip()))
 
 
     def list_couplings(q, k, fo, BW, QU=None, g=None):
@@ -2176,6 +2183,9 @@ def main():
         # print coupling info
 
         elif args.bw and args.n:
+            if kw.get('g') is not None:
+                list_groupdelay(kw['g'], kw.get('f'), BW=args.bw, QU=args.qu)
+                print()
             for i in range(len(qk)):
                 if i > 0: print()
                 q, k = qk[i]

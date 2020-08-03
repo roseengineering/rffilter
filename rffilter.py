@@ -1969,13 +1969,15 @@ def main():
         N = len(g) - 2
         gn = np.sum(g[1: -1])
         td = gn / (2 * np.pi * BW)
-        print("* SUM(gn)  : {}".format(unit(gn).strip()))
+        print("* SUM(g1-n): {}".format(unit(gn).strip()))
         print("* TD21     : {}".format(unit(td).strip()))
         if QU is not None and fo is not None:
             fo = (fo * np.ones(1))[0]
-            IL = 8.686 * np.pi * 2 * fo * td / QU / 2    # 20 * np.log10(td * wo / QU / 2 + 1)
-            print("* IL ~     : {:.3f} dB".format(IL))
+            wo = 2 * np.pi * fo
+            IL = 8.686 * wo * td / QU / 2    
             K = 8.686 * np.pi * fo
+            # IL = 20 * np.log10(wo * td / QU / 2 + 1)
+            print("* IL ~     : {:.3f} dB".format(IL))
             print("* Qu ~     : {} * TD21 / IL(dB)".format(unit(K).strip()))
 
 

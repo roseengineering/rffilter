@@ -1968,15 +1968,15 @@ def main():
     def list_groupdelay(g, fo, BW, QU):
         N = len(g) - 2
         gn = np.sum(g[1: -1])
-        td = gn / (2 * np.pi * BW)
+        td_prime = gn / 2                      # MYJ 4.08-1
+        td = 2 * td_prime / (2 * np.pi * BW)   # MYJ 4.08-4
         print("* SUM(g1-n): {}".format(unit(gn).strip()))
         print("* TD21     : {}".format(unit(td).strip()))
         if QU is not None and fo is not None:
             fo = (fo * np.ones(1))[0]
             wo = 2 * np.pi * fo
-            IL = 8.686 * wo * td / QU / 2    
+            IL = (8.686 * wo * td / QU) / 2    # MYJ 4.131-8
             K = 8.686 * np.pi * fo
-            # IL = 20 * np.log10(wo * td / QU / 2 + 1)
             print("* IL ~     : {:.3f} dB".format(IL))
             print("* Qu ~     : {} * TD21 / IL(dB)".format(unit(K).strip()))
 

@@ -253,7 +253,7 @@ Design, Measurement, and Tuning of Coupled-Resonator Filters" in MTT.
 
 ```
 $ rffilter.py --g chebyshev_0.2 --n 8 --bw 1000
-* SUM(gn)  : 13.4521e+00
+* SUM(g1-n): 13.4521e+00
 * TD21     : 2.1410e-03
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
@@ -347,7 +347,7 @@ $ rffilter.py --g butterworth --mesh --f 10e6 --bw 400e3 --n 8 --re 50 | tee exa
 * QL       : 25.0
 * QU       : inf
 * qo       : inf
-* SUM(gn)  : 10.2516e+00
+* SUM(g1-n): 10.2516e+00
 * TD21     : 4.0790e-06
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
@@ -422,7 +422,7 @@ $ rffilter.py --g chebyshev_0.2 --n 8 --crystal-mesh --l 69.7e-3 --f 4913.57e3 -
 * QL       : 2048.1
 * QU       : inf
 * qo       : inf
-* SUM(gn)  : 13.4521e+00
+* SUM(g1-n): 13.4521e+00
 * TD21     : 892.0701e-06
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
@@ -537,7 +537,7 @@ $ rffilter.py --g chebyshev_0.2 --n 8 --crystal-mesh --l 69.7e-3 --f 4913.57e3 -
 * QL       : 2048.1
 * QU       : 150000.0
 * qo       : 73.2
-* SUM(gn)  : 13.4521e+00
+* SUM(g1-n): 13.4521e+00
 * TD21     : 892.0701e-06
 * IL ~     : 0.798 dB
 * Qu ~     : 134.1326e+06 * TD21 / IL(dB)
@@ -906,7 +906,7 @@ $ rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal-mesh --ch 5
 * QL       : 3200.7
 * QU       : inf
 * qo       : inf
-* SUM(gn)  : 20.9529e+00
+* SUM(g1-n): 20.9529e+00
 * TD21     : 1.3339e-03
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
@@ -1070,7 +1070,7 @@ $ rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal-mesh --ch 5
 * QL       : 3200.7
 * QU       : inf
 * qo       : inf
-* SUM(gn)  : 20.9529e+00
+* SUM(g1-n): 20.9529e+00
 * TD21     : 1.3339e-03
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
@@ -1270,7 +1270,7 @@ $ rffilter.py --g butterworth --bandpass --f 10e6 --bw 1e6 --n 4 --re 50
 * QL       : 10.0
 * QU       : inf
 * qo       : inf
-* SUM(gn)  : 5.2264e+00
+* SUM(g1-n): 5.2264e+00
 * TD21     : 831.8074e-09
 
 L1  1    0     103.9685e-09
@@ -1297,7 +1297,7 @@ C8  4    5      41.5874e-12
 * QL       : 10.0
 * QU       : inf
 * qo       : inf
-* SUM(gn)  : 5.2264e+00
+* SUM(g1-n): 5.2264e+00
 * TD21     : 831.8074e-09
 
 L1  1    2       6.0909e-06
@@ -1957,7 +1957,7 @@ $ rffilter.py --g butterworth --nodal --f 10e6 --bw 400e3 --n 5 --l 100e-9,100e-
 * QL       : 25.0
 * QU       : inf
 * qo       : inf
-* SUM(gn)  : 6.4720e+00
+* SUM(g1-n): 6.4720e+00
 * TD21     : 2.5751e-06
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
@@ -2006,7 +2006,7 @@ $ rffilter.py --g butterworth --nodal --f 10e6 --bw 400e3 --n 5 --re 100,120
 * QL       : 25.0
 * QU       : inf
 * qo       : inf
-* SUM(gn)  : 6.4720e+00
+* SUM(g1-n): 6.4720e+00
 * TD21     : 2.5751e-06
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
@@ -2141,7 +2141,7 @@ $ rffilter.py --g butterworth --mesh --f 10e6 --bw 400e3 --n 8 --re 50 --qu 2000
 * QL       : 25.0
 * QU       : 2000.0
 * qo       : 80.0
-* SUM(gn)  : 10.2516e+00
+* SUM(g1-n): 10.2516e+00
 * TD21     : 4.0790e-06
 * IL ~     : 0.557 dB
 * Qu ~     : 272.8787e+06 * TD21 / IL(dB)
@@ -2234,7 +2234,7 @@ $ rffilter.py --g butterworth --mesh --f 10e6 --bw 400e3 --n 4 --l 100e-9
 * QL       : 25.0
 * QU       : inf
 * qo       : inf
-* SUM(gn)  : 5.2264e+00
+* SUM(g1-n): 5.2264e+00
 * TD21     : 2.0795e-06
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
@@ -2278,7 +2278,7 @@ $ rffilter.py --g butterworth --mesh --f 10e6 --bw 400e3 --n 4 --re 100
 * QL       : 25.0
 * QU       : inf
 * qo       : inf
-* SUM(gn)  : 5.2264e+00
+* SUM(g1-n): 5.2264e+00
 * TD21     : 2.0795e-06
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
@@ -2322,7 +2322,7 @@ $ rffilter.py --g butterworth --mesh --f 10e6 --bw 400e3 --n 4 --re 100,120
 * QL       : 25.0
 * QU       : inf
 * qo       : inf
-* SUM(gn)  : 5.2264e+00
+* SUM(g1-n): 5.2264e+00
 * TD21     : 2.0795e-06
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10

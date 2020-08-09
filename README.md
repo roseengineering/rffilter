@@ -54,14 +54,16 @@ The program takes the following command line options:
 
 ```
 $ rffilter.py --help
-usage: rffilter.py [-h] [--highpass] [--lowpass] [--bandpass] [--nodal]
-                   [--mesh] [--crystal-mesh] [--crystal-nodal] [--expose]
-                   [--list-g] [--list-k] [--list-z] [--n N] [--bw BW] [--g G]
-                   [--k K] [--z Z] [--f F] [--ro RO] [--re RE] [--l L]
+usage: rffilter.py [-h] [--reverse] [--highpass] [--lowpass] [--bandpass]
+                   [--nodal] [--mesh] [--crystal-mesh] [--crystal-nodal]
+                   [--expose] [--list-g] [--list-k] [--list-z] [-b BW] [-n N]
+                   [-g G] [-k K] [-z Z] [-f F] [-l L] [-r RE] [--ro RO]
                    [--ch CH] [--qu QU] [--qo QO] [--shape-factor SHAPE_FACTOR]
 
 optional arguments:
   -h, --help            show this help message and exit
+  --reverse             reverse the order of the filter elements (default:
+                        False)
   --highpass            generate a highpass filter (default: False)
   --lowpass             generate a lowpass filter (default: False)
   --bandpass            generate a wideband bandpass filter (default: False)
@@ -80,21 +82,21 @@ optional arguments:
   --list-k              list q, k coupling response types (default: False)
   --list-z              list Zverev predistored q, k coupling response types
                         (default: False)
-  --n N                 number of filter poles or resonators (default: None)
-  --bw BW               filter bandwidth (default: None)
-  --g G                 name of lowpass prototype element response (default:
+  -b BW, --bw BW        filter bandwidth (default: None)
+  -n N, --n N           number of filter poles or resonators (default: None)
+  -g G, --g G           name of lowpass prototype element response (default:
                         None)
-  --k K                 name of q, k coupling response (default: None)
-  --z Z                 name of Zverev predistored q, k coupling response
+  -k K, --k K           name of q, k coupling response (default: None)
+  -z Z, --z Z           name of Zverev predistored q, k coupling response
                         (default: None)
-  --f F                 filter design frequency, can be given in common
+  -f F, --f F           filter design frequency, can be given in common
                         notation (default: None)
-  --ro RO               termination resistors, can be given in common notation
-                        (default: None)
-  --re RE               end resistors, can be given in common notation
-                        (default: None)
-  --l L                 resonator inductor values, can be given in common
+  -l L, --l L           resonator inductor values, can be given in common
                         notation (default: None)
+  -r RE, --re RE        filter end resistors, can be given in common notation
+                        (default: None)
+  --ro RO               termination resistors to match end resistors to, can
+                        be given in common notation (default: None)
   --ch CH               holder capacitance Co of crystals (default: None)
   --qu QU               unloaded Q of resonators (default: None)
   --qo QO               normalized Qo of resonators, used if Qu, frequency,

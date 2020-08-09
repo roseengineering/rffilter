@@ -1504,16 +1504,21 @@ def zverev_k(name, n, qo=np.inf):
             k = res[4:]
             yield q, k
 
-def lowpass_g(name, n):
+def lowpass_g(name, n, reverse):
     for g in LOWPASS.get(name.upper(), []):
         if len(g) - 2 == n: 
+            if reverse:
+                g.reverse()
             return g
 
-def coupling_qk(name, n):
+def coupling_qk(name, n, reverse):
     for res in COUPLED.get(name.upper(), []):
         q = res[0:2]
         k = res[2:]
         if len(k) + 1 == n: 
+            if reverse:
+                q.reverse()
+                k.reverse()
             return q, k
 
 def to_csv(row):
@@ -2099,12 +2104,12 @@ def main():
 
         if args.g and args.n:
             kw['type'] = args.g
-            g = lowpass_g(args.g, args.n)
+            g = lowpass_g(args.g, args.n, args.reverse)
             kw['g'] = g
             qk = [ to_coupling_qk(g) ]
         if args.k and args.n:
             kw['type'] = args.k
-            qk = [ coupling_qk(args.k, args.n) ]
+            qk = [ coupling_qk(args.k, args.n, args.reverse) ]
         if args.z and args.n:
             kw['type'] = args.z
             qk = list(zverev_k(args.z, args.n, kw['qo']))
@@ -2210,6 +2215,8 @@ def main():
 
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument("--reverse", action="store_true",
+        help="reverse the order of the filter elements")
     parser.add_argument("--highpass", action="store_true",
         help="generate a highpass filter")
     parser.add_argument("--lowpass", action="store_true",
@@ -2232,24 +2239,26 @@ def main():
         help="list q, k coupling response types")
     parser.add_argument("--list-z", action="store_true",
         help="list Zverev predistored q, k coupling response types")
-    parser.add_argument("--n", type=int, default=None,
-        help="number of filter poles or resonators")
-    parser.add_argument("--bw", type=float, default=None,
+
+    parser.add_argument("-b", "--bw", type=float, default=None,
         help="filter bandwidth")
-    parser.add_argument("--g", type=str, default=None,
+    parser.add_argument("-n", "--n", type=int, default=None,
+        help="number of filter poles or resonators")
+    parser.add_argument("-g", "--g", type=str, default=None,
         help="name of lowpass prototype element response")
-    parser.add_argument("--k", type=str, default=None,
+    parser.add_argument("-k", "--k", type=str, default=None,
         help="name of q, k coupling response")
-    parser.add_argument("--z", type=str, default=None,
+    parser.add_argument("-z", "--z", type=str, default=None,
         help="name of Zverev predistored q, k coupling response")
-    parser.add_argument("--f", type=str, default=None,
+    parser.add_argument("-f", "--f", type=str, default=None,
         help="filter design frequency, can be given in common notation")
-    parser.add_argument("--ro", type=str, default=None,
-        help="termination resistors, can be given in common notation")
-    parser.add_argument("--re", type=str, default=None,
-        help="end resistors, can be given in common notation")
-    parser.add_argument("--l", type=str, default=None,
+    parser.add_argument("-l", "--l", type=str, default=None,
         help="resonator inductor values, can be given in common notation")
+    parser.add_argument("-r", "--re", type=str, default=None,
+        help="filter end resistors, can be given in common notation")
+
+    parser.add_argument("--ro", type=str, default=None,
+        help="termination resistors to match end resistors to, can be given in common notation")
     parser.add_argument("--ch", type=float, default=None,
         help="holder capacitance Co of crystals")
     parser.add_argument("--qu", type=float, default=None,

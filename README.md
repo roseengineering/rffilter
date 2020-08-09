@@ -540,8 +540,8 @@ $ rffilter.py --g chebyshev_0.2 --n 8 --crystal-mesh --l 69.7e-3 --f 4913.57e3 -
 * SUM(g1-n): 13.4521e+00
 * TD21 ~   : 892.0701e-06
 * IL ~     : 0.798 dB
-* Qu ~     : 67.0663e+06 * TD21 / IL(dB)
-* Qu ~     : 59.8278e+03 / IL(dB)
+* Qu ~     : 134.1326e+06 * TD21 / IL(dB)
+* Qu ~     : 119.6557e+03 / IL(dB)
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
 * 1      1.3804  366.1625e-06             -    1.7386e+03    2.8272e+03   53.0558e+00
@@ -1065,8 +1065,8 @@ $ rffilter.py --g chebyshev_0.1 --bw 2500 --n 12 --l .0155 --crystal-mesh --ch 5
 * SUM(g1-n): 20.9529e+00
 * TD21 ~   : 1.3339e-03
 * IL ~     : 2.427 dB
-* Qu ~     : 109.1753e+06 * TD21 / IL(dB)
-* Qu ~     : 145.6292e+03 / IL(dB)
+* Qu ~     : 218.3505e+06 * TD21 / IL(dB)
+* Qu ~     : 291.2585e+03 / IL(dB)
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
 * 1      1.2055  306.9781e-06             -    2.0738e+03    3.8584e+03   31.1006e+00
@@ -2325,8 +2325,8 @@ $ rffilter.py --g butterworth --mesh --f 10e6 --bw 400e3 --n 8 --re 50 --qu 2000
 * SUM(g1-n): 10.2516e+00
 * TD21 ~   : 4.0790e-06
 * IL ~     : 0.557 dB
-* Qu ~     : 136.4394e+06 * TD21 / IL(dB)
-* Qu ~     : 556.5337e+00 / IL(dB)
+* Qu ~     : 272.8787e+06 * TD21 / IL(dB)
+* Qu ~     : 1.1131e+03 / IL(dB)
 
 * ij        q,k           TD1           TDN           CBW           Q,K      QU/QE>10
 * 1      0.3902  621.0226e-09             -    1.0251e+06    9.7550e+00  205.0231e+00

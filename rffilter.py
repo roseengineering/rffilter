@@ -1968,17 +1968,18 @@ def main():
     def list_groupdelay(g, fo, BW, QU):
         N = len(g) - 2
         gn = np.sum(g[1: -1])
-        td_prime = gn / 2                      # MYJ 4.08-1
-        td = 2 * td_prime / (2 * np.pi * BW)   # MYJ 4.08-4
+        td_prime = gn / 2                        # MYJ 4.08-1
+        TD21 = 2 * td_prime / (2 * np.pi * BW)   # MYJ 4.08-4
         print("* SUM(g1-n): {}".format(unit(gn).strip()))
-        print("* TD21 ~   : {}".format(unit(td).strip()))
+        print("* TD21 ~   : {}".format(unit(TD21).strip()))
         if QU is not None and fo is not None:
             fo = (fo * np.ones(1))[0]
             wo = 2 * np.pi * fo
-            IL = 8.686 * td * wo / (2 * QU)   # MYJ 4.131-8 (except the 2)
-            K = 8.686 * np.pi * fo
+            IL = 8.686 * TD21 * wo / (2 * QU)   # MYJ 4.131-8 (except the 2)
+            K = 8.686 * np.pi * fo / 2
             print("* IL ~     : {:.3f} dB".format(IL))
             print("* Qu ~     : {} * TD21 / IL(dB)".format(unit(K).strip()))
+            print("* Qu ~     : {} / IL(dB)".format(unit(K * TD21).strip()))
 
 
     def list_couplings(q, k, fo, BW, QU=None, g=None):

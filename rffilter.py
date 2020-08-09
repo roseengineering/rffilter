@@ -1976,7 +1976,7 @@ def main():
             fo = (fo * np.ones(1))[0]
             wo = 2 * np.pi * fo
             IL = 8.686 * TD21 * wo / (2 * QU)    # MYJ 4.131-8 (except the 2)
-            K = 8.686 * np.pi * fo 
+            K = 8.686 * wo / 2
             print("* IL ~     : {:.3f} dB".format(IL))
             print("* Qu ~     : {} * TD21 / IL(dB)".format(unit(K).strip()))
             print("* Qu ~     : {} / IL(dB)".format(unit(K * TD21).strip()))

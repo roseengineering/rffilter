@@ -2086,12 +2086,16 @@ def main():
 
         if args.f:
             kw['f'] = np.array([ np.double(x) for x in args.f.split(',') ])
+            if args.reverse: kw['f'] = np.flip(kw['f'])
         if args.l: 
             kw['l'] = np.array([ np.double(x) for x in args.l.split(',') ])
+            if args.reverse: kw['l'] = np.flip(kw['l'])
         if args.re: 
             kw['re'] = np.array([ np.double(x) for x in args.re.split(',') ])
+            if args.reverse: kw['re'] = np.flip(kw['re'])
         if args.ro: 
             kw['ro'] = np.array([ np.double(x) for x in args.ro.split(',') ])
+            if args.reverse: kw['ro'] = np.flip(kw['ro'])
 
         if args.bw and args.f:
             QL = kw['f'][0] / args.bw
